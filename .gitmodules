@@ -1,0 +1,3 @@
+[submodule "scalene"]
+	path = scalene
+	url = https://github.com/plasma-umass/scalene.git
