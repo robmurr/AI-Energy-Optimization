@@ -20,7 +20,7 @@ git clone https://github.com/your-username/AI-Energy-Optimization.git
 
 2. Navigate to the Scalene directory:
 ```bash
-cd AI-Energy-Optimization/Task20_Scalene
+cd AI-Energy-Optimization/scalene
 ```
 
 3. Install the required dependencies:
