@@ -193,7 +193,7 @@ def parse_json(file_path):
                            f"{usage.get('SYS %', 0.0):5.2f} | " )
                            #f"{usage.get('Time (sec)', 0.0):5.6f}")
                     f.write(f"{line}\n")
-                    result = 10 / 0
+                
         print(f"\nReport written to {output_file_path}")
 
 
@@ -204,6 +204,6 @@ def parse_json(file_path):
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
 
-file_path = "C:/Users/nyros/GreenAI/GreenAI_Scrapwork/Layne/scalene_output/profile.json"
+file_path = "F:/摄影/sprite2test/AI-Energy-Optimization/JSON_Parser/profile.json"
 parse_json(file_path)
     
