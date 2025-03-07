@@ -204,6 +204,6 @@ def parse_json(file_path):
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
 
-file_path = "F:/摄影/sprite2test/AI-Energy-Optimization/JSON_Parser/profile.json"
+file_path = "profile.json"
 parse_json(file_path)
     
