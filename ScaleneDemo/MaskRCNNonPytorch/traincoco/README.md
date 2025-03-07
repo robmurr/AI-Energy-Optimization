@@ -38,7 +38,12 @@ PyTorch-Simple-MaskRCNN/
 
 ## Conda Environment Setup
 
-Create the environment using the provided `environment.yml` file:
+Place provided `environment.yml` file under the PyTorch-Simple-MaskRCNN so it looks like this:
+
+```
+PyTorch-Simple-MaskRCNN/
+├── encironment.yml/
+```
 
 ### environment.yml
 
@@ -59,13 +64,14 @@ With the environment active, run the training script with Scalene from the root 
 scalene train.py --use-cuda --iters 20 --dataset coco --data-dir coco2017
 ```
 
-This will generate a `profile.html` file in the root folder. Depending on your hardware, training may take a significant amount of time.
+This will generate a `profile.html` and `profile.json` file in the root folder. Depending on your hardware, training may take a significant amount of time.
 
 ---
 
 ## Notes
 
 - This setup uses PyTorch and Torchvision compatible with CUDA (if available).
+- Works only with x86 (windows system) for now
 - If running on a CPU-only machine, modify the script to use `device='cpu'`.
 - Scalene provides **line-by-line CPU, memory, and GPU usage** insights.
 

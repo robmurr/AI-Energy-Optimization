@@ -26,6 +26,7 @@ Mask-RCNN_TF2.14.0/
 
 
 ## Conda Environment Setup
+Make sure to replace the `environment.yml` in the Mask-RCNN_TF2.14.0 folder with the `environment.yml` provided.
 
 Create the environment using the provided `environment.yml` file (already modified to include Scalene):
 
