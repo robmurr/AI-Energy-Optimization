@@ -1,0 +1,11 @@
+name: cputdp_env
+channels:
+  - defaults
+dependencies:
+  - python=3.11
+  - pip
+  - pip:
+    - py-cpuinfo
+    - python-dotenv
+    - openai
+
