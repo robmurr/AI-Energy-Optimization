@@ -46,12 +46,12 @@ This file instructs conda to create a Python 3.11 environment and then installs 
 
 Your script relies on `python-dotenv` to read an `.env` file containing your OpenAI API key.
 
-1. **Create** a file named `.env` in the same directory as `FindCPUTDP.py` (or elsewhere if you intend to specify a custom path in `load_dotenv()`).
+1. **Create** a file named `.env` in the same directory as `FindCPUTDP.py` (or in any parent directory from `FindCPUTDP.py`).
 2. **Inside** that `.env` file, add:
    ```bash
    OPENAI_API_KEY="YOUR_OPENAI_KEY_HERE"
    ```
-3. **Make sure** this file is not tracked in version control (add `.env` to your `.gitignore`).
+3. **Make sure** this file is not tracked in version control (add `.env` to your `.gitignore`, which has already been done for this repo).
 
 ---
 
@@ -78,8 +78,3 @@ What happens:
 - **Unknown CPU?** If `py-cpuinfo` can’t detect your CPU brand/model, the script returns `-1`.
 
 ---
-
-### That’s It!
-
-Your system should now be correctly configured to run `FindCPUTDP.py`. 
-Happy coding!
