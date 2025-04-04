@@ -34,13 +34,6 @@ pip install pynvml
    - Retrieve the maximum power limit (TDP) for the GPU at index `0` (or a different index, if specified)
    - Print the TDP in watts
 
-   If you have multiple GPUs and wish to query a specific one, you can specify the GPU index. For example:
-
-   ```bash
-   python3 EnergyInvestigator.py 1
-   ```
-
-   This will query the second GPU (if available). If you don't specify a GPU index, the script will default to using the first GPU (index `0`).
 
 3. **Expected Output**
 
