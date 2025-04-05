@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo
+    container_name: tdp_mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  backend:
+    build: ./app
+    container_name: tdp_backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./app/.env
+    depends_on:
+      - mongo
+    restart: always
+
+volumes:
+  mongo-data:
+
