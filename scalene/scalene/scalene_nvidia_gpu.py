@@ -1,7 +1,7 @@
 import contextlib
 import os
 import sys
-from typing import Tuple
+from typing import Tuple, List
 
 import pynvml
 
@@ -145,10 +145,35 @@ class ScaleneNVIDIAGPU(ScaleneAccelerator):
     def get_num_cores(self) -> int:
         return self.__ngpus
 
-    def get_stats(self) -> Tuple[float, float]:
-        """Returns a tuple of (utilization %, memory in use)."""
+    def get_stats(self) -> List[Tuple[float, float]]:
+        """Returns a list of tuples, each containing (utilization %, memory in use) for each GPU."""
         if self.has_gpu():
-            total_load = self.gpu_utilization(self.__pid)
-            mem_used = self.gpu_memory_usage(self.__pid)
-            return (total_load, mem_used)
-        return (0.0, 0.0)
+            gpu_stats = []
+            for i in range(self.__ngpus):
+                # Get utilization for this specific GPU
+                if self.__has_per_pid_accounting:
+                    utilization = 0.0
+                    with contextlib.suppress(Exception):
+                        h = self.__handle[i]
+                        utilization = pynvml.nvmlDeviceGetAccountingStats(
+                            h, self.__pid
+                        ).gpuUtilization / 100.0
+                else:
+                    try:
+                        h = self.__handle[i]
+                        utilization = pynvml.nvmlDeviceGetUtilizationRates(h).gpu / 100.0
+                    except pynvml.NVMLError:
+                        utilization = 0.0
+                
+                # Get memory usage for this specific GPU
+                mem_used = 0.0
+                h = self.__handle[i]
+                with contextlib.suppress(Exception):
+                    for proc in pynvml.nvmlDeviceGetComputeRunningProcesses(h):
+                        if proc.usedGpuMemory and proc.pid == self.__pid:
+                            mem_used += proc.usedGpuMemory / 1048576
+                
+                gpu_stats.append((utilization, mem_used))
+            
+            return gpu_stats
+        return [(0.0, 0.0)]  # Return a list with one entry for consistency when no GPU

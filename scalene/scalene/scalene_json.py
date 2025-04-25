@@ -9,7 +9,7 @@ from operator import itemgetter
 from pathlib import Path
 from pydantic import BaseModel, Field, NonNegativeFloat, NonNegativeInt, PositiveInt, StrictBool, ValidationError, model_validator
 from typing import Any, Callable, Dict, List, Optional
-from FindEnergy.EnergyInvestigator import query_tdp_from_backend
+from FindEnergy.EnergyInvestigator import query_tdp_from_backend, get_gpu_max_power_limit
 
 from scalene.scalene_leak_analysis import ScaleneLeakAnalysis
 from scalene.scalene_statistics import Filename, LineNumber, ScaleneStatistics
@@ -313,18 +313,27 @@ class ScaleneJSON:
                 elapsed_time_sec = elapsed_time_sec_gpu
             
             #CPU AND GPU ENERGY FORMULA AND CALCULATIONS
-            if(stats.gpu_power_limits[fname][line_no][0] != 0):
-                gpu_avg_power_limit = stats.gpu_power_limits[fname][line_no][1]/stats.gpu_power_limits[fname][line_no][0]
-            else:
-                gpu_avg_power_limit = 0.0
-
-            power_gpu = gpu_avg_power_limit * n_gpu_percent
-            joules_gpu = power_gpu * elapsed_time_sec_gpu
+            joules_gpu = 0.0
+            gpu_avg_power_limit = get_gpu_max_power_limit()
+            
+            # Calculate for each GPU
+            for gpu_idx in stats.gpu_power_limits[fname][line_no]:
+                if stats.gpu_power_limits[fname][line_no][gpu_idx][0] != 0:
+                    gpu_avg_power_limit = stats.gpu_power_limits[fname][line_no][gpu_idx][1] / stats.gpu_power_limits[fname][line_no][gpu_idx][0]
+                    gpu_avg_utilization = stats.gpu_power_limits[fname][line_no][gpu_idx][2] / stats.gpu_power_limits[fname][line_no][gpu_idx][0]
+                else:
+                    gpu_avg_power_limit = 0.0
+                    gpu_avg_utilization = 0.0
+                
+                # Use the actual utilization for this specific GPU rather than the aggregate n_gpu_percent
+                power_gpu = gpu_avg_power_limit * gpu_avg_utilization # Convert utilization to percentage
+                gpu_joules = power_gpu * elapsed_time_sec_gpu
+                joules_gpu += gpu_joules
 
             power_cpu = cpu_tdp * mean_cpu_util
             joules_cpu = power_cpu * elapsed_time_sec_cpu
             
-            joules_total = joules_cpu+joules_gpu
+            joules_total = joules_cpu + joules_gpu
         except Exception as e:
             print(f"Error Calculations")
 
@@ -348,7 +357,7 @@ class ScaleneJSON:
             "n_sys_percent": n_sys_percent,
             "n_usage_fraction": n_usage_fraction,
             "elapsed_time_sec": elapsed_time_sec,
-            "gpu_avg_power_limit": gpu_avg_power_limit,
+            "gpu_avg_power_limit": gpu_avg_power_limit,  # For backwards compatibility
             "gpu_joule_usage": joules_gpu,
             "cpu_joule_usage": joules_cpu,
             "total_joule_usage": joules_total,
