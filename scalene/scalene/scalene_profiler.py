@@ -1,5 +1,4 @@
 # ruff: noqa: E402
-
 from __future__ import (
     annotations,
 )  # work around Python 3.8 issue, see https://stackoverflow.com/a/68072481/335756
@@ -24,7 +23,12 @@ try:
     import cysignals # noqa: F401
 except ModuleNotFoundError:
     pass
+import sys
+import os
 
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '')))
+
+from FindEnergy.EnergyInvestigator import get_gpu_max_power_limit
 import argparse
 import atexit
 import builtins
@@ -35,14 +39,12 @@ import inspect
 import json
 import math
 import multiprocessing
-import os
 import pathlib
 import platform
 import queue
 import re
 import signal
 import subprocess
-import sys
 import sysconfig
 import tempfile
 import threading
@@ -1081,6 +1083,8 @@ class Scalene:
             )
             Scalene.__stats.n_gpu_samples[fname][lineno] += elapsed_wallclock
             Scalene.__stats.gpu_mem_samples[fname][lineno].push(gpu_mem_used)
+            Scalene.__stats.gpu_power_limits[fname][lineno][0] += 1
+            Scalene.__stats.gpu_power_limits[fname][lineno][1] += get_gpu_max_power_limit()
 
         # Now handle the rest of the threads.
         for frame, tident, orig_frame in new_frames:
