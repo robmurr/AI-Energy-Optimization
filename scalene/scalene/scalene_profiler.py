@@ -772,9 +772,12 @@ class Scalene:
                 return
 
             if Scalene.__accelerator:
-                (gpu_load, gpu_mem_used) = Scalene.__accelerator.get_stats()
+                gpu_stats = Scalene.__accelerator.get_stats()
+                # Use first GPU for backward compatibility with old code
+                gpu_load, gpu_mem_used = gpu_stats[0] if gpu_stats else (0.0, 0.0)
             else:
-                (gpu_load, gpu_mem_used) = (0.0, 0.0)
+                gpu_stats = []
+                gpu_load, gpu_mem_used = (0.0, 0.0)
 
             # Process this CPU sample.
             Scalene.process_cpu_sample(
@@ -1027,6 +1030,13 @@ class Scalene:
         c_time = max(c_time, 0)
         # Now update counters (weighted) for every frame we are tracking.
         total_time = python_time + c_time
+        
+        # Get the current GPU stats for later use
+        # This ensures gpu_stats is defined everywhere in the function
+        if Scalene.__accelerator:
+            gpu_stats = Scalene.__accelerator.get_stats()
+        else:
+            gpu_stats = []
 
         # First, find out how many frames are not sleeping.  We need
         # to know this number so we can parcel out time appropriately
@@ -1083,8 +1093,27 @@ class Scalene:
             )
             Scalene.__stats.n_gpu_samples[fname][lineno] += elapsed_wallclock
             Scalene.__stats.gpu_mem_samples[fname][lineno].push(gpu_mem_used)
-            Scalene.__stats.gpu_power_limits[fname][lineno][0] += 1
-            Scalene.__stats.gpu_power_limits[fname][lineno][1] += get_gpu_max_power_limit()
+            
+            # Get power limits for all GPUs
+            gpu_power_limits = get_gpu_max_power_limit()
+            
+            # Record power limits and utilization for each GPU
+            for idx, gpu_info in enumerate(gpu_power_limits):
+                gpu_idx = gpu_info["index"]
+                power_limit = gpu_info["power_limit"]
+                
+                # Get corresponding GPU utilization if available
+                gpu_utilization = 0.0
+                if Scalene.__accelerator and idx < len(gpu_stats):
+                    gpu_utilization = gpu_stats[idx][0]  # GPU load for this specific GPU
+                
+                # Store GPU utilization alongside power limits
+                if gpu_idx not in Scalene.__stats.gpu_power_limits[fname][lineno]:
+                    Scalene.__stats.gpu_power_limits[fname][lineno][gpu_idx] = [0, 0.0, 0.0]  # [count, power_limit_sum, utilization_sum]
+                
+                Scalene.__stats.gpu_power_limits[fname][lineno][gpu_idx][0] += 1
+                Scalene.__stats.gpu_power_limits[fname][lineno][gpu_idx][1] += power_limit
+                Scalene.__stats.gpu_power_limits[fname][lineno][gpu_idx][2] += gpu_utilization
 
         # Now handle the rest of the threads.
         for frame, tident, orig_frame in new_frames:

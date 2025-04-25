@@ -32,7 +32,9 @@ class ScaleneStatistics:
     # Statistics counters:
     #
     def __init__(self) -> None:
-        self.gpu_power_limits: Dict[Filename, Dict[LineNumber, List[float]]] = defaultdict(lambda: defaultdict(lambda: [0, 0.0]))
+        self.gpu_power_limits: Dict[Filename, Dict[LineNumber, Dict[int, List[float]]]] = defaultdict(
+            lambda: defaultdict(lambda: defaultdict(lambda: [0, 0.0]))
+        )
         # time the profiling started
         self.start_time: float = 0
 
@@ -331,17 +333,23 @@ class ScaleneStatistics:
                 first_line_no
             ] += self.memory_aggregate_footprint[filename][line_no]
             if first_line_no == 1:
-                fn_stats.gpu_power_limits[fn_name][
-                    first_line_no] = [
-                    fn_stats.gpu_power_limits[fn_name][first_line_no][0]+self.gpu_power_limits[filename][line_no][0],
-                    fn_stats.gpu_power_limits[fn_name][first_line_no][1] + self.gpu_power_limits[filename][line_no][1]
-                ]
+                for gpu_idx in self.gpu_power_limits[filename][line_no]:
+                    if gpu_idx not in fn_stats.gpu_power_limits[fn_name][first_line_no]:
+                        fn_stats.gpu_power_limits[fn_name][first_line_no][gpu_idx] = [0, 0.0, 0.0]
+                    fn_stats.gpu_power_limits[fn_name][first_line_no][gpu_idx] = [
+                        fn_stats.gpu_power_limits[fn_name][first_line_no][gpu_idx][0] + self.gpu_power_limits[filename][line_no][gpu_idx][0],
+                        fn_stats.gpu_power_limits[fn_name][first_line_no][gpu_idx][1] + self.gpu_power_limits[filename][line_no][gpu_idx][1],
+                        fn_stats.gpu_power_limits[fn_name][first_line_no][gpu_idx][2] + self.gpu_power_limits[filename][line_no][gpu_idx][2]
+                    ]
             else:
-                fn_stats.gpu_power_limits[fn_name][
-                    first_line_no] = [
-                    fn_stats.gpu_power_limits[fn_name][first_line_no][0] + 1,
-                    fn_stats.gpu_power_limits[fn_name][first_line_no][1] + self.gpu_power_limits[filename][line_no][1]
-                ]
+                for gpu_idx in self.gpu_power_limits[filename][line_no]:
+                    if gpu_idx not in fn_stats.gpu_power_limits[fn_name][first_line_no]:
+                        fn_stats.gpu_power_limits[fn_name][first_line_no][gpu_idx] = [0, 0.0, 0.0]
+                    fn_stats.gpu_power_limits[fn_name][first_line_no][gpu_idx] = [
+                        fn_stats.gpu_power_limits[fn_name][first_line_no][gpu_idx][0] + 1,
+                        fn_stats.gpu_power_limits[fn_name][first_line_no][gpu_idx][1] + self.gpu_power_limits[filename][line_no][gpu_idx][1],
+                        fn_stats.gpu_power_limits[fn_name][first_line_no][gpu_idx][2] + self.gpu_power_limits[filename][line_no][gpu_idx][2]
+                    ]
 
 
         return fn_stats

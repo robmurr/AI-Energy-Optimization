@@ -6,14 +6,8 @@ import torch
 
 def get_cpu_name():
     info = cpuinfo.get_cpu_info()
-    if torch.cuda.is_available():
-        print("CUDA is available!")
-        print(f"Number of GPUs: {torch.cuda.device_count()}")
-        print(f"Current GPU: {torch.cuda.current_device()}")
-        print(f"GPU Name: {torch.cuda.get_device_name(0)}")
-    else:
-        print("CUDA is not available.")
     return info.get("brand_raw", "Unknown CPU")
+
 
 get_cpu_name()
 def query_tdp_from_backend():
@@ -24,33 +18,34 @@ def query_tdp_from_backend():
     else:
         print("Error:", response.text)
 
-    
-def get_gpu_max_power_limit(gpu_index=0):
+def get_gpu_max_power_limit():
     """
-    Retrieve the maximum power limit for a specified GPU device.
-    
-    Args:
-        gpu_index (int, optional): Index of the GPU device. Defaults to 0.
+    Retrieve the power limits for all available GPU devices.
     
     Returns:
-        float: Maximum power limit in watts
+        list: List of dictionaries containing GPU index and power limit in watts
     """
+    gpu_power_limits = []
     try:
         pynvml.nvmlInit()
-        
-        # Get handle for the specified GPU
-        handle = pynvml.nvmlDeviceGetHandleByIndex(gpu_index)
-        
-        # Retrieve the maximum power limit
-        max_power_limit = pynvml.nvmlDeviceGetEnforcedPowerLimit(handle) / 1000
-        
-        return max_power_limit
-    
+        device_count = pynvml.nvmlDeviceGetCount()
+        for gpu_index in range(device_count):
+            try:
+                handle = pynvml.nvmlDeviceGetHandleByIndex(gpu_index)                
+                power_limit = pynvml.nvmlDeviceGetEnforcedPowerLimit(handle) / 1000
+                device_name = pynvml.nvmlDeviceGetName(handle)
+                gpu_power_limits.append({
+                    "index": gpu_index,
+                    "name": device_name,
+                    "power_limit": power_limit
+                })
+            except pynvml.NVMLError as error:
+                print(f"Error retrieving info for GPU {gpu_index}: {error}")
+        return gpu_power_limits
     except pynvml.NVMLError as error:
-        print(f"Error retrieving GPU power limit: {error}")
-        return None
+        print(f"Error initializing NVML: {error}")
+        return []
     finally:
-        # frees some resources
         pynvml.nvmlShutdown()
 
 
