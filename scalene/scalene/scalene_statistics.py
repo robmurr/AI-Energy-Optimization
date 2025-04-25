@@ -32,6 +32,9 @@ class ScaleneStatistics:
     # Statistics counters:
     #
     def __init__(self) -> None:
+        self.gpu_power_limits: Dict[Filename, Dict[LineNumber, Dict[int, List[float]]]] = defaultdict(
+            lambda: defaultdict(lambda: defaultdict(lambda: [0, 0.0]))
+        )
         # time the profiling started
         self.start_time: float = 0
 
@@ -195,6 +198,7 @@ class ScaleneStatistics:
 
     def clear(self) -> None:
         """Reset all statistics except for memory footprint."""
+        self.gpu_power_limits.clear()
         self.start_time = 0
         self.elapsed_time = 0
         self.alloc_samples = 0
@@ -328,6 +332,25 @@ class ScaleneStatistics:
             fn_stats.memory_aggregate_footprint[fn_name][
                 first_line_no
             ] += self.memory_aggregate_footprint[filename][line_no]
+            if first_line_no == 1:
+                for gpu_idx in self.gpu_power_limits[filename][line_no]:
+                    if gpu_idx not in fn_stats.gpu_power_limits[fn_name][first_line_no]:
+                        fn_stats.gpu_power_limits[fn_name][first_line_no][gpu_idx] = [0, 0.0, 0.0]
+                    fn_stats.gpu_power_limits[fn_name][first_line_no][gpu_idx] = [
+                        fn_stats.gpu_power_limits[fn_name][first_line_no][gpu_idx][0] + self.gpu_power_limits[filename][line_no][gpu_idx][0],
+                        fn_stats.gpu_power_limits[fn_name][first_line_no][gpu_idx][1] + self.gpu_power_limits[filename][line_no][gpu_idx][1],
+                        fn_stats.gpu_power_limits[fn_name][first_line_no][gpu_idx][2] + self.gpu_power_limits[filename][line_no][gpu_idx][2]
+                    ]
+            else:
+                for gpu_idx in self.gpu_power_limits[filename][line_no]:
+                    if gpu_idx not in fn_stats.gpu_power_limits[fn_name][first_line_no]:
+                        fn_stats.gpu_power_limits[fn_name][first_line_no][gpu_idx] = [0, 0.0, 0.0]
+                    fn_stats.gpu_power_limits[fn_name][first_line_no][gpu_idx] = [
+                        fn_stats.gpu_power_limits[fn_name][first_line_no][gpu_idx][0] + 1,
+                        fn_stats.gpu_power_limits[fn_name][first_line_no][gpu_idx][1] + self.gpu_power_limits[filename][line_no][gpu_idx][1],
+                        fn_stats.gpu_power_limits[fn_name][first_line_no][gpu_idx][2] + self.gpu_power_limits[filename][line_no][gpu_idx][2]
+                    ]
+
 
         return fn_stats
 
@@ -362,6 +385,7 @@ class ScaleneStatistics:
         "total_gpu_samples",
         "memory_malloc_count",
         "memory_free_count",
+        "gpu_power_limits",
     ]
     # To be added: __malloc_samples
 
@@ -443,6 +467,10 @@ class ScaleneStatistics:
                 self.stacks.update(x.stacks)
                 self.total_cpu_samples += x.total_cpu_samples
                 self.total_gpu_samples += x.total_gpu_samples
+                # Merge gpu_power_limits using increment_per_line_samples
+                self.increment_per_line_samples(
+                    self.gpu_power_limits, x.gpu_power_limits
+                )
                 self.increment_per_line_samples(
                     self.cpu_samples_c, x.cpu_samples_c
                 )

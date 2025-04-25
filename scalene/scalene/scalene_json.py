@@ -9,10 +9,13 @@ from operator import itemgetter
 from pathlib import Path
 from pydantic import BaseModel, Field, NonNegativeFloat, NonNegativeInt, PositiveInt, StrictBool, ValidationError, model_validator
 from typing import Any, Callable, Dict, List, Optional
+from FindEnergy.EnergyInvestigator import query_tdp_from_backend, get_gpu_max_power_limit
 
 from scalene.scalene_leak_analysis import ScaleneLeakAnalysis
 from scalene.scalene_statistics import Filename, LineNumber, ScaleneStatistics
 from scalene.scalene_analysis import ScaleneAnalysis
+
+cpu_tdp = query_tdp_from_backend()
 
 
 class GPUDevice(str, Enum):
@@ -206,7 +209,11 @@ class ScaleneJSON:
                 "n_python_fraction": 0,
                 "n_copy_mb_s": 0,
                 "memory_samples": [],
-                "elapsed_time_sec": 0
+                "elapsed_time_sec": 0,
+                "gpu_avg_power_limit": 0,
+                "gpu_joule_usage": 0.0,
+                "cpu_joule_usage": 0.0,
+                "total_joule_usage": 0.0,
             }
 
         # Prepare output values.
@@ -278,7 +285,6 @@ class ScaleneJSON:
         n_sys_percent = n_cpu_percent * (1.0 - mean_cpu_util)
         n_cpu_percent_python *= mean_cpu_util
         n_cpu_percent_c *= mean_cpu_util
-        del mean_cpu_util
 
         n_copy_b = stats.memcpy_samples[fname][line_no]
         if stats.elapsed_time:
@@ -293,16 +299,43 @@ class ScaleneJSON:
             )
         )
 
-        #EDIT FOR ELAPSED TIME FUNCTIONS
-        elapsed_time_sec_cpu = (n_cpu_samples_c / stats.total_cpu_samples * stats.elapsed_time) + (n_cpu_samples_python / stats.total_cpu_samples * stats.elapsed_time)
-        elapsed_time_sec_gpu = 0
-        if stats.n_gpu_samples[fname][line_no] != 0:
-            elapsed_time_sec_gpu = n_gpu_samples / stats.n_gpu_samples[fname][line_no] * stats.elapsed_time
 
-        if(elapsed_time_sec_cpu >= elapsed_time_sec_gpu):
-            elapsed_time_sec = elapsed_time_sec_cpu
-        else:
-            elapsed_time_sec = elapsed_time_sec_gpu
+        #EDIT FOR ELAPSED TIME FUNCTIONS
+        try:
+            elapsed_time_sec_cpu = (n_cpu_samples_c / stats.total_cpu_samples * stats.elapsed_time) + (n_cpu_samples_python / stats.total_cpu_samples * stats.elapsed_time)
+            elapsed_time_sec_gpu = 0
+            if stats.n_gpu_samples[fname][line_no] != 0:
+                elapsed_time_sec_gpu = n_gpu_samples / stats.n_gpu_samples[fname][line_no] * stats.elapsed_time
+
+            if(elapsed_time_sec_cpu >= elapsed_time_sec_gpu):
+                elapsed_time_sec = elapsed_time_sec_cpu
+            else:
+                elapsed_time_sec = elapsed_time_sec_gpu
+            
+            #CPU AND GPU ENERGY FORMULA AND CALCULATIONS
+            joules_gpu = 0.0
+            gpu_avg_power_limit = get_gpu_max_power_limit()
+            
+            # Calculate for each GPU
+            for gpu_idx in stats.gpu_power_limits[fname][line_no]:
+                if stats.gpu_power_limits[fname][line_no][gpu_idx][0] != 0:
+                    gpu_avg_power_limit = stats.gpu_power_limits[fname][line_no][gpu_idx][1] / stats.gpu_power_limits[fname][line_no][gpu_idx][0]
+                    gpu_avg_utilization = stats.gpu_power_limits[fname][line_no][gpu_idx][2] / stats.gpu_power_limits[fname][line_no][gpu_idx][0]
+                else:
+                    gpu_avg_power_limit = 0.0
+                    gpu_avg_utilization = 0.0
+                
+                # Use the actual utilization for this specific GPU rather than the aggregate n_gpu_percent
+                power_gpu = gpu_avg_power_limit * gpu_avg_utilization # Convert utilization to percentage
+                gpu_joules = power_gpu * elapsed_time_sec_gpu
+                joules_gpu += gpu_joules
+
+            power_cpu = cpu_tdp * mean_cpu_util
+            joules_cpu = power_cpu * elapsed_time_sec_cpu
+            
+            joules_total = joules_cpu + joules_gpu
+        except Exception as e:
+            print(f"Error Calculations")
 
         payload = {
             "line": line,
@@ -324,6 +357,10 @@ class ScaleneJSON:
             "n_sys_percent": n_sys_percent,
             "n_usage_fraction": n_usage_fraction,
             "elapsed_time_sec": elapsed_time_sec,
+            "gpu_avg_power_limit": gpu_avg_power_limit,  # For backwards compatibility
+            "gpu_joule_usage": joules_gpu,
+            "cpu_joule_usage": joules_cpu,
+            "total_joule_usage": joules_total,
         }
         try:
             FunctionDetail(**payload)

@@ -228,22 +228,25 @@ pre[class*="language-"] {
     "args": [
         "test/testme.py"
     ],
-    "elapsed_time_sec": 8.801120281219482,
+    "elapsed_time_sec": 6.493950128555298,
     "entrypoint_dir": "C:\\Users\\nyros\\AI-Energy-Optimization\\scalene\\test",
     "filename": "C:\\Users\\nyros\\AI-Energy-Optimization\\scalene\\test",
     "files": {
         "C:\\Users\\nyros\\AI-Energy-Optimization\\scalene\\test\\testme.py": {
             "functions": [
                 {
-                    "elapsed_time_sec": 1.8794330653878593,
+                    "cpu_joule_usage": 58.47542010111961,
+                    "elapsed_time_sec": 1.5994097063705013,
+                    "gpu_avg_power_limit": 45.0,
+                    "gpu_joule_usage": 0.0,
                     "line": "doit1",
                     "lineno": 9,
                     "memory_samples": [],
                     "n_avg_mb": 0.0,
                     "n_copy_mb_s": 0.0,
-                    "n_core_utilization": 0.043336478971801304,
-                    "n_cpu_percent_c": 12.092452191186466,
-                    "n_cpu_percent_python": 5.7429865063567265,
+                    "n_core_utilization": 0.04780274603308369,
+                    "n_cpu_percent_c": 10.370612390005375,
+                    "n_cpu_percent_python": 9.639608728122742,
                     "n_gpu_avg_memory_mb": 0.0,
                     "n_gpu_peak_memory_mb": 0.0,
                     "n_gpu_percent": 0.0,
@@ -252,19 +255,23 @@ pre[class*="language-"] {
                     "n_mallocs": 0,
                     "n_peak_mb": 0.0,
                     "n_python_fraction": 0,
-                    "n_sys_percent": 3.519036702575362,
-                    "n_usage_fraction": 0
+                    "n_sys_percent": 4.619005696188678,
+                    "n_usage_fraction": 0,
+                    "total_joule_usage": 58.47542010111961
                 },
                 {
-                    "elapsed_time_sec": 6.417592226399025,
+                    "cpu_joule_usage": 166.56974774925197,
+                    "elapsed_time_sec": 4.846384770648154,
+                    "gpu_avg_power_limit": 45.0,
+                    "gpu_joule_usage": 0.0,
                     "line": "doit2",
                     "lineno": 17,
                     "memory_samples": [],
                     "n_avg_mb": 0.0,
                     "n_copy_mb_s": 0.0,
-                    "n_core_utilization": 0.04355356028240825,
-                    "n_cpu_percent_c": 43.81836702612515,
-                    "n_cpu_percent_python": 18.8493484082735,
+                    "n_core_utilization": 0.04381984204359559,
+                    "n_cpu_percent_c": 29.33067076200672,
+                    "n_cpu_percent_python": 27.669304240986673,
                     "n_gpu_avg_memory_mb": 0.0,
                     "n_gpu_peak_memory_mb": 0.0,
                     "n_gpu_percent": 0.0,
@@ -273,19 +280,23 @@ pre[class*="language-"] {
                     "n_mallocs": 0,
                     "n_peak_mb": 0.0,
                     "n_python_fraction": 0,
-                    "n_sys_percent": 10.250186166075826,
-                    "n_usage_fraction": 0
+                    "n_sys_percent": 17.629251811323453,
+                    "n_usage_fraction": 0,
+                    "total_joule_usage": 166.56974774925197
                 },
                 {
-                    "elapsed_time_sec": 0.06521280587744134,
+                    "cpu_joule_usage": 2.029312495344543,
+                    "elapsed_time_sec": 0.048155651536646964,
+                    "gpu_avg_power_limit": 45.0,
+                    "gpu_joule_usage": 0.0,
                     "line": "stuff",
                     "lineno": 36,
                     "memory_samples": [],
                     "n_avg_mb": 0.0,
                     "n_copy_mb_s": 0.0,
-                    "n_core_utilization": 0.05702749457110717,
-                    "n_cpu_percent_c": 0.5038529934795496,
-                    "n_cpu_percent_python": 0.2371072910491998,
+                    "n_core_utilization": 0.0624198498045895,
+                    "n_cpu_percent_c": 0.39813894275905687,
+                    "n_cpu_percent_python": 0.29628944577418187,
                     "n_gpu_avg_memory_mb": 0.0,
                     "n_gpu_peak_memory_mb": 0.0,
                     "n_gpu_percent": 0.0,
@@ -294,8 +305,9 @@ pre[class*="language-"] {
                     "n_mallocs": 0,
                     "n_peak_mb": 0.0,
                     "n_python_fraction": 0,
-                    "n_sys_percent": 0.0,
-                    "n_usage_fraction": 0
+                    "n_sys_percent": 0.04711798283318408,
+                    "n_usage_fraction": 0,
+                    "total_joule_usage": 2.029312495344543
                 }
             ],
             "imports": [
@@ -305,9 +317,18 @@ pre[class*="language-"] {
             "leaks": {},
             "lines": [
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 1,
                     "end_region_line": 1,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "#!/usr/bin/env python3\n",
                     "lineno": 1,
                     "memory_samples": [],
@@ -327,37 +348,57 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 1,
-                    "start_region_line": 1
+                    "start_region_line": 1,
+                    "total_joule_usage": 0.0
                 },
                 {
-                    "elapsed_time_sec": 0.43888218355518016,
+                    "cpu_joule_usage": 0.0,
+                    "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 2,
                     "end_region_line": 2,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "import numpy as np\n",
                     "lineno": 2,
                     "memory_samples": [],
                     "n_avg_mb": 0.0,
                     "n_copy_mb_s": 0.0,
-                    "n_core_utilization": 0.027756582616136834,
-                    "n_cpu_percent_c": 1.3146247813927532,
-                    "n_cpu_percent_python": 0.9834076286782161,
+                    "n_core_utilization": 0.0,
+                    "n_cpu_percent_c": 0.0,
+                    "n_cpu_percent_python": 0.0,
                     "n_gpu_avg_memory_mb": 0.0,
                     "n_gpu_peak_memory_mb": 0.0,
-                    "n_gpu_percent": 0.0,
+                    "n_gpu_percent": 0,
                     "n_growth_mb": 0.0,
                     "n_malloc_mb": 0.0,
                     "n_mallocs": 0,
                     "n_peak_mb": 0.0,
                     "n_python_fraction": 0,
-                    "n_sys_percent": 2.688630304807513,
+                    "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 2,
-                    "start_region_line": 2
+                    "start_region_line": 2,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 3,
                     "end_region_line": 3,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "#import math\n",
                     "lineno": 3,
                     "memory_samples": [],
@@ -377,12 +418,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 3,
-                    "start_region_line": 3
+                    "start_region_line": 3,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 4,
                     "end_region_line": 4,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "\n",
                     "lineno": 4,
                     "memory_samples": [],
@@ -402,12 +453,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 4,
-                    "start_region_line": 4
+                    "start_region_line": 4,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 5,
                     "end_region_line": 5,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "# from numpy import linalg as LA\n",
                     "lineno": 5,
                     "memory_samples": [],
@@ -427,12 +488,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 5,
-                    "start_region_line": 5
+                    "start_region_line": 5,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 6,
                     "end_region_line": 6,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "\n",
                     "lineno": 6,
                     "memory_samples": [],
@@ -452,12 +523,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 6,
-                    "start_region_line": 6
+                    "start_region_line": 6,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 7,
                     "end_region_line": 7,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "arr = [i for i in range(1,1000)]\n",
                     "lineno": 7,
                     "memory_samples": [],
@@ -477,12 +558,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 7,
-                    "start_region_line": 7
+                    "start_region_line": 7,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 8,
                     "end_region_line": 8,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "\n",
                     "lineno": 8,
                     "memory_samples": [],
@@ -502,12 +593,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 8,
-                    "start_region_line": 8
+                    "start_region_line": 8,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 15,
                     "end_region_line": 15,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "def doit1(x):\n",
                     "lineno": 9,
                     "memory_samples": [],
@@ -527,12 +628,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 9,
-                    "start_region_line": 9
+                    "start_region_line": 9,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 10,
                     "end_region_line": 15,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "    y = 1\n",
                     "lineno": 10,
                     "memory_samples": [],
@@ -552,20 +663,24 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 10,
-                    "start_region_line": 9
+                    "start_region_line": 9,
+                    "total_joule_usage": 0.0
                 },
                 {
-                    "elapsed_time_sec": 0.37497363379528764,
+                    "cpu_joule_usage": 6.638671054354058,
+                    "elapsed_time_sec": 0.2028958118077392,
                     "end_outermost_loop": 11,
                     "end_region_line": 15,
+                    "gpu_avg_power_limit": 45.0,
+                    "gpu_joule_usage": 0.0,
                     "line": "    x = [i*i for i in range(0,100000)][99999]\n",
                     "lineno": 11,
                     "memory_samples": [],
                     "n_avg_mb": 0.0,
                     "n_copy_mb_s": 0.0,
-                    "n_core_utilization": 0.042931535138687506,
-                    "n_cpu_percent_c": 2.4366890868579305,
-                    "n_cpu_percent_python": 1.2215255996781271,
+                    "n_core_utilization": 0.041474088985867706,
+                    "n_cpu_percent_c": 1.1214946413854914,
+                    "n_cpu_percent_python": 1.1502509142415296,
                     "n_gpu_avg_memory_mb": 0.0,
                     "n_gpu_peak_memory_mb": 0.0,
                     "n_gpu_percent": 0.0,
@@ -574,23 +689,27 @@ pre[class*="language-"] {
                     "n_mallocs": 0,
                     "n_peak_mb": 0.0,
                     "n_python_fraction": 0,
-                    "n_sys_percent": 0.6023069495042505,
+                    "n_sys_percent": 0.8526364890635073,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 11,
-                    "start_region_line": 9
+                    "start_region_line": 9,
+                    "total_joule_usage": 6.638671054354058
                 },
                 {
-                    "elapsed_time_sec": 0.7545121640019963,
+                    "cpu_joule_usage": 22.059720058445645,
+                    "elapsed_time_sec": 0.6099715861308616,
                     "end_outermost_loop": 12,
                     "end_region_line": 15,
+                    "gpu_avg_power_limit": 45.0,
+                    "gpu_joule_usage": 0.0,
                     "line": "    y1 = [i*i for i in range(0,200000)][199999]\n",
                     "lineno": 12,
                     "memory_samples": [],
                     "n_avg_mb": 0.0,
                     "n_copy_mb_s": 0.0,
-                    "n_core_utilization": 0.041674925538371606,
-                    "n_cpu_percent_c": 4.680433109244818,
-                    "n_cpu_percent_python": 2.1830156960736304,
+                    "n_core_utilization": 0.04568206544637966,
+                    "n_cpu_percent_c": 3.6075368966314105,
+                    "n_cpu_percent_python": 3.941273790152381,
                     "n_gpu_avg_memory_mb": 0.0,
                     "n_gpu_peak_memory_mb": 0.0,
                     "n_gpu_percent": 0.0,
@@ -599,23 +718,27 @@ pre[class*="language-"] {
                     "n_mallocs": 0,
                     "n_peak_mb": 0.0,
                     "n_python_fraction": 0,
-                    "n_sys_percent": 1.7094616866791807,
+                    "n_sys_percent": 1.8441100171908977,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 12,
-                    "start_region_line": 9
+                    "start_region_line": 9,
+                    "total_joule_usage": 22.059720058445645
                 },
                 {
-                    "elapsed_time_sec": 0.7499472675905753,
+                    "cpu_joule_usage": 29.928650267194808,
+                    "elapsed_time_sec": 0.7865423084319003,
                     "end_outermost_loop": 13,
                     "end_region_line": 15,
+                    "gpu_avg_power_limit": 45.0,
+                    "gpu_joule_usage": 0.0,
                     "line": "    z1 = [i for i in range(0,300000)][299999]\n",
                     "lineno": 13,
                     "memory_samples": [],
                     "n_avg_mb": 0.0,
                     "n_copy_mb_s": 0.0,
-                    "n_core_utilization": 0.04520930744859473,
-                    "n_cpu_percent_c": 4.969196072535557,
-                    "n_cpu_percent_python": 2.3384452106049696,
+                    "n_core_utilization": 0.05159767746425971,
+                    "n_cpu_percent_c": 5.693465478234062,
+                    "n_cpu_percent_python": 4.548084023728828,
                     "n_gpu_avg_memory_mb": 0.0,
                     "n_gpu_peak_memory_mb": 0.0,
                     "n_gpu_percent": 0.0,
@@ -624,15 +747,25 @@ pre[class*="language-"] {
                     "n_mallocs": 0,
                     "n_peak_mb": 0.0,
                     "n_python_fraction": 0,
-                    "n_sys_percent": 1.2134019889400902,
+                    "n_sys_percent": 1.8703745636886822,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 13,
-                    "start_region_line": 9
+                    "start_region_line": 9,
+                    "total_joule_usage": 29.928650267194808
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 14,
                     "end_region_line": 15,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "    z = x * y * y1 * z1\n",
                     "lineno": 14,
                     "memory_samples": [],
@@ -652,12 +785,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 14,
-                    "start_region_line": 9
+                    "start_region_line": 9,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 15,
                     "end_region_line": 15,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "    return z\n",
                     "lineno": 15,
                     "memory_samples": [],
@@ -677,12 +820,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 15,
-                    "start_region_line": 9
+                    "start_region_line": 9,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 16,
                     "end_region_line": 16,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "\n",
                     "lineno": 16,
                     "memory_samples": [],
@@ -702,12 +855,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 16,
-                    "start_region_line": 16
+                    "start_region_line": 16,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 26,
                     "end_region_line": 26,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "def doit2(x):\n",
                     "lineno": 17,
                     "memory_samples": [],
@@ -727,12 +890,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 17,
-                    "start_region_line": 17
+                    "start_region_line": 17,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 18,
                     "end_region_line": 26,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "    i = 0\n",
                     "lineno": 18,
                     "memory_samples": [],
@@ -752,12 +925,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 18,
-                    "start_region_line": 17
+                    "start_region_line": 17,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 19,
                     "end_region_line": 26,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "    z = 0.1\n",
                     "lineno": 19,
                     "memory_samples": [],
@@ -777,12 +960,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 19,
-                    "start_region_line": 17
+                    "start_region_line": 17,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 25,
                     "end_region_line": 25,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "    while i \\u003c 100000:\n",
                     "lineno": 20,
                     "memory_samples": [],
@@ -802,20 +995,24 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 20,
-                    "start_region_line": 20
+                    "start_region_line": 20,
+                    "total_joule_usage": 0.0
                 },
                 {
-                    "elapsed_time_sec": 6.254560211705422,
+                    "cpu_joule_usage": 157.44014623289095,
+                    "elapsed_time_sec": 4.58955462911937,
                     "end_outermost_loop": 25,
                     "end_region_line": 25,
+                    "gpu_avg_power_limit": 45.0,
+                    "gpu_joule_usage": 0.0,
                     "line": "        z = z * z\n",
                     "lineno": 21,
                     "memory_samples": [],
                     "n_avg_mb": 0.0,
                     "n_copy_mb_s": 0.0,
-                    "n_core_utilization": 0.043689378475879906,
-                    "n_cpu_percent_c": 42.85479468537642,
-                    "n_cpu_percent_python": 18.39097134464068,
+                    "n_core_utilization": 0.04386609867347874,
+                    "n_cpu_percent_c": 27.827306412095854,
+                    "n_cpu_percent_python": 26.048529512514346,
                     "n_gpu_avg_memory_mb": 0.0,
                     "n_gpu_peak_memory_mb": 0.0,
                     "n_gpu_percent": 0.0,
@@ -824,23 +1021,27 @@ pre[class*="language-"] {
                     "n_mallocs": 0,
                     "n_peak_mb": 0.0,
                     "n_python_fraction": 0,
-                    "n_sys_percent": 9.819734859135501,
+                    "n_sys_percent": 16.798476909085725,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 20,
-                    "start_region_line": 20
+                    "start_region_line": 20,
+                    "total_joule_usage": 157.44014623289095
                 },
                 {
-                    "elapsed_time_sec": 0.16303201469360334,
+                    "cpu_joule_usage": 7.042667953635633,
+                    "elapsed_time_sec": 0.19262260614658783,
                     "end_outermost_loop": 25,
                     "end_region_line": 25,
+                    "gpu_avg_power_limit": 45.0,
+                    "gpu_joule_usage": 0.0,
                     "line": "        z = x * x\n",
                     "lineno": 22,
                     "memory_samples": [],
                     "n_avg_mb": 0.0,
                     "n_copy_mb_s": 0.0,
-                    "n_core_utilization": 0.03866410531742853,
-                    "n_cpu_percent_c": 0.9740512602197468,
-                    "n_cpu_percent_python": 0.4583770636328221,
+                    "n_core_utilization": 0.045891157079494434,
+                    "n_cpu_percent_c": 1.253196270167111,
+                    "n_cpu_percent_python": 1.1567965570773335,
                     "n_gpu_avg_memory_mb": 0.0,
                     "n_gpu_peak_memory_mb": 0.0,
                     "n_gpu_percent": 0.0,
@@ -849,65 +1050,83 @@ pre[class*="language-"] {
                     "n_mallocs": 0,
                     "n_peak_mb": 0.0,
                     "n_python_fraction": 0,
-                    "n_sys_percent": 0.4199723874693043,
+                    "n_sys_percent": 0.5561926582212465,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 20,
-                    "start_region_line": 20
+                    "start_region_line": 20,
+                    "total_joule_usage": 7.042667953635633
                 },
                 {
-                    "elapsed_time_sec": 0.0,
+                    "cpu_joule_usage": 1.5650810729292155,
+                    "elapsed_time_sec": 0.048155651536646964,
                     "end_outermost_loop": 25,
                     "end_region_line": 25,
+                    "gpu_avg_power_limit": 45.0,
+                    "gpu_joule_usage": 0.0,
                     "line": "        z = z * z\n",
                     "lineno": 23,
                     "memory_samples": [],
                     "n_avg_mb": 0.0,
                     "n_copy_mb_s": 0.0,
-                    "n_core_utilization": 0.0,
-                    "n_cpu_percent_c": 0.0,
-                    "n_cpu_percent_python": 0.0,
+                    "n_core_utilization": 0.036111627907224324,
+                    "n_cpu_percent_c": 0.19280481579890385,
+                    "n_cpu_percent_python": 0.34276411697582915,
                     "n_gpu_avg_memory_mb": 0.0,
                     "n_gpu_peak_memory_mb": 0.0,
-                    "n_gpu_percent": 0,
+                    "n_gpu_percent": 0.0,
                     "n_growth_mb": 0.0,
                     "n_malloc_mb": 0.0,
                     "n_mallocs": 0,
                     "n_peak_mb": 0.0,
                     "n_python_fraction": 0,
-                    "n_sys_percent": 0.0,
+                    "n_sys_percent": 0.20597743859168988,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 20,
-                    "start_region_line": 20
+                    "start_region_line": 20,
+                    "total_joule_usage": 1.5650810729292155
                 },
                 {
-                    "elapsed_time_sec": 0.0,
+                    "cpu_joule_usage": 0.5534704858205278,
+                    "elapsed_time_sec": 0.016051883845548988,
                     "end_outermost_loop": 25,
                     "end_region_line": 25,
+                    "gpu_avg_power_limit": 45.0,
+                    "gpu_joule_usage": 0.0,
                     "line": "        z = z * z\n",
                     "lineno": 24,
                     "memory_samples": [],
                     "n_avg_mb": 0.0,
                     "n_copy_mb_s": 0.0,
-                    "n_core_utilization": 0.0,
-                    "n_cpu_percent_c": 0.0,
-                    "n_cpu_percent_python": 0.0,
+                    "n_core_utilization": 0.038311217074859204,
+                    "n_cpu_percent_c": 0.06818290561078365,
+                    "n_cpu_percent_python": 0.12121405441917092,
                     "n_gpu_avg_memory_mb": 0.0,
                     "n_gpu_peak_memory_mb": 0.0,
-                    "n_gpu_percent": 0,
+                    "n_gpu_percent": 0.0,
                     "n_growth_mb": 0.0,
                     "n_malloc_mb": 0.0,
                     "n_mallocs": 0,
                     "n_peak_mb": 0.0,
                     "n_python_fraction": 0,
-                    "n_sys_percent": 0.0,
+                    "n_sys_percent": 0.05778516375885306,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 20,
-                    "start_region_line": 20
+                    "start_region_line": 20,
+                    "total_joule_usage": 0.5534704858205278
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 25,
                     "end_region_line": 25,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "        i += 1\n",
                     "lineno": 25,
                     "memory_samples": [],
@@ -927,12 +1146,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 20,
-                    "start_region_line": 20
+                    "start_region_line": 20,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 26,
                     "end_region_line": 26,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "    return z\n",
                     "lineno": 26,
                     "memory_samples": [],
@@ -952,12 +1181,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 26,
-                    "start_region_line": 17
+                    "start_region_line": 17,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 27,
                     "end_region_line": 27,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "\n",
                     "lineno": 27,
                     "memory_samples": [],
@@ -977,12 +1216,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 27,
-                    "start_region_line": 27
+                    "start_region_line": 27,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 34,
                     "end_region_line": 34,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "def doit3(x):\n",
                     "lineno": 28,
                     "memory_samples": [],
@@ -1002,12 +1251,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 28,
-                    "start_region_line": 28
+                    "start_region_line": 28,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 29,
                     "end_region_line": 34,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "    z = x + 1\n",
                     "lineno": 29,
                     "memory_samples": [],
@@ -1027,12 +1286,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 29,
-                    "start_region_line": 28
+                    "start_region_line": 28,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 30,
                     "end_region_line": 34,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "    z = x + 1\n",
                     "lineno": 30,
                     "memory_samples": [],
@@ -1052,12 +1321,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 30,
-                    "start_region_line": 28
+                    "start_region_line": 28,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 31,
                     "end_region_line": 34,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "    z = x + 1\n",
                     "lineno": 31,
                     "memory_samples": [],
@@ -1077,12 +1356,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 31,
-                    "start_region_line": 28
+                    "start_region_line": 28,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 32,
                     "end_region_line": 34,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "    z = x + z\n",
                     "lineno": 32,
                     "memory_samples": [],
@@ -1102,12 +1391,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 32,
-                    "start_region_line": 28
+                    "start_region_line": 28,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 33,
                     "end_region_line": 34,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "    z = x + z\n",
                     "lineno": 33,
                     "memory_samples": [],
@@ -1127,12 +1426,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 33,
-                    "start_region_line": 28
+                    "start_region_line": 28,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 34,
                     "end_region_line": 34,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "    return z\n",
                     "lineno": 34,
                     "memory_samples": [],
@@ -1152,12 +1461,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 34,
-                    "start_region_line": 28
+                    "start_region_line": 28,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 35,
                     "end_region_line": 35,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "\n",
                     "lineno": 35,
                     "memory_samples": [],
@@ -1177,12 +1496,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 35,
-                    "start_region_line": 35
+                    "start_region_line": 35,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 46,
                     "end_region_line": 46,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "def stuff():\n",
                     "lineno": 36,
                     "memory_samples": [],
@@ -1202,12 +1531,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 36,
-                    "start_region_line": 36
+                    "start_region_line": 36,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 46,
                     "end_region_line": 46,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "#    y = np.random.randint(1, 100, size=50000000)[49999999]\n",
                     "lineno": 37,
                     "memory_samples": [],
@@ -1227,12 +1566,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 36,
-                    "start_region_line": 36
+                    "start_region_line": 36,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 38,
                     "end_region_line": 46,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "    x = 1.01\n",
                     "lineno": 38,
                     "memory_samples": [],
@@ -1252,12 +1601,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 38,
-                    "start_region_line": 36
+                    "start_region_line": 36,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 45,
                     "end_region_line": 45,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "    for i in range(1,10):\n",
                     "lineno": 39,
                     "memory_samples": [],
@@ -1277,20 +1636,24 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 39,
-                    "start_region_line": 39
+                    "start_region_line": 39,
+                    "total_joule_usage": 0.0
                 },
                 {
-                    "elapsed_time_sec": 0.06521280587744134,
+                    "cpu_joule_usage": 2.029312495344543,
+                    "elapsed_time_sec": 0.048155651536646964,
                     "end_outermost_loop": 45,
                     "end_region_line": 45,
+                    "gpu_avg_power_limit": 45.0,
+                    "gpu_joule_usage": 0.0,
                     "line": "        print(i)\n",
                     "lineno": 40,
                     "memory_samples": [],
                     "n_avg_mb": 0.0,
                     "n_copy_mb_s": 0.0,
-                    "n_core_utilization": 0.05702749457110717,
-                    "n_cpu_percent_c": 0.5038529934795496,
-                    "n_cpu_percent_python": 0.2371072910491998,
+                    "n_core_utilization": 0.0624198498045895,
+                    "n_cpu_percent_c": 0.39813894275905687,
+                    "n_cpu_percent_python": 0.29628944577418187,
                     "n_gpu_avg_memory_mb": 0.0,
                     "n_gpu_peak_memory_mb": 0.0,
                     "n_gpu_percent": 0.0,
@@ -1299,15 +1662,25 @@ pre[class*="language-"] {
                     "n_mallocs": 0,
                     "n_peak_mb": 0.0,
                     "n_python_fraction": 0,
-                    "n_sys_percent": 0.0,
+                    "n_sys_percent": 0.04711798283318408,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 39,
-                    "start_region_line": 39
+                    "start_region_line": 39,
+                    "total_joule_usage": 2.029312495344543
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 45,
                     "end_region_line": 45,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "        for j in range(1,10):\n",
                     "lineno": 41,
                     "memory_samples": [],
@@ -1327,12 +1700,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 39,
-                    "start_region_line": 41
+                    "start_region_line": 41,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 45,
                     "end_region_line": 45,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "            x = doit1(x)\n",
                     "lineno": 42,
                     "memory_samples": [],
@@ -1352,12 +1735,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 39,
-                    "start_region_line": 41
+                    "start_region_line": 41,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 45,
                     "end_region_line": 45,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "            x = doit2(x)\n",
                     "lineno": 43,
                     "memory_samples": [],
@@ -1377,12 +1770,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 39,
-                    "start_region_line": 41
+                    "start_region_line": 41,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 45,
                     "end_region_line": 45,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "            x = doit3(x)\n",
                     "lineno": 44,
                     "memory_samples": [],
@@ -1402,12 +1805,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 39,
-                    "start_region_line": 41
+                    "start_region_line": 41,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 45,
                     "end_region_line": 45,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "            x = 1.01\n",
                     "lineno": 45,
                     "memory_samples": [],
@@ -1427,12 +1840,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 39,
-                    "start_region_line": 41
+                    "start_region_line": 41,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 46,
                     "end_region_line": 46,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "    return x\n",
                     "lineno": 46,
                     "memory_samples": [],
@@ -1452,12 +1875,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 46,
-                    "start_region_line": 36
+                    "start_region_line": 36,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 47,
                     "end_region_line": 47,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "\n",
                     "lineno": 47,
                     "memory_samples": [],
@@ -1477,12 +1910,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 47,
-                    "start_region_line": 47
+                    "start_region_line": 47,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 48,
                     "end_region_line": 48,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "import sys\n",
                     "lineno": 48,
                     "memory_samples": [],
@@ -1502,12 +1945,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 48,
-                    "start_region_line": 48
+                    "start_region_line": 48,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 49,
                     "end_region_line": 49,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "print(\"TESTME\")\n",
                     "lineno": 49,
                     "memory_samples": [],
@@ -1527,12 +1980,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 49,
-                    "start_region_line": 49
+                    "start_region_line": 49,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 50,
                     "end_region_line": 50,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "print(sys.argv)\n",
                     "lineno": 50,
                     "memory_samples": [],
@@ -1552,12 +2015,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 50,
-                    "start_region_line": 50
+                    "start_region_line": 50,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 51,
                     "end_region_line": 51,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "stuff()\n",
                     "lineno": 51,
                     "memory_samples": [],
@@ -1577,12 +2050,22 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 51,
-                    "start_region_line": 51
+                    "start_region_line": 51,
+                    "total_joule_usage": 0.0
                 },
                 {
+                    "cpu_joule_usage": 0.0,
                     "elapsed_time_sec": 0.0,
                     "end_outermost_loop": 52,
                     "end_region_line": 52,
+                    "gpu_avg_power_limit": [
+                        {
+                            "index": 0,
+                            "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+                            "power_limit": 45.0
+                        }
+                    ],
+                    "gpu_joule_usage": 0.0,
                     "line": "\n",
                     "lineno": 52,
                     "memory_samples": [],
@@ -1602,7 +2085,8 @@ pre[class*="language-"] {
                     "n_sys_percent": 0.0,
                     "n_usage_fraction": 0,
                     "start_outermost_loop": 52,
-                    "start_region_line": 52
+                    "start_region_line": 52,
+                    "total_joule_usage": 0.0
                 }
             ],
             "percent_cpu_time": 100.0
