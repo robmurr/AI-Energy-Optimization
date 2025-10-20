@@ -307,10 +307,10 @@ class ScaleneJSON:
             if stats.n_gpu_samples[fname][line_no] != 0:
                 elapsed_time_sec_gpu = n_gpu_samples / stats.n_gpu_samples[fname][line_no] * stats.elapsed_time
 
-            if(elapsed_time_sec_cpu >= elapsed_time_sec_gpu):
-                elapsed_time_sec = elapsed_time_sec_cpu
-            else:
-                elapsed_time_sec = elapsed_time_sec_gpu
+            # if(elapsed_time_sec_cpu >= elapsed_time_sec_gpu):
+            #     elapsed_time_sec = elapsed_time_sec_cpu
+            # else:
+            #     elapsed_time_sec = elapsed_time_sec_gpu
             
             #CPU AND GPU ENERGY FORMULA AND CALCULATIONS
             joules_gpu = 0.0
@@ -326,7 +326,7 @@ class ScaleneJSON:
                     gpu_avg_utilization = 0.0
                 
                 # Use the actual utilization for this specific GPU rather than the aggregate n_gpu_percent
-                power_gpu = gpu_avg_power_limit * gpu_avg_utilization # Convert utilization to percentage
+                power_gpu = (gpu_avg_power_limit * gpu_avg_utilization) / 100 # Convert utilization to percentage
                 gpu_joules = power_gpu * elapsed_time_sec_gpu
                 joules_gpu += gpu_joules
 
