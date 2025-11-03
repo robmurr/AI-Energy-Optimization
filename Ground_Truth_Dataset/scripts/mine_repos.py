@@ -10,12 +10,14 @@ from git import Repo
 from pathlib import Path
 import json
 
+# Try to load .env file if python-dotenv is available
 try:
     from dotenv import load_dotenv
     # Load from Ground_Truth_Dataset/.env
     env_path = Path(__file__).parent.parent / '.env'
     load_dotenv(dotenv_path=env_path)
 except ImportError:
+    # python-dotenv not installed, will rely on environment variables
     pass
 
 
