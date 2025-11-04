@@ -15,8 +15,8 @@ from scalene.scalene_leak_analysis import ScaleneLeakAnalysis
 from scalene.scalene_statistics import Filename, LineNumber, ScaleneStatistics
 from scalene.scalene_analysis import ScaleneAnalysis
 
-cpu_tdp = query_tdp_from_backend()
-
+# cpu_tdp = query_tdp_from_backend()
+cpu_tdp = 125.0
 
 class GPUDevice(str, Enum):
     nvidia = "GPU"
@@ -265,7 +265,7 @@ class ScaleneJSON:
         n_avg_mb = (
             stats.memory_aggregate_footprint[fname][line_no]
             if n_mallocs == 0
-            else stats.memory_aggregate_footprint[fname][line_no] / n_mallocs
+            else  stats.memory_aggregate_footprint[fname][line_no] / n_mallocs
         )
 
         # Peak memory consumed by this line.
@@ -299,43 +299,83 @@ class ScaleneJSON:
             )
         )
 
+        # Initialize joule variables 
+        joules_gpu = 0.0
+        joules_cpu = 0.0
+        joules_total = 0.0
 
         #EDIT FOR ELAPSED TIME FUNCTIONS
         try:
-            elapsed_time_sec_cpu = (n_cpu_samples_c / stats.total_cpu_samples * stats.elapsed_time) + (n_cpu_samples_python / stats.total_cpu_samples * stats.elapsed_time)
-            elapsed_time_sec_gpu = 0
-            if stats.n_gpu_samples[fname][line_no] != 0:
-                elapsed_time_sec_gpu = n_gpu_samples / stats.n_gpu_samples[fname][line_no] * stats.elapsed_time
+            elapsed_time = stats.elapsed_time or 0.0
+            total_cpu_samples = stats.total_cpu_samples or 1.0
+            n_gpu_line_samples = stats.n_gpu_samples.get(fname, {}).get(line_no, 0.0)
+            
+            print("Test 1")
+            print("n_cpu_samples_c =", type(n_cpu_samples_c), n_cpu_samples_c)
+            print("n_cpu_samples_python =", type(n_cpu_samples_python), n_cpu_samples_python)
+            print("elapsed_time =", type(elapsed_time), elapsed_time)
 
-            # if(elapsed_time_sec_cpu >= elapsed_time_sec_gpu):
-            #     elapsed_time_sec = elapsed_time_sec_cpu
-            # else:
-            #     elapsed_time_sec = elapsed_time_sec_gpu
+            elapsed_time_sec_cpu = 0.0
+            elapsed_time_sec_cpu = (n_cpu_samples_c / total_cpu_samples * elapsed_time) + (n_cpu_samples_python / total_cpu_samples * elapsed_time)
+            elapsed_time_sec_gpu = 0.0
+            
+            print("elapsed_time_sec_cpu =", type(elapsed_time_sec_cpu), elapsed_time_sec_cpu)
+            if n_gpu_samples and n_gpu_line_samples:
+                elapsed_time_sec_gpu = float(n_gpu_samples / n_gpu_line_samples * elapsed_time)
+
+            print("elapsed_time_sec_gpu =", type(elapsed_time_sec_gpu), elapsed_time_sec_gpu)
+            elapsed_time_sec = max(elapsed_time_sec_cpu, elapsed_time_sec_gpu)
+            print("elapsed_time_sec =", type(elapsed_time_sec), elapsed_time_sec)
             
             #CPU AND GPU ENERGY FORMULA AND CALCULATIONS
-            joules_gpu = 0.0
-            gpu_avg_power_limit = get_gpu_max_power_limit()
+            print("CPU and GPU Energy calculations")
+            power_cpu = float(cpu_tdp or 0.0) * float(mean_cpu_util or 0.0) 
+            joules_cpu = power_cpu * float(elapsed_time_sec_cpu or 0.0)
             
-            # Calculate for each GPU
-            for gpu_idx in stats.gpu_power_limits[fname][line_no]:
-                if stats.gpu_power_limits[fname][line_no][gpu_idx][0] != 0:
-                    gpu_avg_power_limit = stats.gpu_power_limits[fname][line_no][gpu_idx][1] / stats.gpu_power_limits[fname][line_no][gpu_idx][0]
-                    gpu_avg_utilization = stats.gpu_power_limits[fname][line_no][gpu_idx][2] / stats.gpu_power_limits[fname][line_no][gpu_idx][0]
-                else:
-                    gpu_avg_power_limit = 0.0
-                    gpu_avg_utilization = 0.0
+            print("CPU power calculation successful!!!!!")
+            # gpu_avg_power_limit = float(get_gpu_max_power_limit() or 0.0)
+
+            gpu_power_limits = get_gpu_max_power_limit() or 0.0
+            print("gpu_power_limits =", type(gpu_power_limits), gpu_power_limits)
+
+            if isinstance(gpu_power_limits, list) and gpu_power_limits:
+                gpu_avg_power_limit = float(gpu_power_limits[0].get('power_limit', 0.0))
+            else:
+                gpu_avg_power_limit = 0.0
+
+            print("gpu_avg_power_limit =", type(gpu_avg_power_limit), gpu_avg_power_limit)
+
+            gpu_util = 0.0
+            print(n_gpu_percent)
+            if n_gpu_percent != 0.0:
+                gpu_util = n_gpu_percent / 100.0
+            
+            joules_gpu = gpu_avg_power_limit * elapsed_time_sec_gpu * gpu_util
+
+            print("joules_gpu =", type(joules_gpu), joules_gpu)
+            print("joules_cpu =", type(joules_cpu), joules_cpu)
+            joules_total = joules_gpu + joules_cpu
+            print("joules_total =", type(joules_total), joules_total)
+            
+           # Calculate for each GPU
+           # for gpu_idx in stats.gpu_power_limits[fname][line_no]:
+           #     if stats.gpu_power_limits[fname][line_no][gpu_idx][0] != 0:
+           #         gpu_avg_power_limit = stats.gpu_power_limits[fname][line_no][gpu_idx][1] / stats.gpu_power_limits[fname][line_no][gpu_idx][0]
+           #         gpu_avg_utilization = stats.gpu_power_limits[fname][line_no][gpu_idx][2] / stats.gpu_power_limits[fname][line_no][gpu_idx][0]
+           #     else:
+           #         gpu_avg_power_limit = 0.0
+           #         gpu_avg_utilization = 0.0
                 
                 # Use the actual utilization for this specific GPU rather than the aggregate n_gpu_percent
-                power_gpu = (gpu_avg_power_limit * gpu_avg_utilization) / 100 # Convert utilization to percentage
-                gpu_joules = power_gpu * elapsed_time_sec_gpu
-                joules_gpu += gpu_joules
+           #     power_gpu = (gpu_avg_power_limit * gpu_avg_utilization) / 100 # Convert utilization to percentage
+           #     gpu_joules = power_gpu * elapsed_time_sec_gpu
+           #     joules_gpu += gpu_joules
 
-            power_cpu = cpu_tdp * mean_cpu_util
-            joules_cpu = power_cpu * elapsed_time_sec_cpu
             
-            joules_total = joules_cpu + joules_gpu
+            #joules_total += joules_gpu
         except Exception as e:
             print(f"Error Calculations")
+            print(e)
 
         payload = {
             "line": line,

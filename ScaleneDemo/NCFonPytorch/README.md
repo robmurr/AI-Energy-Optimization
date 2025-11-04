@@ -19,7 +19,12 @@ After downloading, right click on  the zipped file and click `extract all` then,
 Run the preprocessing script to prepare the dataset
 
 ```bash
-./prepare_dataset.sh
+ssh -v -i ~/.ssh/rob_gai_pub cc@<192.5.86.195
+```
+
+```bash
+pip install torch numpy pandas tqdm pyyaml
+./prepare_dataset.sh ml-20m ./data ./data/cache
 ```
 This will generate preprocessed data in ../../data/cache/ml-20m
 
@@ -46,7 +51,7 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - python=3.8
+  - python=3.10
   - pytorch
   - torchvision
   - cudatoolkit=11.3
@@ -66,8 +71,10 @@ conda activate ncf_pytorch
 ## Run Training with Scalene Profiling
 With the environment active, run the training script with scalene from the NCF directory:
 ```bash
-scalene -- python -m torch.distributed.launch --nproc_per_node=1 --use_env ncf.py --data ../../data/cache/ml-20m --checkpoint_dir ../../checkpoints --amp --epochs 1
+scalene ../ScaleneDemo/NCFonPytorch/NCF/ncf.py --data ../ScaleneDemo/NCFonPytorch/NCF/data/cache --checkpoint_dir ~/checkpoints --json --outfile profile.json
+
 ```
+
 This will generate `profile.json` and `profile.html` files in the current directory. Depending on your hardware, training may take a significant amount of time.
 Note:
 
@@ -92,6 +99,16 @@ The `--epochs 1` flag limits training to one epoch for testing purposes.
 conda --version
 ```
 
+- If conda is not installed:
+```bash
+mkdir -p ~/miniconda3
+curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh -o ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm ~/miniconda3/miniconda.sh
+source ~/miniconda3/bin/activate
+conda init --all
+```
+
 - If Scalene gives an error, ensure you are inside the environment and try:
 ```bash
 pip install scalene
@@ -107,3 +124,13 @@ If it returns False, the script will run on CPU.
 
 ## License
 This project follows the original license from the NVIDIA DeepLearningExamples repository.
+
+## Notes
+/home/cc/GreenAI/DeepLearningExamples/PyTorch/Recommendation/NCF
+/home/cc/GreenAI/AI-Energy-Optimization/ScaleneDemo/NCFonPytorch
+
+ File "/home/cc/GreenAI/AI-Energy-Optimization/scalene/scalene/scalene_json.py", line 362, in output_profile_line
+    "cpu_joule_usage": joules_cpu,
+UnboundLocalError: local variable 'joules_cpu' referenced before assignment
+
+
