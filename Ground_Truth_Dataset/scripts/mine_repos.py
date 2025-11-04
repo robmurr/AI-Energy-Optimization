@@ -90,7 +90,7 @@ def clone_repositories(repos, target_dir="repos"):
             continue
 
         try:
-            Repo.clone_from(repo_data["clone_url"], str(repo_path), depth=1)
+            Repo.clone_from(repo_data["clone_url"], str(repo_path))
             print(f"cloned successfully ({repo_data['stars']} stars)")
             cloned.append(repo_data)
         except Exception as e:
