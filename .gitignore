@@ -5,3 +5,6 @@
 .DS_Store
 */.DS_Store
 **/.DS_Store
+
+pipeline/commit_mining/setup/ml_repos_isolated/successful_clones/
+pipeline/commit_mining/setup/ml_repos_isolated/failed_clones/
