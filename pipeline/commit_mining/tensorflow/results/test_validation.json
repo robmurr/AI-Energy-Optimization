@@ -1,0 +1,55 @@
+[
+  {
+    "repo": "funNLP",
+    "has_tests": false,
+    "test_indicators": [],
+    "test_framework": null,
+    "test_file_count": 0
+  },
+  {
+    "repo": "keras",
+    "has_tests": true,
+    "test_indicators": [
+      "pyproject.toml",
+      "integration_tests/",
+      ".github/workflows",
+      "50 test file(s)"
+    ],
+    "test_framework": "pytest",
+    "test_file_count": 50
+  },
+  {
+    "repo": "models",
+    "has_tests": true,
+    "test_indicators": [
+      ".github/workflows",
+      "50 test file(s)"
+    ],
+    "test_framework": "unittest",
+    "test_file_count": 50
+  },
+  {
+    "repo": "ray",
+    "has_tests": true,
+    "test_indicators": [
+      "pytest.ini",
+      "pyproject.toml",
+      ".github/workflows",
+      "50 test file(s)"
+    ],
+    "test_framework": "pytest",
+    "test_file_count": 50
+  },
+  {
+    "repo": "Real-Time-Voice-Cloning",
+    "has_tests": true,
+    "test_indicators": [
+      "pyproject.toml",
+      "tests/",
+      ".github/workflows",
+      "1 test file(s)"
+    ],
+    "test_framework": "pytest",
+    "test_file_count": 1
+  }
+]

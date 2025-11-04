@@ -54,7 +54,7 @@ def process_commits(csv_path, repos_dir="repos", checkouts_dir="checkouts", max_
     print(f"Processing {len(commits)} commits...\n")
 
     # Prepare paths
-    base_path = Path(__file__).parent.parent
+    base_path = Path(__file__).parent
     repos_path = base_path / repos_dir
     checkouts_path = base_path / checkouts_dir
     checkouts_path.mkdir(exist_ok=True)

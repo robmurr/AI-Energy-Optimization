@@ -20,14 +20,14 @@ REFACTORING_KEYWORDS = [
 ]
 
 def load_repo_metadata(metadata_file="results/repo_metadata.json"):
-    metadata_path = Path(__file__).parent.parent / metadata_file
+    metadata_path = Path(__file__).parent / metadata_file
 
     with open(metadata_path, 'r') as f:
         return json.load(f)
 
 def load_test_validation(validation_file="results/test_validation.json"):
     """Load test validation results and return repos with tests."""
-    validation_path = Path(__file__).parent.parent / validation_file
+    validation_path = Path(__file__).parent / validation_file
 
     if not validation_path.exists():
         print(f"Warning: {validation_file} not found. Proceeding with all repos.")
@@ -64,7 +64,16 @@ def extract_commits_from_repo(repo_path, repo_name, max_commits=200):
     commit_count = 0
 
     try:
-        for commit in Repository(repo_path, only_no_merge=True).traverse_commits():
+        # Verify path exists before attempting to open repository
+        repo_path_obj = Path(repo_path)
+        if not repo_path_obj.exists():
+            print(f"    Error: Repository path does not exist: {repo_path}")
+            return records
+        
+        # Try to open the repository
+        repo = Repository(str(repo_path_obj.resolve()), only_no_merge=True)
+        
+        for commit in repo.traverse_commits():
             # Stop if we've collected enough commits
             if commit_count >= max_commits:
                 break
@@ -102,7 +111,7 @@ def extract_commits_from_repo(repo_path, repo_name, max_commits=200):
                 commit_count += 1
 
     except Exception as e:
-        print(f"Warning: Error processing {repo_name}: {e}")
+        print(f"    Warning: Error processing {repo_name} at {repo_path}: {type(e).__name__}: {e}")
 
     return records
 
@@ -110,7 +119,7 @@ def mine_commits(repos_dir="repos", max_commits_per_repo=500, repos_with_tests=N
     """
     only processes repos with test suites if repos_with_tests is provided.
     """
-    repos_path = Path(__file__).parent.parent / repos_dir
+    repos_path = Path(__file__).parent / repos_dir
 
     if not repos_path.exists():
         print(f"Error: {repos_dir} directory not found.")
@@ -140,7 +149,20 @@ def mine_commits(repos_dir="repos", max_commits_per_repo=500, repos_with_tests=N
         repo_name = repo_dir.name
         print(f"[{idx}/{len(repo_dirs)}] Processing {repo_name}...")
 
-        records = extract_commits_from_repo(str(repo_dir), repo_name, max_commits_per_repo)
+        # Ensure we have an absolute path to the repository
+        repo_path = repo_dir.resolve()
+        
+        # Verify the repository directory exists and has a .git folder
+        if not repo_path.exists():
+            print(f"  -> Warning: Repository path does not exist: {repo_path}")
+            continue
+        
+        git_path = repo_path / ".git"
+        if not git_path.exists():
+            print(f"  -> Warning: Not a valid git repository (no .git folder): {repo_path}")
+            continue
+
+        records = extract_commits_from_repo(str(repo_path), repo_name, max_commits_per_repo)
         all_records.extend(records)
 
         print(f"  -> Found {len(records)} candidate commits")
