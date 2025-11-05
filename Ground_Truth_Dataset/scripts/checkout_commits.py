@@ -41,7 +41,7 @@ def process_commits(csv_path, repos_dir="repos", checkouts_dir="checkouts", max_
 
     # Load commits
     commits = []
-    with open(csv_path, 'r') as f:
+    with open(csv_path, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             commits.append(row)
