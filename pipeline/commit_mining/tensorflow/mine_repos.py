@@ -129,7 +129,7 @@ def main():
         print("No repositories found. Exiting.")
         return 1
 
-    print(f"\nFound {len(repos)} PyTorch repositories:")
+    print(f"\nFound {len(repos)} Tensorflow repositories:")
     for i, repo in enumerate(repos, 1):
         print(f"  {i}. {repo['full_name']} ({repo['stars']} stars)")
 
