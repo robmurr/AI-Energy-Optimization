@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Mine Matplotlib repositories from GitHub.
+Mine Tensorflow repositories from GitHub.
 """
 
 import os
@@ -13,7 +13,7 @@ import json
 try:
     from dotenv import load_dotenv
     # Load from Ground_Truth_Dataset/.env
-    env_path = Path(__file__).parent.parent / '.env'
+    env_path = Path(__file__).parent / '.env'
     load_dotenv(dotenv_path=env_path)
 except ImportError:
     pass
@@ -23,8 +23,8 @@ def fetch_pytorch_repos(token=None, max_repos=10, min_stars=50):
 
     headers = {"Authorization": f"token {token}"} if token else {}
 
-    # Search for Python repos with matplotlib in name or description
-    query = f"matplotlib language:Python stars:>={min_stars}"
+    # Search for Python repos with torch/pytorch in name or description
+    query = f"tensorflow language:Python stars:>={min_stars}"
     url = f"https://api.github.com/search/repositories"
     params = {
         "q": query,
@@ -68,7 +68,7 @@ def clone_repositories(repos, target_dir="repos"):
     Clone repositories to local directory.
 
     """
-    target_path = Path(__file__).parent.parent / target_dir
+    target_path = Path(__file__).parent / target_dir
     target_path.mkdir(exist_ok=True)
 
     print(f"\nCloning {len(repos)} repositories to {target_path}...")
@@ -90,7 +90,7 @@ def clone_repositories(repos, target_dir="repos"):
             continue
 
         try:
-            Repo.clone_from(repo_data["clone_url"], str(repo_path), depth=1)
+            Repo.clone_from(repo_data["clone_url"], str(repo_path))
             print(f"cloned successfully ({repo_data['stars']} stars)")
             cloned.append(repo_data)
         except Exception as e:
@@ -99,7 +99,7 @@ def clone_repositories(repos, target_dir="repos"):
     return cloned, skipped
 
 def save_repo_metadata(repos, filename="repo_metadata.json"):
-    metadata_path = Path(__file__).parent.parent / "results" / filename
+    metadata_path = Path(__file__).parent / "results" / filename
     metadata_path.parent.mkdir(exist_ok=True)
 
     with open(metadata_path, 'w') as f:
@@ -129,7 +129,7 @@ def main():
         print("No repositories found. Exiting.")
         return 1
 
-    print(f"\nFound {len(repos)} PyTorch repositories:")
+    print(f"\nFound {len(repos)} Tensorflow repositories:")
     for i, repo in enumerate(repos, 1):
         print(f"  {i}. {repo['full_name']} ({repo['stars']} stars)")
 
