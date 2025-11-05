@@ -23,7 +23,7 @@ def fetch_pytorch_repos(token=None, max_repos=10, min_stars=50):
 
     headers = {"Authorization": f"token {token}"} if token else {}
 
-    # Search for Python repos with torch/pytorch in name or description
+    # Search for Python repos with matplotlib in name or description
     query = f"matplotlib language:Python stars:>={min_stars}"
     url = f"https://api.github.com/search/repositories"
     params = {
@@ -129,7 +129,7 @@ def main():
         print("No repositories found. Exiting.")
         return 1
 
-    print(f"\nFound {len(repos)} PyTorch repositories:")
+    print(f"\nFound {len(repos)} Matplotlib repositories:")
     for i, repo in enumerate(repos, 1):
         print(f"  {i}. {repo['full_name']} ({repo['stars']} stars)")
 
