@@ -183,7 +183,7 @@ def main():
         help='Only output commits with exactly 1 modified file'
     )
     parser.add_argument(
-        '--max-commits',
+        '--max',
         type=int,
         default=500,
         help='Maximum commits to extract per repository (default: 500)'
@@ -194,9 +194,11 @@ def main():
     print("="*60)
     print("COMMIT MINING")
     print("="*60)
+    print(f"Max commits per repository: {args.max}")
 
     if args.single:
         print("Filter: Only commits with exactly 1 modified file will be saved")
+    print()
 
     # Load repository metadata from Phase 1
     repos = load_repo_metadata()
@@ -215,7 +217,7 @@ def main():
         print("No test validation found - processing all repositories")
 
     # Mine commits (only from repos with tests)
-    df = mine_commits(max_commits_per_repo=args.max_commits, repos_with_tests=repos_with_tests)
+    df = mine_commits(max_commits_per_repo=args.max, repos_with_tests=repos_with_tests)
 
     if df.empty:
         print("\nError: No candidate commits found.")

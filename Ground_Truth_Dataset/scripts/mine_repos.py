@@ -9,6 +9,7 @@ import requests
 from git import Repo
 from pathlib import Path
 import json
+import argparse
 
 try:
     from dotenv import load_dotenv
@@ -108,9 +109,23 @@ def save_repo_metadata(repos, filename="repo_metadata.json"):
     print(f"\nSaved metadata to {metadata_path}")
 
 def main():
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(
+        description='Mine PyTorch repositories from GitHub'
+    )
+    parser.add_argument(
+        '--max',
+        type=int,
+        default=10,
+        help='Maximum number of repositories to fetch (default: 10)'
+    )
+
+    args = parser.parse_args()
+
     print("="*60)
     print("REPOSITORY MINING")
     print("="*60)
+    print(f"Max repositories to fetch: {args.max}")
     print()
 
     # Load GitHub token from environment variable
@@ -122,8 +137,8 @@ def main():
         return 1
     print()
 
-    # Fetch repositories (testing with 5 repos)
-    repos = fetch_pytorch_repos(token=token, max_repos=5, min_stars=50)
+    # Fetch repositories
+    repos = fetch_pytorch_repos(token=token, max_repos=args.max, min_stars=100)
 
     if not repos:
         print("No repositories found. Exiting.")
