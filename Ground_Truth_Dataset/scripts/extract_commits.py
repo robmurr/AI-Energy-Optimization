@@ -89,13 +89,16 @@ def extract_commits_from_repo(repo_path, repo_name, max_commits=200):
                         modified_files.append(mod.new_path or mod.old_path)
 
             if has_relevant_change:
+                # Replace newlines in commit message with spaces to avoid multi-line CSV fields
+                clean_message = " ".join(commit.msg.strip().split())
+
                 records.append({
                     "repo": repo_name,
                     "commit_hash": commit.hash,
                     "parent_hash": commit.parents[0] if commit.parents else None,
                     "author": commit.author.name,
                     "date": commit.author_date.isoformat(),
-                    "message": commit.msg.strip(),
+                    "message": clean_message,
                     "files_changed": len(modified_files),
                     "modified_files": "; ".join(modified_files[:5])  # Limit to first 5 files
                 })
