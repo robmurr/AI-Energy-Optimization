@@ -9,6 +9,7 @@ import pandas as pd
 from pathlib import Path
 from pydriller import Repository
 import json
+import argparse
 
 # Keywords
 REFACTORING_KEYWORDS = [
@@ -150,17 +151,52 @@ def mine_commits(repos_dir="repos", max_commits_per_repo=500, repos_with_tests=N
 
     return pd.DataFrame(all_records)
 
-def save_results(df, output_file="candidate_commits.csv"):
+def save_results(df, output_file="candidate_commits.csv", single_file_only=False):
+    """
+    Save results to CSV file, optionally filtering for single file commits.
+
+    Args:
+        df: DataFrame with commit data
+        output_file: Output filename
+        single_file_only: If True, only save commits with exactly 1 modified file
+    """
+    if single_file_only:
+        original_count = len(df)
+        df = df[df['files_changed'] == 1].copy()
+        filtered_count = len(df)
+        print(f"\nFiltered to single-file commits: {filtered_count} of {original_count} ({filtered_count/original_count*100:.2f}%)")
+
     output_path = Path(__file__).parent.parent / output_file
     df.to_csv(output_path, index=False)
-    print(f"\nSaved results to {output_path}")
+    print(f"Saved results to {output_path}")
 
 
 def main():
     """Main execution function."""
+    # Parse command line arguments
+    parser = argparse.ArgumentParser(
+        description='Extract PyTorch optimization/refactoring commits from repositories'
+    )
+    parser.add_argument(
+        '--single',
+        action='store_true',
+        help='Only output commits with exactly 1 modified file'
+    )
+    parser.add_argument(
+        '--max-commits',
+        type=int,
+        default=500,
+        help='Maximum commits to extract per repository (default: 500)'
+    )
+
+    args = parser.parse_args()
+
     print("="*60)
     print("COMMIT MINING")
     print("="*60)
+
+    if args.single:
+        print("Filter: Only commits with exactly 1 modified file will be saved")
 
     # Load repository metadata from Phase 1
     repos = load_repo_metadata()
@@ -179,14 +215,14 @@ def main():
         print("No test validation found - processing all repositories")
 
     # Mine commits (only from repos with tests)
-    df = mine_commits(max_commits_per_repo=500, repos_with_tests=repos_with_tests)
+    df = mine_commits(max_commits_per_repo=args.max_commits, repos_with_tests=repos_with_tests)
 
     if df.empty:
         print("\nError: No candidate commits found.")
         return 1
 
-    # Save results
-    save_results(df)
+    # Save results (with optional filtering)
+    save_results(df, single_file_only=args.single)
 
     print("\nComplete!")
     print("="*60 + "\n")
