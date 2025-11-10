@@ -33,7 +33,7 @@ def fetch_pytorch_repos(token=None, max_repos=10, min_stars=50):
         "per_page": max_repos
     }
 
-    print(f"Searching GitHub for Matplotlib repos (≥{min_stars} stars)...")
+    print(f"Searching GitHub for Tensorflow repos (>={min_stars} stars)...")
 
     try:
         response = requests.get(url, headers=headers, params=params)

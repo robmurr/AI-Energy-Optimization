@@ -204,7 +204,7 @@ def process_commits(csv_path, repos_dir="repos", max_commits=None):
     Process commits and map modified files to relevant tests.
     """
     csv_path = Path(csv_path)
-    repos_path = Path(__file__).parent.parent / repos_dir
+    repos_path = Path(__file__).parent / repos_dir
 
     if not csv_path.exists():
         print(f"Error: {csv_path} not found")
@@ -212,7 +212,7 @@ def process_commits(csv_path, repos_dir="repos", max_commits=None):
 
     # Read commits
     commits = []
-    with open(csv_path, 'r') as f:
+    with open(csv_path, 'r', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         for row in reader:
             commits.append(row)
@@ -263,7 +263,7 @@ def process_commits(csv_path, repos_dir="repos", max_commits=None):
 
 
 def save_results(results, output_file="test_mapping.csv"):
-    output_path = Path(__file__).parent.parent / output_file
+    output_path = Path(__file__).parent / output_file
 
     with open(output_path, 'w', newline='') as f:
         fieldnames = [
@@ -309,12 +309,21 @@ def main():
     print("="*60)
     print()
 
+    # Look for candidate_commits.csv in current directory first, then parent
+    csv_path = Path(__file__).parent / "candidate_commits.csv"
+    if not csv_path.exists():
+        csv_path = Path(__file__).parent.parent / "candidate_commits.csv"
+    
+    if not csv_path.exists():
+        print(f"Error: candidate_commits.csv not found in {Path(__file__).parent} or parent directory")
+        return 1
+
     # Process commits
-    results = process_commits("candidate_commits.csv")
+    results = process_commits(str(csv_path))
 
     if not results:
-        print("\nNo results to save.")
-        return 1
+        print("\nNo results to save (no tests found for any commits).")
+        return 0  # Not an error, just no tests found
 
     # Save results
     save_results(results)
