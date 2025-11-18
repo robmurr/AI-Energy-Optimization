@@ -119,8 +119,8 @@ def find_test_by_imports(repo_path, modified_file):
             ])
 
         for pattern in patterns:
+            # OPTION 1: Use grep (fast, but only works on Mac/Linux with grep installed)
             try:
-                # Use grep to search for the import pattern in test files
                 result = subprocess.run(
                     ['grep', '-r', '-l', '--include=*.py', pattern, str(test_dir_path)],
                     capture_output=True,
@@ -140,6 +140,27 @@ def find_test_by_imports(repo_path, modified_file):
             except (subprocess.TimeoutExpired, subprocess.SubprocessError):
                 # Skip if grep fails or times out
                 pass
+
+            '''
+            # OPTION 2: Pure Python search (cross-platform, works on Windows)
+            # Remove the triple quotes above and below to enable this version
+            # Comment out OPTION 1 if using this
+            try:
+                # Search for pattern in Python files recursively
+                for py_file in test_dir_path.rglob('*.py'):
+                    try:
+                        with open(py_file, 'r', encoding='utf-8', errors='ignore') as f:
+                            content = f.read()
+                            if pattern in content:
+                                test_file = py_file.relative_to(repo_path)
+                                candidates.append(str(test_file))
+                    except (IOError, OSError):
+                        # Skip files we can't read
+                        continue
+            except Exception:
+                # Skip if search fails
+                pass
+            '''
 
     # Remove duplicates while preserving order
     return list(dict.fromkeys(candidates))
