@@ -125,6 +125,8 @@ def find_test_by_imports(repo_path, modified_file):
                     ['grep', '-r', '-l', '--include=*.py', pattern, str(test_dir_path)],
                     capture_output=True,
                     text=True,
+                    encoding='utf-8',
+                    errors='ignore',
                     timeout=5
                 )
 
@@ -212,7 +214,7 @@ def process_commits(csv_path, repos_dir="repos", max_commits=None):
 
     # Read commits
     commits = []
-    with open(csv_path, 'r') as f:
+    with open(csv_path, 'r', encoding='utf-8', errors='ignore') as f:
         reader = csv.DictReader(f)
         for row in reader:
             commits.append(row)
@@ -265,7 +267,7 @@ def process_commits(csv_path, repos_dir="repos", max_commits=None):
 def save_results(results, output_file="test_mapping.csv"):
     output_path = Path(__file__).parent.parent / output_file
 
-    with open(output_path, 'w', newline='') as f:
+    with open(output_path, 'w', newline='', encoding='utf-8') as f:
         fieldnames = [
             'repo', 'commit_hash', 'modified_files', 'modified_file_count',
             'relevant_tests', 'test_count', 'test_strategy'
