@@ -1,0 +1,162 @@
+repo,commit_hash,modified_files,modified_file_count,relevant_tests,test_count,test_strategy
+ComfyUI,5cfe38f41c7091b0fd954877d9d7427a8b438b1a,comfy\cli_args.py; execution.py; main.py; tests\inference\test_execution.py; tests\inference\testing_nodes\testing-pack\conditions.py,5,tests\inference,1,directory
+ComfyUI,dafbe321d2dfbe2cabd9eb32e88f8088996cd524,execution.py; tests\inference\test_execution.py; tests\inference\testing_nodes\testing-pack\specific_tests.py; tests\inference\testing_nodes\testing-pack\stubs.py,4,tests\inference,1,directory
+ComfyUI,2b653e8c18f18792e7f080df611c8a35f1d0fdf4,comfy\utils.py; execution.py; main.py; server.py; tests\inference\test_async_nodes.py,5,tests\inference,1,directory
+ComfyUI,b1467da4803017a418c32c159525767f45871ca3,execution.py; main.py; tests\execution\test_execution.py,3,tests\execution,1,directory
+ComfyUI,b7992f871af38d89a459080caa57cc359ed93a46,execution.py; main.py; tests\execution\test_execution.py,3,tests\execution,1,directory
+ComfyUI,4739d7717fea56750d0ef98c64268d9c1e487d78,execution.py; main.py; tests\execution\test_execution.py,3,tests\execution,1,directory
+pytorch,e9f9fd3727bca299111c6b7b23a5fdbc61832484,setup.py; test\legacy\nn.py; test\test.py; tools\cwrap\plugins\StandaloneExtension.py; tools\nnwrap\generate_wrappers.py,5,test\test_nn.py,1,convention
+pytorch,980300b3816b745cb93ece7092e1240a2d904d46,test\common.py; test\test_autograd.py; test\test_nn.py; torch\autograd\variable.py; torch\nn\modules\loss.py,5,test\autograd,1,directory
+pytorch,0325e2f646279229890f368d54a09a99a14c7074,setup.py; test\test_autograd.py; torch\_utils.py; torch\autograd\__init__.py; torch\autograd\engine.py,5,test\autograd,1,directory
+pytorch,e3e786e35eb22cd963185c3eafb79b0430856070,test\data\network1.py; test\data\network2.py; test\test_torch.py; torch\nn\modules\container.py; torch\serialization.py,5,test\test_serialization.py,1,convention
+pytorch,df59b89fbb0c64224526405acb1528021655e3e0,test\test_optim.py; torch\legacy\optim\adamax.py; torch\optim\adamax.py,3,test\optim,1,directory
+pytorch,09493603f6164446f811f94ab24850d9bbb53676,test\test_optim.py; torch\optim\adamax.py,2,test\optim,1,directory
+pytorch,aea6ba4bcd850ecc1b1280c9bc229679b859f030,test\test_dataloader.py; torch\utils\data\dataloader.py,2,test\test_dataloader.py,1,convention
+pytorch,be3276fcdd2cf7395c3c176bd6c4ec3964a7151b,test\test_dataloader.py; torch\utils\data\dataloader.py,2,test\test_dataloader.py,1,convention
+pytorch,fd92470e23e24c92fd692b826e5eee32e54527e4,setup.py; torch\nn\_functions\batchnorm.py; torch\nn\_functions\thnn\batchnorm.py; torch\nn\functional.py,4,test\nn,1,directory
+pytorch,676ffee542e00651845067f73e2646b24c6c26c8,test\test_optim.py; torch\optim\optimizer.py,2,test\optim,1,directory
+pytorch,3238786ea161936f1b520b429fa0c55f27352646,torch\optim\optimizer.py,1,test\optim,1,directory
+pytorch,ecfcf39f302f7bb193884f72ef2bd59141e5c46c,test\test_optim.py; torch\optim\adamax.py; torch\optim\lbfgs.py; torch\optim\optimizer.py; torch\optim\sgd.py,5,test\optim,1,directory
+pytorch,60d1852c7bba771915ddc6d9dffd93ffaf63e2d5,setup.py; torch\distributed\__init__.py; torch\distributed\remote_types.py,3,test\distributed,1,directory
+pytorch,6c77fa91211f398d9cd5d9fe1a4407878b915ef5,torch\nn\_functions\thnn\sparse.py; torch\nn\modules\rnn.py,2,test\test_sparse.py,1,convention
+pytorch,bd5303010dbe3b682d65e198f6ff5dfc3cb6c54a,setup.py; test\test_autograd.py; test\test_multiprocessing.py; torch\autograd\function.py; torch\autograd\variable.py,5,test\autograd,1,directory
+pytorch,bd7a5ad6f070de9df72496b7b6ebbfc0542082b1,torch\optim\optimizer.py,1,test\optim,1,directory
+pytorch,34ce58c909543632a0ba41791c9a83f29580b23b,setup.py; test\test_autograd.py; torch\cuda\streams.py; torch\nn\functional.py,4,test\nn,1,directory
+pytorch,e216f557fdc952de82d52d7355141f57ea9b30c0,test\test_dataloader.py; torch\utils\data\dataloader.py,2,test\test_dataloader.py,1,convention
+pytorch,b9aef6bc03da94ef3398c6244fe92f0985d0610b,torch\optim\adamax.py,1,test\optim,1,directory
+pytorch,476d85dd3f8ee48f6affc836d5c7fbd8ccfab200,torch\utils\data\dataloader.py,1,test\test_dataloader.py,1,convention
+pytorch,5c79046d39a0d585744b8c195bc3500a657707f7,torch\optim\adamax.py,1,test\optim,1,directory
+pytorch,9f2a5d804d812607afc7a0e549e0849c5ae11a73,test\test_utils.py; torch\utils\data\dataloader.py,2,test\test_dataloader.py,1,convention
+pytorch,701e63107fb3c177e83850a0389f0d6580d8fe45,test\common.py; test\test_nn.py; test\test_sparse.py; test\test_torch.py; torch\nn\_functions\thnn\sparse.py,5,test\test_sparse.py,1,convention
+pytorch,24d92b5d9f5f772aea1bf224937a4368698d6528,tools\cwrap\plugins\THPPlugin.py; torch\functional.py; torch\storage.py; torch\utils\data\dataloader.py,4,test\test_dataloader.py,1,convention
+pytorch,94b147fd41f24699a27e042ee6600799d7d93e7a,test\test_dataloader.py; torch\utils\data\dataloader.py,2,test\test_dataloader.py,1,convention
+pytorch,9643be76f95cb8c6e2514aea42602404403df743,torch\nn\_functions\thnn\sparse.py,1,test\test_sparse.py,1,convention
+pytorch,2ca787fcf40d65065a2cf036d238f748ec18d227,setup.py; test\common.py; test\test_autograd.py; torch\autograd\__init__.py; torch\autograd\engine.py,5,test\autograd,1,directory
+pytorch,34804e96009acc8956fefb19c52fcf322d5745e6,torch\distributed\__init__.py,1,test\distributed,1,directory
+pytorch,a76098ac1532d5e9ee24b4776258ae731627f8e3,test\test_optim.py; torch\optim\optimizer.py,2,test\optim,1,directory
+pytorch,12813b88f6b59657645fa4965c39900519db7df9,torch\_utils.py; torch\cuda\comm.py; torch\distributed\__init__.py; torch\distributed\collectives.py; torch\nn\parallel\data_parallel.py,5,test\distributed,1,directory
+pytorch,f09027bc2913d8ab010085040c189eecd5681c12,test\test_dataloader.py; torch\utils\data\dataloader.py; torch\utils\data\sampler.py,3,test\test_dataloader.py,1,convention
+pytorch,da0fad8a7a3721eccdd60460914b62dda95daff9,test\test_nn.py; torch\autograd\_functions\blas.py; torch\autograd\variable.py; torch\nn\_functions\linear.py; torch\nn\functional.py,5,test\autograd; test\nn,2,directory
+pytorch,8915e2710c57cefd4bb5a7876216f08d3bc8c92f,test\test_distributed.py; torch\distributed\__init__.py; torch\distributed\collectives.py; torch\utils\data\distributed.py,4,test\distributed,1,directory
+pytorch,e69063405e1c3da76a838f3167bc0e334ecdd2a0,torch\optim\optimizer.py,1,test\optim,1,directory
+pytorch,a797ab93433b4b8e0bd06c60ea3fe0710eec2a5e,setup.py; torch\autograd\__init__.py; torch\autograd\ir.py,3,test\autograd,1,directory
+pytorch,3055b69f63fe95ab7a38ac044e9f2960857f1675,torch\autograd\__init__.py; torch\autograd\ir.py,2,test\autograd,1,directory
+pytorch,e91966a0b48e46a9aa8d3312aef486af29bf49ef,test\test_jit.py; torch\autograd\function.py; torch\jit.py,3,test\autograd; test\test_jit.py,2,convention
+pytorch,82efbe349b7abd1b621f5ae4bcf8169b7474774d,test\test_jit.py; torch\jit.py,2,test\test_jit.py,1,convention
+pytorch,d8e2ab632e24e397a72d13d01d69a32699453f8e,test\test_jit.py; torch\jit.py,2,test\test_jit.py,1,convention
+pytorch,230721e198f10341d0c1ff0b422c0db3c4dbc9f4,test\test_jit.py; test\test_onnx.py; torch\jit.py,3,test\test_jit.py,1,convention
+pytorch,aafa35e0b5bcb6bf055d5bc45cbe23e19e448727,test\test_jit.py; torch\jit.py,2,test\test_jit.py,1,convention
+pytorch,67b2923a9dc829537a4f275c0875027722b015b5,torch\jit.py,1,test\test_jit.py,1,convention
+pytorch,faa6fdfa18b5180a4275387f83fc444cc6e2e8d1,torch\nn\functional.py,1,test\nn,1,directory
+pytorch,f7f37306e4583e4839ed291e2f55be41457689eb,test\test_jit.py; torch\jit\__init__.py,2,test\jit,1,directory
+pytorch,129336cb06fa3b78cf403859e32a332bcdadac10,test\test_torch.py; torch\utils\dlpack.py,2,test\test_dlpack.py,1,convention
+pytorch,f76d6c029c443606559122440299b724f1b7ff30,test\test_optim.py; torch\optim\__init__.py; torch\optim\adadelta.py; torch\optim\adagrad.py; torch\optim\adam.py,5,test\optim,1,directory
+pytorch,7605d196fe21a03e4a1841af01ee1955dc52c114,torch\jit\__init__.py,1,test\jit,1,directory
+pytorch,ef4b19f767021e33407e518a0943d3ea7d978f8a,test\test_jit.py; torch\contrib\_graph_vis.py; torch\onnx\__init__.py; torch\onnx\symbolic.py,4,test\onnx,1,directory
+pytorch,cc7f09a3727c5095ccbadc16869522ada5e724e0,setup.py; test\test_autograd.py; torch\autograd\profiler.py,3,test\autograd,1,directory
+pytorch,9c498aa52340e3d8281091ab39663d5aa8517911,test\test_autograd.py; torch\autograd\variable.py,2,test\autograd,1,directory
+pytorch,c25a1493cd4063d721e6e79b5bacd94c897b1512,torch\autograd\profiler.py,1,test\autograd,1,directory
+pytorch,af9fd35d82b09de13bf0e91647d3409e396e141c,test\test_optim.py; torch\optim\lbfgs.py; torch\optim\optimizer.py,3,test\optim,1,directory
+pytorch,926ed2b280f84ba9aa175a37553ddb5186364b59,test\test_distributed.py; torch\distributed\__init__.py; torch\nn\parallel\distributed.py,3,test\distributed,1,directory
+pytorch,4c7219b3b086d73d3a0b48206118b84c08610a18,torch\autograd\variable.py,1,test\autograd,1,directory
+pytorch,1c0fbd27a10b7036b1db643014e65cae7f6d0266,aten\src\ATen\copy_wrapper.py; aten\src\ATen\function_wrapper.py; aten\src\ATen\gen.py; setup.py; tools\autograd\gen_variable_type.py,5,test\autograd,1,directory
+pytorch,7e1fccb8f5ea2eb0e8e1fceb40440bdffd3941c7,torch\autograd\variable.py,1,test\autograd,1,directory
+pytorch,8199edf5c1fb7073694e18954caa87602fbcce64,aten\src\ATen\function_wrapper.py; tools\autograd\gen_variable_type.py,2,test\autograd,1,directory
+pytorch,6d72c829855607953ac001a21e34692f278f6439,aten\src\ATen\function_wrapper.py; setup.py; test\test_jit.py; tools\autograd\gen_variable_type.py; torch\onnx\__init__.py,5,test\autograd; test\onnx,2,directory
+pytorch,bec0349280db8ffef00c808ae5d7546cd9ab16d4,aten\src\ATen\copy_wrapper.py; setup.py; test\test_cuda.py; torch\autograd\_functions\tensor.py; torch\autograd\variable.py,5,test\autograd,1,directory
+pytorch,68c0998cbe29e950a8171bd7429704eca750459f,test\test_optim.py; torch\optim\__init__.py; torch\optim\adam.py; torch\optim\sparse_adam.py,4,test\optim,1,directory
+pytorch,0876bab8b782ef5e91b4830001a87ed8065ba43c,aten\src\ATen\gen.py; torch\distributions\gamma.py,2,test\distributions,1,directory
+pytorch,bc6bd62bd6805136117d860819a361ef78608462,torch\utils\data\dataloader.py,1,test\test_dataloader.py,1,convention
+pytorch,a88a8ec8278e19f52cfd6e75a685ce0e9200b96b,setup.py; tools\autograd\gen_variable_type.py; torch\legacy\nn\VolumetricConvolution.py; torch\nn\functional.py; torch\onnx\symbolic.py,5,test\autograd; test\nn; test\onnx,3,directory
+pytorch,5b8fe5cbb5b696d49d1480942f1904f92444857b,setup.py; torch\nn\functional.py; torch\onnx\symbolic.py,3,test\nn; test\onnx,2,directory
+pytorch,5f7c5502b8fd3c94c74a823f6a83d936892eb9dd,test\test_jit.py; test\test_nn.py; tools\autograd\gen_variable_type.py; torch\backends\cudnn\__init__.py; torch\nn\functional.py,5,test\autograd; test\nn,2,directory
+pytorch,89acc10f85d45284157a28d224538f62e329f5a7,test\test_optim.py; torch\optim\optimizer.py,2,test\optim,1,directory
+pytorch,04ad23252a3ce592c5e5c30c6fd87000f8d178cf,aten\src\ATen\gen.py; test\test_autograd.py; tools\autograd\gen_autograd.py; tools\autograd\gen_variable_type.py,4,test\autograd,1,directory
+pytorch,eb857ec36760eac9db02f9d0cd6426a1415f3718,torch\_tensor_str.py; torch\autograd\variable.py,2,test\autograd,1,directory
+pytorch,05ebd152070bf161b7abb78e88588dd78b1e6f89,test\test_nn.py; tools\autograd\gen_variable_type.py,2,test\autograd,1,directory
+pytorch,8c2d35c75442859421d0c130979aaf05d3a2d2d4,test\test_distributions.py; torch\distributions\beta.py; torch\distributions\dirichlet.py; torch\distributions\gamma.py; torch\distributions\kl.py,5,test\distributions,1,directory
+pytorch,79d15c52cb60e4882fc41ae0fcb2fc918916eeb8,test\test_autograd.py; torch\autograd\__init__.py,2,test\autograd,1,directory
+pytorch,b8ab7bee26c41ceb90a1f944dd27c135699adaf2,setup.py; tools\autograd\gen_variable_type.py,2,test\autograd,1,directory
+pytorch,a249016044ffa916787d126482dab6684305163b,tools\autograd\gen_variable_type.py,1,test\autograd,1,directory
+pytorch,7bd2db997e95bf69e67bee3be5b0ef73ef39a516,tools\autograd\gen_python_functions.py; tools\autograd\gen_variable_type.py; torch\backends\cudnn\rnn.py; torch\nn\_functions\rnn.py; torch\nn\modules\rnn.py,5,test\autograd,1,directory
+pytorch,b2cfd961d3ef63f5dc02e1e0b66756a6297d6f3a,test\test_nn.py; torch\autograd\function.py; torch\nn\_functions\packing.py; torch\nn\_functions\rnn.py; torch\nn\modules\rnn.py,5,test\autograd,1,directory
+pytorch,47ee86776efd36db9074a151354f36d1c10d19a5,test\test_cuda.py; test\test_distributions.py; test\test_torch.py; torch\_torch_docs.py; torch\distributions\categorical.py,5,test\distributions,1,directory
+pytorch,a061000250cf7745801ca9118428f97ffaa9ac3f,test\test_optim.py; torch\optim\adam.py,2,test\optim,1,directory
+pytorch,0509f26d41428d91761ed3415cc2542608c61bf0,tools\autograd\gen_python_functions.py,1,test\autograd,1,directory
+pytorch,1848cad10802db9fa0aa066d9de195958120d863,test\common.py; test\test_jit.py; test\test_nn.py; torch\nn\functional.py; torch\nn\modules\batchnorm.py,5,test\nn,1,directory
+pytorch,008ba18c5bc2a8fb5f061e812c18c531887d946e,setup.py; test\cpp_extensions\setup.py; test\test_cpp_extensions.py; torch\utils\cpp_extension.py,4,test\cpp_extensions,1,directory
+pytorch,392fc8885cf9ad38d76dfa61eb566703ca753fca,torch\utils\data\dataloader.py,1,test\test_dataloader.py,1,convention
+pytorch,df88373f88745dd163b358777ecfafa40113ac27,torch\optim\adam.py,1,test\optim,1,directory
+pytorch,a90b6955902cb6dcb7d90650cab399004acba5df,torch\utils\data\dataloader.py,1,test\test_dataloader.py,1,convention
+pytorch,c2721ab5039466ced3af077fae14d8ee578ff484,test\test_torch.py; torch\autograd\variable.py; torch\functional.py,3,test\autograd,1,directory
+pytorch,8ba8713f5d31beed7af6b9a003812aae52a0445a,test\test_torch.py; torch\serialization.py,2,test\test_serialization.py,1,convention
+pytorch,a3442f62bc2d01b64e554e925e9e0efa89c5e4c3,aten\src\ATen\function_wrapper.py; tools\autograd\gen_python_functions.py; tools\autograd\gen_variable_type.py; torch\backends\cudnn\rnn.py,4,test\autograd,1,directory
+pytorch,f3e16cc7371576ffa1cd04a4553fa326f16c48e0,test\test_nn.py; torch\nn\functional.py; torch\nn\grad.py,3,test\nn,1,directory
+pytorch,41c84ca735872bec36add90e087b3857a9df0fe3,test\test_distributions.py; torch\distributions\transforms.py,2,test\distributions\test_transforms.py,1,convention
+pytorch,ae4362bc6ae39cc287c6a3f97871b0c5b414a5a2,torch\utils\data\dataloader.py,1,test\test_dataloader.py,1,convention
+pytorch,063946d2b3f3f1e953a2a3b54e0b34f1393de295,test\test_optim.py; torch\optim\adadelta.py; torch\optim\adagrad.py; torch\optim\adam.py; torch\optim\adamax.py,5,test\optim,1,directory
+pytorch,31c0e2321aec0544119aa6c101ce6a0be494787e,torch\optim\optimizer.py,1,test\optim,1,directory
+pytorch,371e14b807cfa8fc4087ecf7676ba076d0817453,test\test_nn.py; torch\nn\functional.py,2,test\nn,1,directory
+pytorch,60a16e5663f35f2df17ae1d5b060d0e1accdbefd,test\test_dataloader.py; torch\utils\data\dataloader.py,2,test\test_dataloader.py,1,convention
+pytorch,0b17f4b87e2333e722ad4c1d0a50a21ce71ecf7e,test\test_distributions.py; torch\distributions\transforms.py,2,test\distributions\test_transforms.py,1,convention
+pytorch,e831ad62046da7c330b566a275242b77099b28a0,test\test_multiprocessing.py; torch\multiprocessing\reductions.py,2,test\test_reductions.py,1,convention
+pytorch,87e369111a5defce56b4f0b3fac53970fa0d5462,setup.py; test\test_torch.py; tools\autograd\gen_python_functions.py,3,test\autograd,1,directory
+pytorch,e3196e0ea8e3d0a9830bbd2a87beadd12a8c450c,test\test_utils.py; torch\autograd\__init__.py; torch\utils\checkpoint.py,3,test\autograd,1,directory
+pytorch,e8d2f05931df211a60126c43c92c646dadb7d014,test\test_jit.py; torch\onnx\__init__.py; torch\onnx\utils.py,3,test\onnx; test\test_utils.py,2,convention
+pytorch,f15f3ca1afb55c54e6f984eb120ea68293367ffe,torch\utils\data\dataloader.py,1,test\test_dataloader.py,1,convention
+pytorch,e44f901b55873ebb6b1b0d3bab30fd89d487b71c,test\test_optim.py; torch\optim\lr_scheduler.py,2,test\optim,1,directory
+pytorch,f21c5c5cd8edb9c21c98604c77c028f1d55036d2,torch\onnx\symbolic.py,1,test\onnx,1,directory
+pytorch,3964253f943668fe076c992dbf91e975b3b4c3c4,test\test_distributions.py; torch\distributions\binomial.py; torch\distributions\kl.py,3,test\distributions,1,directory
+pytorch,932c4c2364884af52609ea8a86c7232a926d958f,test\test_autograd.py; tools\autograd\gen_variable_type.py,2,test\autograd,1,directory
+pytorch,ee00a8049a21a27f126ac820859e0643c70fcc8b,test\test_nn.py; torch\nn\functional.py; torch\nn\modules\sparse.py,3,test\nn; test\test_sparse.py,2,convention
+pytorch,2a18e7c45b838d9f826b929fc7dd62923aad5927,aten\src\ATen\function_wrapper.py; tools\autograd\gen_python_functions.py,2,test\autograd,1,directory
+pytorch,c96f2624a280ae3e2d9195c35150f6aec85f6a02,test\test_nn.py; torch\nn\init.py,2,test\nn\test_init.py,1,convention
+pytorch,0829d4502de40c77f191e85983edf7f67a843c70,test\test_jit.py; tools\autograd\gen_python_functions.py; tools\autograd\gen_variable_type.py; torch\onnx\symbolic.py; torch\tensor.py,5,test\autograd; test\onnx,2,directory
+pytorch,a015d579ddce90831bb945bbefdd1aa1a3633f63,torch\legacy\nn\LogSoftMax.py; torch\legacy\nn\SoftMax.py; torch\legacy\nn\SoftMin.py; torch\legacy\nn\SpatialSoftMax.py; torch\nn\functional.py,5,test\nn,1,directory
+pytorch,71626491c40c86eb1ee410e695c467486084144c,test\test_autograd.py; test\test_cuda.py; test\test_torch.py; tools\autograd\gen_python_functions.py; torch\_torch_docs.py,5,test\autograd,1,directory
+pytorch,f43e06712829ce24552d73e2442ef31385559729,torch\optim\optimizer.py,1,test\optim,1,directory
+stable-diffusion-webui,c938679de7b87b4f14894d9f57fe0f40dd6e3c06,modules\codeformer_model.py; modules\devices.py; modules\extras.py; modules\processing.py; webui.py,5,test\test_extras.py,1,convention
+stable-diffusion-webui,9ecea0a8d6bdc434755e11128487fd62f1ff130f,modules\extras.py,1,test\test_extras.py,1,convention
+stable-diffusion-webui,2ce27728f6433911274efa67856315d22df56629,modules\extras.py; modules\ui.py,2,test\test_extras.py,1,convention
+stable-diffusion-webui,0fd130767102ebcf90e97c6c191ecf199a2d4091,modules\extras.py,1,test\test_extras.py,1,convention
+stable-diffusion-webui,d3338bdef18b3049431a0649d55ff22aa18baa68,modules\extras.py,1,test\test_extras.py,1,convention
+stable-diffusion-webui,0110429dc4bc004ac56573fe1a6b05cb0123678e,modules\extras.py,1,test\test_extras.py,1,convention
+stable-diffusion-webui,aacc4c1ecbcba3cef421d8776dc5b4b239df9b42,modules\extras.py,1,test\test_extras.py,1,convention
+stable-diffusion-webui,bc16b135b527224545dca555a9d51edb0adcee2d,modules\extras.py,1,test\test_extras.py,1,convention
+stable-diffusion-webui,60872c5b404114336f9ca0c671ba88fa4a8201c9,modules\extras.py,1,test\test_extras.py,1,convention
+stable-diffusion-webui,fb5a8cf0d9ed027ea3aa2e5422c946d8e6e72efe,modules\extras.py,1,test\test_extras.py,1,convention
+stable-diffusion-webui,a13c3bed3cec27afe3c015d3d62db36e25b10d1f,modules\extras.py,1,test\test_extras.py,1,convention
+stable-diffusion-webui,0523704dade0508bf3ae0c8cb799b1ae332d449b,modules\extras.py,1,test\test_extras.py,1,convention
+stable-diffusion-webui,595dca85af9e26b5d76cd64659a5bdd9da4f2b89,modules\extras.py,1,test\test_extras.py,1,convention
+stable-diffusion-webui,bde4731f1d3ddf30c46f86c9f6e71e6c0644089d,modules\extras.py,1,test\test_extras.py,1,convention
+stable-diffusion-webui,1f1b327959b546b5e6f995905a1699c5fe4a0c35,modules\extras.py; modules\ui.py,2,test\test_extras.py,1,convention
+stable-diffusion-webui,d8b366146748555a18b595af400c8cb222ea0ec9,modules\extras.py,1,test\test_extras.py,1,convention
+stable-diffusion-webui,a1e5e0d7669def010ecf31d801d6f0667bcf8061,modules\extras.py; modules\shared.py,2,test\test_extras.py,1,convention
+stable-diffusion-webui,29f758afe9c09834a1cd2dac3f5dd6fbf7dfeaa7,modules\extras.py,1,test\test_extras.py,1,convention
+stable-diffusion-webui,313e14de04d9955c6ad077341feceb0fc7f2f1d3,modules\extras.py,1,test\test_extras.py,1,convention
+transformers,6a17688021268fe429e78c66ea0932cb55cd03b1,examples\test_examples.py; src\transformers\trainer.py; src\transformers\training_args.py,3,tests\test_training_args.py,1,convention
+transformers,f7c93b3ceec341c3c794e9fc18939bc5d50b0fc2,src\transformers\training_args.py,1,tests\test_training_args.py,1,convention
+transformers,64e3d966b1131c15b5905b1e1e582d4bebac1ef0,src\transformers\trainer.py; src\transformers\training_args.py; src\transformers\training_args_tf.py,3,tests\test_training_args.py,1,convention
+transformers,734a28a767e94d0273d7130db21a2ed5c113c51f,src\transformers\trainer.py; src\transformers\trainer_utils.py; src\transformers\training_args.py; src\transformers\training_args_tf.py,4,tests\test_training_args.py,1,convention
+transformers,cedc547e7e009e4745db350505848fd5c4f8f6f3,src\transformers\trainer.py; src\transformers\training_args.py,2,tests\test_training_args.py,1,convention
+transformers,3a7fdd3f5214d1ec494379e7c65b4eb08146ddb0,src\transformers\integrations.py; src\transformers\trainer.py; src\transformers\trainer_utils.py; src\transformers\training_args.py,4,tests\test_training_args.py,1,convention
+transformers,1cd9be2aeb2a3cf0d8e982717c9f1a63319f838c,src\transformers\models\gpt2\modeling_gpt2.py; src\transformers\models\t5\modeling_t5.py; src\transformers\trainer.py; src\transformers\training_args.py; tests\test_modeling_common.py,5,tests\test_training_args.py,1,convention
+transformers,b08843cf4db9670a6bd5257f566eba46b2c46264,src\transformers\training_args.py,1,tests\test_training_args.py,1,convention
+transformers,ed1845ef4c531c02432a9126420ee255b96fbdd5,src\transformers\training_args.py; src\transformers\training_args_tf.py,2,tests\test_training_args.py,1,convention
+transformers,748006c0b35d64cdee23a3cdc2107a1ce64044b5,src\transformers\modeling_utils.py; src\transformers\models\gpt2\modeling_gpt2.py; src\transformers\models\t5\modeling_t5.py; src\transformers\trainer.py; src\transformers\training_args.py,5,tests\test_training_args.py,1,convention
+transformers,33b74228397a112961c891234e60286102d516a3,src\transformers\trainer.py; src\transformers\training_args.py,2,tests\test_training_args.py,1,convention
+transformers,2df34f4aba7ffbf47974f121767be052bebb23ca,examples\seq2seq\test_finetune_trainer.py; src\transformers\integrations.py; src\transformers\trainer.py; src\transformers\training_args.py,4,tests\test_training_args.py,1,convention
+transformers,04dc65e5c6adbfe43944beedfa12fb6b7bec0e60,src\transformers\training_args.py; tests\test_trainer.py,2,tests\test_training_args.py,1,convention
+transformers,5e1bea4f16c919b0df158932e7c0acc826af4fb6,src\transformers\training_args.py; tests\test_trainer.py,2,tests\test_training_args.py,1,convention
+transformers,25fcb5c171ba68525e01863fd8619f4598f6b9f1,src\transformers\trainer.py; src\transformers\training_args.py,2,tests\test_training_args.py,1,convention
+transformers,bc109ae5b8674ce6247abca649ba28c903979be3,src\transformers\trainer.py; src\transformers\training_args.py,2,tests\test_training_args.py,1,convention
+transformers,1420b5ff675ccdc3296c6776b339a08a22d2e941,src\transformers\training_args.py,1,tests\test_training_args.py,1,convention
+transformers,b54cb0bd825363eeed0cebedd38940d62130dbbd,src\transformers\trainer.py; src\transformers\training_args.py,2,tests\test_training_args.py,1,convention
+transformers,31245775e5772fbded1ac07ed89fbba3b5af0cb9,src\transformers\sagemaker\trainer_sm.py; src\transformers\sagemaker\training_args_sm.py; src\transformers\trainer.py; src\transformers\training_args.py,4,tests\test_training_args.py,1,convention
+transformers,97e688bc220514cd5ea072f06b186401c9cfbbd0,src\transformers\file_utils.py; src\transformers\trainer.py; src\transformers\trainer_utils.py; src\transformers\training_args.py; tests\test_trainer.py,5,tests\test_training_args.py,1,convention
+transformers,b70f441b72accf3205185290efc563c0dea65bfc,src\transformers\sagemaker\trainer_sm.py; src\transformers\sagemaker\training_args_sm.py; src\transformers\trainer.py; src\transformers\training_args.py,4,tests\test_training_args.py,1,convention
+transformers,6bef764506b2b53732ee5315b80f89e6c007b584,src\transformers\sagemaker\trainer_sm.py; src\transformers\sagemaker\training_args_sm.py; src\transformers\trainer.py; src\transformers\training_args.py,4,tests\test_training_args.py,1,convention
+transformers,c83fbc5f2d4355a13be52b086fe548f3c43e8ec8,src\transformers\integrations.py; src\transformers\testing_utils.py; src\transformers\trainer.py; src\transformers\training_args.py,4,tests\test_training_args.py,1,convention
+transformers,604c0850878c1840e19e025f6f909c5956716aa6,tests\sagemaker\scripts\pytorch\run_ddp.py,1,tests\sagemaker\scripts\pytorch,1,directory
+transformers,3d339ee6595b9e42925559ae21a0f6e77f032873,tests\deepspeed\test_deepspeed.py,1,tests\deepspeed,1,directory
+transformers,83206ca6a8c79ffb8937b45742d81205c52c3e96,tests\deepspeed\test_deepspeed.py,1,tests\deepspeed,1,directory

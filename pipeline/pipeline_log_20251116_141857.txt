@@ -1,0 +1,36 @@
+[2025-11-16 14:18:57] [INFO] ======================================================================
+[2025-11-16 14:18:57] [INFO] STARTING COMMIT MINING PIPELINE
+[2025-11-16 14:18:57] [INFO] ======================================================================
+[2025-11-16 14:18:57] [INFO] Root directory: C:\Users\nyros\Downloads\GreenAI\AI-Energy-Optimization\pipeline
+[2025-11-16 14:18:57] [INFO] Frameworks: matplotlib, tensorflow, pytorch
+[2025-11-16 14:18:57] [INFO] Log file: C:\Users\nyros\Downloads\GreenAI\AI-Energy-Optimization\pipeline\pipeline_log_20251116_141857.txt
+[2025-11-16 14:18:57] [INFO] 
+[2025-11-16 14:18:57] [INFO] ======================================================================
+[2025-11-16 14:18:57] [INFO] Starting pipeline for MATPLOTLIB
+[2025-11-16 14:18:57] [INFO] ======================================================================
+[2025-11-16 14:18:57] [ERROR] Framework directory not found: C:\Users\nyros\Downloads\GreenAI\AI-Energy-Optimization\pipeline\matplotlib
+[2025-11-16 14:18:57] [INFO] 
+[2025-11-16 14:18:57] [INFO] ======================================================================
+[2025-11-16 14:18:57] [INFO] Starting pipeline for TENSORFLOW
+[2025-11-16 14:18:57] [INFO] ======================================================================
+[2025-11-16 14:18:57] [ERROR] Framework directory not found: C:\Users\nyros\Downloads\GreenAI\AI-Energy-Optimization\pipeline\tensorflow
+[2025-11-16 14:18:57] [INFO] 
+[2025-11-16 14:18:57] [INFO] ======================================================================
+[2025-11-16 14:18:57] [INFO] Starting pipeline for PYTORCH
+[2025-11-16 14:18:57] [INFO] ======================================================================
+[2025-11-16 14:18:57] [ERROR] Framework directory not found: C:\Users\nyros\Downloads\GreenAI\AI-Energy-Optimization\pipeline\pytorch
+[2025-11-16 14:18:57] [INFO] 
+[2025-11-16 14:18:57] [WARNING] No checkouts to collect from any framework
+[2025-11-16 14:18:57] [INFO] ======================================================================
+[2025-11-16 14:18:57] [INFO] PIPELINE EXECUTION SUMMARY
+[2025-11-16 14:18:57] [INFO] ======================================================================
+[2025-11-16 14:18:57] [INFO] Frameworks processed: 3
+[2025-11-16 14:18:57] [INFO] Successful: 0
+[2025-11-16 14:18:57] [INFO] Failed: 3
+[2025-11-16 14:18:57] [INFO] Total checkouts collected: 0
+[2025-11-16 14:18:57] [INFO]   matplotlib: FAILED
+[2025-11-16 14:18:57] [INFO]   tensorflow: FAILED
+[2025-11-16 14:18:57] [INFO]   pytorch: FAILED
+[2025-11-16 14:18:57] [INFO] ======================================================================
+[2025-11-16 14:18:57] [INFO] Complete! Check log file for details: C:\Users\nyros\Downloads\GreenAI\AI-Energy-Optimization\pipeline\pipeline_log_20251116_141857.txt
+[2025-11-16 14:18:57] [INFO] ======================================================================

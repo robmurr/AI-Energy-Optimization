@@ -1,0 +1,60 @@
+[
+  {
+    "repo": "ComfyUI",
+    "has_tests": true,
+    "test_indicators": [
+      "pytest.ini",
+      "pyproject.toml",
+      "tests/",
+      ".github/workflows",
+      "25 test file(s)"
+    ],
+    "test_framework": "pytest",
+    "test_file_count": 25
+  },
+  {
+    "repo": "funNLP",
+    "has_tests": false,
+    "test_indicators": [],
+    "test_framework": null,
+    "test_file_count": 0
+  },
+  {
+    "repo": "pytorch",
+    "has_tests": true,
+    "test_indicators": [
+      "pytest.ini",
+      "pyproject.toml",
+      "test/",
+      ".github/workflows",
+      "50 test file(s)"
+    ],
+    "test_framework": "pytest",
+    "test_file_count": 50
+  },
+  {
+    "repo": "stable-diffusion-webui",
+    "has_tests": true,
+    "test_indicators": [
+      "pyproject.toml",
+      "test/",
+      ".github/workflows",
+      "6 test file(s)"
+    ],
+    "test_framework": "pytest",
+    "test_file_count": 6
+  },
+  {
+    "repo": "transformers",
+    "has_tests": true,
+    "test_indicators": [
+      "pyproject.toml",
+      "tests/",
+      ".github/workflows",
+      ".circleci/config.yml",
+      "50 test file(s)"
+    ],
+    "test_framework": "pytest",
+    "test_file_count": 50
+  }
+]

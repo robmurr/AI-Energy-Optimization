@@ -135,8 +135,8 @@ def find_test_by_imports(repo_path, modified_file):
                             test_file = Path(line).relative_to(repo_path)
                             candidates.append(str(test_file))
 
-            except (subprocess.TimeoutExpired, subprocess.SubprocessError):
-                # Skip if grep fails or times out
+            except (subprocess.TimeoutExpired, subprocess.SubprocessError, FileNotFoundError):
+                # Skip if grep fails, times out, or is not available (Windows)
                 pass
 
     # Remove duplicates while preserving order
@@ -204,7 +204,7 @@ def process_commits(csv_path, repos_dir="repos", max_commits=None):
     Process commits and map modified files to relevant tests.
     """
     csv_path = Path(csv_path)
-    repos_path = Path(__file__).parent.parent / repos_dir
+    repos_path = Path(__file__).parent / repos_dir
 
     if not csv_path.exists():
         print(f"Error: {csv_path} not found")
