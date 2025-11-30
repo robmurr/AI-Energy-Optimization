@@ -1,0 +1,38 @@
+# Dockerfile for vllm
+# Base container - build once, reuse for multiple commits
+FROM python:3.9-slim
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    git \
+    build-essential \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install common test runners
+RUN pip install --no-cache-dir \
+    pytest \
+    pytest-cov \
+    unittest-xml-reporting \
+    nose
+
+# Set working directory
+WORKDIR /workspace
+
+# Copy repository (will be mounted as volume at runtime, but copy for initial setup)
+COPY . /workspace/
+
+# Install dependencies based on what's available
+
+# Install from setup.py (try to install in editable mode)
+RUN if [ -f setup.py ]; then \
+    pip install --no-cache-dir -e . || pip install --no-cache-dir . || true; \
+    fi
+
+# Install from pyproject.toml
+RUN if [ -f pyproject.toml ]; then \
+    pip install --no-cache-dir -e . || pip install --no-cache-dir . || true; \
+    fi
+
+# Default command
+CMD ["/bin/bash"]

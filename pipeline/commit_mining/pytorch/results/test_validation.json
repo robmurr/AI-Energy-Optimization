@@ -1,5 +1,14 @@
 [
   {
+    "repo": "annotated_deep_learning_paper_implementations",
+    "has_tests": true,
+    "test_indicators": [
+      "1 test file(s)"
+    ],
+    "test_framework": "unittest",
+    "test_file_count": 1
+  },
+  {
     "repo": "ComfyUI",
     "has_tests": true,
     "test_indicators": [
@@ -20,6 +29,18 @@
     "test_file_count": 0
   },
   {
+    "repo": "keras",
+    "has_tests": true,
+    "test_indicators": [
+      "pyproject.toml",
+      "integration_tests/",
+      ".github/workflows",
+      "50 test file(s)"
+    ],
+    "test_framework": "pytest",
+    "test_file_count": 50
+  },
+  {
     "repo": "pytorch",
     "has_tests": true,
     "test_indicators": [
@@ -31,6 +52,18 @@
     ],
     "test_framework": "pytest",
     "test_file_count": 50
+  },
+  {
+    "repo": "Real-Time-Voice-Cloning",
+    "has_tests": true,
+    "test_indicators": [
+      "pyproject.toml",
+      "tests/",
+      ".github/workflows",
+      "1 test file(s)"
+    ],
+    "test_framework": "pytest",
+    "test_file_count": 1
   },
   {
     "repo": "stable-diffusion-webui",
@@ -56,5 +89,27 @@
     ],
     "test_framework": "pytest",
     "test_file_count": 50
+  },
+  {
+    "repo": "vllm",
+    "has_tests": true,
+    "test_indicators": [
+      "pyproject.toml",
+      "tests/",
+      ".github/workflows",
+      "50 test file(s)"
+    ],
+    "test_framework": "pytest",
+    "test_file_count": 50
+  },
+  {
+    "repo": "yolov5",
+    "has_tests": true,
+    "test_indicators": [
+      "pyproject.toml",
+      ".github/workflows"
+    ],
+    "test_framework": "pytest",
+    "test_file_count": 0
   }
 ]

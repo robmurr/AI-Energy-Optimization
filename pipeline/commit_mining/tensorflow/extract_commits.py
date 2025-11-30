@@ -170,7 +170,7 @@ def mine_commits(repos_dir="repos", max_commits_per_repo=500, repos_with_tests=N
     return pd.DataFrame(all_records)
 
 def save_results(df, output_file="candidate_commits.csv"):
-    output_path = Path(__file__).parent.parent / output_file
+    output_path = Path(__file__).parent / output_file
     df.to_csv(output_path, index=False)
     print(f"\nSaved results to {output_path}")
 

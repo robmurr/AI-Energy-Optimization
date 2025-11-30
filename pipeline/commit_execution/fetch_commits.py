@@ -8,6 +8,7 @@ import os
 import sys
 import subprocess
 import shutil
+import argparse
 from pathlib import Path
 from datetime import datetime
 import json
@@ -31,7 +32,8 @@ class PipelineRunner:
         self.frameworks = ['matplotlib', 'tensorflow', 'pytorch']
         # Save to commit_storage in the same directory as this script
         self.output_dir = Path(__file__).parent / 'commit_storage'
-        self.log_file = self.root_dir / f'pipeline_log_{datetime.now().strftime("%Y%m%d_%H%M%S")}.txt'
+        self.test_mappings_dir = Path(__file__).parent / 'test_mappings'
+        self.test_mappings_dir.mkdir(exist_ok=True)
         
         # Pipeline steps in order
         self.pipeline_steps = [
@@ -41,15 +43,16 @@ class PipelineRunner:
             'map_tests_to_commits.py',
             'checkout_commits.py'
         ]
+        
+        # Parameters
+        self.max_repos = None
+        self.max_commits = None
+        self.skip_mine = False
+        self.include_checkout = False
     
     def log(self, message, level="INFO"):
-        """Log a message to both console and file."""
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        log_entry = f"[{timestamp}] [{level}] {message}"
-        print(log_entry)
-        
-        with open(self.log_file, 'a', encoding='utf-8') as f:
-            f.write(log_entry + '\n')
+        """Print message without timestamps or brackets."""
+        print(message)
     
     def run_script(self, script_path, working_dir):
         """
@@ -62,17 +65,33 @@ class PipelineRunner:
         Returns:
             Tuple of (success: bool, stdout: str, stderr: str)
         """
+        return self.run_script_with_args(script_path, working_dir, [])
+    
+    def run_script_with_args(self, script_path, working_dir, args):
+        """
+        Run a Python script as a subprocess with arguments.
+        
+        Args:
+            script_path: Path to the script to run
+            working_dir: Directory to run the script from
+            args: List of command-line arguments
+            
+        Returns:
+            Tuple of (success: bool, stdout: str, stderr: str)
+        """
         script_path = Path(script_path)
         working_dir = Path(working_dir)
         
         if not script_path.exists():
             return False, "", f"Script not found: {script_path}"
         
-        self.log(f"Running {script_path.name} in {working_dir.name}/")
+        cmd_str = f"{script_path.name} {' '.join(args)}" if args else script_path.name
+        self.log(f"Running {cmd_str} in {working_dir.name}/")
         
         try:
+            cmd = [sys.executable, str(script_path)] + args
             result = subprocess.run(
-                [sys.executable, str(script_path)],
+                cmd,
                 cwd=str(working_dir),
                 capture_output=True,
                 text=True,
@@ -80,21 +99,20 @@ class PipelineRunner:
             )
             
             if result.returncode == 0:
-                self.log(f"Successfully completed {script_path.name}", "SUCCESS")
+                self.log(f"Successfully completed {script_path.name}")
                 return True, result.stdout, result.stderr
             else:
-                self.log(f"Script failed with return code {result.returncode}: {script_path.name}", "ERROR")
-                self.log(f"Error output: {result.stderr}", "ERROR")
+                self.log(f"Script failed with return code {result.returncode}: {script_path.name}")
+                if result.stderr:
+                    self.log(f"Error: {result.stderr}")
                 return False, result.stdout, result.stderr
                 
         except subprocess.TimeoutExpired:
             error_msg = f"Script timed out after 1 hour: {script_path.name}"
-            self.log(error_msg, "ERROR")
             return False, "", error_msg
             
         except Exception as e:
             error_msg = f"Exception while running {script_path.name}: {type(e).__name__}: {str(e)}"
-            self.log(error_msg, "ERROR")
             return False, "", error_msg
     
     def check_framework_setup(self, framework_dir):
@@ -127,42 +145,68 @@ class PipelineRunner:
         Returns:
             Tuple of (success: bool, checkouts_dir: Path or None)
         """
-        self.log("=" * 70)
-        self.log(f"Starting pipeline for {framework_name.upper()}")
-        self.log("=" * 70)
-        
         framework_dir = self.root_dir / "commit_mining" /framework_name
+        
+        self.log(f"\nStarting pipeline for {framework_name.upper()}")
         
         # Check if framework directory exists
         if not framework_dir.exists():
-            self.log(f"Framework directory not found: {framework_dir}", "ERROR")
+            self.log(f"Framework directory not found: {framework_dir}")
             return False, None
         
         # Check if all required scripts are present
         is_ready, missing = self.check_framework_setup(framework_dir)
         if not is_ready:
-            self.log(f"Missing required scripts in {framework_name}: {', '.join(missing)}", "ERROR")
+            self.log(f"Missing required scripts in {framework_name}: {', '.join(missing)}")
             return False, None
         
         # Run each pipeline step in order
         for step_num, script_name in enumerate(self.pipeline_steps, 1):
+            # Skip mining if requested
+            if script_name == 'mine_repos.py' and self.skip_mine:
+                self.log(f"Step {step_num}/{len(self.pipeline_steps)}: {script_name} (SKIPPED)")
+                continue
+            
+            # Skip checkout if not requested
+            if script_name == 'checkout_commits.py' and not self.include_checkout:
+                self.log(f"Step {step_num}/{len(self.pipeline_steps)}: {script_name} (SKIPPED)")
+                continue
+            
             self.log(f"Step {step_num}/{len(self.pipeline_steps)}: {script_name}")
             
             script_path = framework_dir / script_name
-            success, stdout, stderr = self.run_script(script_path, framework_dir)
+            
+            # Build command arguments
+            cmd_args = []
+            if script_name == 'mine_repos.py' and self.max_repos:
+                cmd_args = ['--max', str(self.max_repos)]
+            elif script_name == 'extract_commits.py' and self.max_commits:
+                cmd_args = ['--max', str(self.max_commits), '--single']
+            
+            if cmd_args:
+                # Run with arguments
+                success, stdout, stderr = self.run_script_with_args(script_path, framework_dir, cmd_args)
+            else:
+                success, stdout, stderr = self.run_script(script_path, framework_dir)
             
             if not success:
-                self.log(f"Pipeline failed at step {step_num} ({script_name}) for {framework_name}", "ERROR")
+                self.log(f"Pipeline failed at step {step_num} ({script_name}) for {framework_name}")
                 return False, None
+            
+            # After map_tests_to_commits.py, copy the CSV to test_mappings/
+            if script_name == 'map_tests_to_commits.py':
+                self.collect_test_mapping(framework_name, framework_dir)
         
-        # Check if checkouts were created
-        checkouts_dir = framework_dir / 'checkouts'
-        if not checkouts_dir.exists() or not any(checkouts_dir.iterdir()):
-            self.log(f"No checkouts found for {framework_name}", "WARNING")
-            return True, None  # Not an error, just no commits to checkout
+        # Only return checkouts if checkout_commits.py was actually run in this execution
+        # (not from previous runs)
+        if self.include_checkout:
+            checkouts_dir = framework_dir / 'checkouts'
+            if checkouts_dir.exists() and any(checkouts_dir.iterdir()):
+                self.log(f"Successfully completed pipeline for {framework_name}")
+                return True, checkouts_dir
         
-        self.log(f"Successfully completed pipeline for {framework_name}", "SUCCESS")
-        return True, checkouts_dir
+        self.log(f"Successfully completed pipeline for {framework_name}")
+        return True, None
     
     def collect_checkouts(self, framework_checkouts):
         """
@@ -171,9 +215,7 @@ class PipelineRunner:
         Args:
             framework_checkouts: Dict mapping framework names to their checkout directories
         """
-        self.log("=" * 70)
-        self.log("Collecting checkouts from all frameworks")
-        self.log("=" * 70)
+        self.log("\nCollecting checkouts from all frameworks")
         
         # Create output directory
         self.output_dir.mkdir(exist_ok=True)
@@ -187,7 +229,7 @@ class PipelineRunner:
         
         for framework, checkouts_dir in framework_checkouts.items():
             if checkouts_dir is None:
-                self.log(f"No checkouts to collect for {framework}", "INFO")
+                self.log(f"No checkouts to collect for {framework}")
                 collection_summary['frameworks'][framework] = {
                     'status': 'no_checkouts',
                     'count': 0
@@ -206,7 +248,7 @@ class PipelineRunner:
                 
                 try:
                     if target_path.exists():
-                        self.log(f"Removing existing checkout: {target_path.name}", "INFO")
+                        self.log(f"Removing existing checkout: {target_path.name}")
                         shutil.rmtree(target_path)
                     
                     shutil.copytree(checkout_item, target_path)
@@ -214,10 +256,10 @@ class PipelineRunner:
                     total_collected += 1
                     
                 except Exception as e:
-                    self.log(f"Failed to copy {checkout_item.name}: {str(e)}", "ERROR")
+                    self.log(f"Failed to copy {checkout_item.name}: {str(e)}")
                     failed_count += 1
             
-            self.log(f"Collected {collected_count} checkouts from {framework} (failed: {failed_count})", "INFO")
+            self.log(f"Collected {collected_count} checkouts from {framework} (failed: {failed_count})")
             
             collection_summary['frameworks'][framework] = {
                 'status': 'success',
@@ -233,11 +275,33 @@ class PipelineRunner:
         with open(summary_path, 'w', encoding='utf-8') as f:
             json.dump(collection_summary, f, indent=2)
         
-        self.log(f"Total checkouts collected: {total_collected}", "SUCCESS")
-        self.log(f"Output directory: {self.output_dir.absolute()}", "INFO")
-        self.log(f"Collection summary saved to: {summary_path}", "INFO")
+        self.log(f"Total checkouts collected: {total_collected}")
+        self.log(f"Output directory: {self.output_dir.absolute()}")
         
         return total_collected
+    
+    def collect_test_mapping(self, framework_name, framework_dir):
+        """
+        Collect test mapping CSV from a framework and save to test_mappings/.
+        
+        Args:
+            framework_name: Name of the framework
+            framework_dir: Path to framework directory
+        """
+        test_mapping_file = framework_dir / 'test_mapping.csv'
+        
+        if not test_mapping_file.exists():
+            self.log(f"Test mapping file not found for {framework_name}: {test_mapping_file}")
+            return
+        
+        # Copy to test_mappings/ with framework prefix
+        target_file = self.test_mappings_dir / f"{framework_name}_test_mapping.csv"
+        
+        try:
+            shutil.copy2(test_mapping_file, target_file)
+            self.log(f"Copied test mapping for {framework_name} to {target_file.name}")
+        except Exception as e:
+            self.log(f"Failed to copy test mapping for {framework_name}: {str(e)}")
     
     def run_full_pipeline(self):
         """
@@ -251,7 +315,6 @@ class PipelineRunner:
         self.log("=" * 70)
         self.log(f"Root directory: {self.root_dir.absolute()}")
         self.log(f"Frameworks: {', '.join(self.frameworks)}")
-        self.log(f"Log file: {self.log_file}")
         self.log("")
         
         results = {}
@@ -271,11 +334,11 @@ class PipelineRunner:
         if framework_checkouts:
             total_collected = self.collect_checkouts(framework_checkouts)
         else:
-            self.log("No checkouts to collect from any framework", "WARNING")
+            self.log("No checkouts to collect from any framework")
             total_collected = 0
         
         # Print final summary
-        self.log("=" * 70)
+        self.log("\n" + "=" * 70)
         self.log("PIPELINE EXECUTION SUMMARY")
         self.log("=" * 70)
         
@@ -292,7 +355,7 @@ class PipelineRunner:
             self.log(f"  {framework}: {status}")
         
         self.log("=" * 70)
-        self.log(f"Complete! Check log file for details: {self.log_file}")
+        self.log("Complete!")
         self.log("=" * 70)
         
         return results
@@ -301,9 +364,43 @@ class PipelineRunner:
 def main():
     """Main entry point for the pipeline."""
     
-    # Check for custom root directory argument
-    if len(sys.argv) > 1:
-        root_dir = Path(sys.argv[1])
+    parser = argparse.ArgumentParser(
+        description='Fetch commits and run test mapping pipeline across multiple frameworks'
+    )
+    parser.add_argument(
+        '--max-repos',
+        type=int,
+        default=None,
+        help='Maximum repositories to mine per framework (default: all)'
+    )
+    parser.add_argument(
+        '--max-commits',
+        type=int,
+        default=None,
+        help='Maximum commits per repository (default: all)'
+    )
+    parser.add_argument(
+        '--skip-mine',
+        action='store_true',
+        help='Skip mining phase (use existing repos)'
+    )
+    parser.add_argument(
+        '--full',
+        action='store_true',
+        help='Include checkout phase'
+    )
+    parser.add_argument(
+        '--root-dir',
+        type=str,
+        default=None,
+        help='Root directory for commit_mining (default: parent of script directory)'
+    )
+    
+    args = parser.parse_args()
+    
+    # Parse root directory
+    if args.root_dir:
+        root_dir = Path(args.root_dir)
         if not root_dir.exists():
             print(f"Error: Provided root directory does not exist: {root_dir}")
             return 1
@@ -312,6 +409,13 @@ def main():
     
     try:
         runner = PipelineRunner(root_dir)
+        
+        # Set parameters
+        runner.max_repos = args.max_repos
+        runner.max_commits = args.max_commits
+        runner.skip_mine = args.skip_mine
+        runner.include_checkout = args.full
+        
         results = runner.run_full_pipeline()
         
         # Exit with error code if any framework failed

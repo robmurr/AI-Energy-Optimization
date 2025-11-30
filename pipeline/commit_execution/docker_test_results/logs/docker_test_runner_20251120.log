@@ -1,0 +1,45 @@
+[2025-11-20 15:40:13] [INFO] ======================================================================
+[2025-11-20 15:40:13] [INFO] STARTING DOCKER TEST RUNNER
+[2025-11-20 15:40:13] [INFO] ======================================================================
+[2025-11-20 15:40:13] [INFO] Parsing CSV: C:\Users\nyros\Downloads\GreenAI\AI-Energy-Optimization\pipeline\commit_execution\test_mappings\aggregated_test_mapping.csv
+[2025-11-20 15:40:13] [INFO] Found 5 repositories with 1696 total commits
+[2025-11-20 15:40:13] [INFO] 
+Processing repository: ComfyUI
+[2025-11-20 15:40:13] [INFO]   Commits to process: 12
+[2025-11-20 15:40:13] [WARNING]   Skipping ComfyUI: repository not found
+[2025-11-20 15:40:13] [INFO] 
+Processing repository: pytorch
+[2025-11-20 15:40:13] [INFO]   Commits to process: 602
+[2025-11-20 15:40:13] [INFO] Building Docker image: pytorch:latest
+[2025-11-20 15:40:14] [ERROR] Failed to build image pytorch:latest: ERROR: error during connect: Head "http://%2F%2F.%2Fpipe%2FdockerDesktopLinuxEngine/_ping": open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.
+
+[2025-11-20 15:40:14] [WARNING]   Skipping pytorch: failed to build Docker image
+[2025-11-20 15:40:14] [INFO] 
+Processing repository: stable-diffusion-webui
+[2025-11-20 15:40:14] [INFO]   Commits to process: 39
+[2025-11-20 15:40:14] [INFO] Building Docker image: stable-diffusion-webui:latest
+[2025-11-20 15:40:14] [ERROR] Failed to build image stable-diffusion-webui:latest: ERROR: error during connect: Head "http://%2F%2F.%2Fpipe%2FdockerDesktopLinuxEngine/_ping": open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.
+
+[2025-11-20 15:40:14] [WARNING]   Skipping stable-diffusion-webui: failed to build Docker image
+[2025-11-20 15:40:14] [INFO] 
+Processing repository: transformers
+[2025-11-20 15:40:14] [INFO]   Commits to process: 618
+[2025-11-20 15:40:14] [INFO] Building Docker image: transformers:latest
+[2025-11-20 15:40:14] [ERROR] Failed to build image transformers:latest: ERROR: error during connect: Head "http://%2F%2F.%2Fpipe%2FdockerDesktopLinuxEngine/_ping": open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.
+
+[2025-11-20 15:40:14] [WARNING]   Skipping transformers: failed to build Docker image
+[2025-11-20 15:40:14] [INFO] 
+Processing repository: vllm
+[2025-11-20 15:40:14] [INFO]   Commits to process: 425
+[2025-11-20 15:40:14] [WARNING]   Skipping vllm: repository not found
+[2025-11-20 15:40:14] [INFO] Summary saved to: C:\Users\nyros\Downloads\GreenAI\AI-Energy-Optimization\pipeline\commit_execution\docker_test_results\execution_summary.json
+[2025-11-20 15:40:14] [INFO] 
+======================================================================
+[2025-11-20 15:40:14] [INFO] DOCKER TEST RUNNER COMPLETE
+[2025-11-20 15:40:14] [INFO] ======================================================================
+[2025-11-20 15:40:14] [INFO] Repositories processed: 0
+[2025-11-20 15:40:14] [INFO] Total commits: 1696
+[2025-11-20 15:40:14] [INFO] Processed commits: 0
+[2025-11-20 15:40:14] [INFO] Failed commits: 0
+[2025-11-20 15:40:14] [INFO] Skipped commits: 0
+[2025-11-20 15:40:14] [INFO] Results directory: C:\Users\nyros\Downloads\GreenAI\AI-Energy-Optimization\pipeline\commit_execution\docker_test_results\test_results

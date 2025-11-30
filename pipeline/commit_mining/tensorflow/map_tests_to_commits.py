@@ -119,12 +119,15 @@ def find_test_by_imports(repo_path, modified_file):
             ])
 
         for pattern in patterns:
+            # OPTION 1: Use grep (fast, but only works on Mac/Linux with grep installed)
+            grep_success = False
             try:
-                # Use grep to search for the import pattern in test files
                 result = subprocess.run(
                     ['grep', '-r', '-l', '--include=*.py', pattern, str(test_dir_path)],
                     capture_output=True,
                     text=True,
+                    encoding='utf-8',
+                    errors='ignore',
                     timeout=5
                 )
 
@@ -134,10 +137,30 @@ def find_test_by_imports(repo_path, modified_file):
                         if line:
                             test_file = Path(line).relative_to(repo_path)
                             candidates.append(str(test_file))
+                    grep_success = True
 
-            except (subprocess.TimeoutExpired, subprocess.SubprocessError, FileNotFoundError):
+            except (subprocess.TimeoutExpired, subprocess.SubprocessError, FileNotFoundError, OSError):
                 # Skip if grep fails, times out, or is not available (Windows)
                 pass
+
+            # OPTION 2: Pure Python search (cross-platform, works on Windows)
+            # Use this if grep failed or is not available
+            if not grep_success:
+                try:
+                    # Search for pattern in Python files recursively
+                    for py_file in test_dir_path.rglob('*.py'):
+                        try:
+                            with open(py_file, 'r', encoding='utf-8', errors='ignore') as f:
+                                content = f.read()
+                                if pattern in content:
+                                    test_file = py_file.relative_to(repo_path)
+                                    candidates.append(str(test_file))
+                        except (IOError, OSError):
+                            # Skip files we can't read
+                            continue
+                except Exception:
+                    # Skip if search fails
+                    pass
 
     # Remove duplicates while preserving order
     return list(dict.fromkeys(candidates))
@@ -212,7 +235,7 @@ def process_commits(csv_path, repos_dir="repos", max_commits=None):
 
     # Read commits
     commits = []
-    with open(csv_path, 'r', encoding='utf-8') as f:
+    with open(csv_path, 'r', encoding='utf-8', errors='ignore') as f:
         reader = csv.DictReader(f)
         for row in reader:
             commits.append(row)
@@ -263,9 +286,9 @@ def process_commits(csv_path, repos_dir="repos", max_commits=None):
 
 
 def save_results(results, output_file="test_mapping.csv"):
-    output_path = Path(__file__).parent.parent / output_file
+    output_path = Path(__file__).parent / output_file
 
-    with open(output_path, 'w', newline='') as f:
+    with open(output_path, 'w', newline='', encoding='utf-8') as f:
         fieldnames = [
             'repo', 'commit_hash', 'modified_files', 'modified_file_count',
             'relevant_tests', 'test_count', 'test_strategy'
@@ -309,13 +332,11 @@ def main():
     print("="*60)
     print()
 
-    # Look for candidate_commits.csv in current directory first, then parent
+    # Look for candidate_commits.csv in the same directory as this script
     csv_path = Path(__file__).parent / "candidate_commits.csv"
-    if not csv_path.exists():
-        csv_path = Path(__file__).parent.parent / "candidate_commits.csv"
     
     if not csv_path.exists():
-        print(f"Error: candidate_commits.csv not found in {Path(__file__).parent} or parent directory")
+        print(f"Error: candidate_commits.csv not found in {Path(__file__).parent}")
         return 1
 
     # Process commits

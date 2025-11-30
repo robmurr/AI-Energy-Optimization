@@ -5,6 +5,7 @@
 
 import os
 import sys
+import argparse
 import pandas as pd
 from pathlib import Path
 from pydriller import Repository
@@ -56,7 +57,7 @@ def has_torch_usage(source_code):
 
     return any(indicator in source_code for indicator in torch_indicators)
 
-def extract_commits_from_repo(repo_path, repo_name, max_commits=200):
+def extract_commits_from_repo(repo_path, repo_name, max_commits=200, single_file_only=False):
     """
     Extract refactoring/optimization commits from a single repository.
     """
@@ -97,6 +98,10 @@ def extract_commits_from_repo(repo_path, repo_name, max_commits=200):
                         has_relevant_change = True
                         modified_files.append(mod.new_path or mod.old_path)
 
+            # Filter for single-file commits if requested
+            if single_file_only and len(modified_files) != 1:
+                continue
+
             if has_relevant_change:
                 records.append({
                     "repo": repo_name,
@@ -115,7 +120,7 @@ def extract_commits_from_repo(repo_path, repo_name, max_commits=200):
 
     return records
 
-def mine_commits(repos_dir="repos", max_commits_per_repo=500, repos_with_tests=None):
+def mine_commits(repos_dir="repos", max_commits_per_repo=500, repos_with_tests=None, single_file_only=False):
     """
     only processes repos with test suites if repos_with_tests is provided.
     """
@@ -162,7 +167,7 @@ def mine_commits(repos_dir="repos", max_commits_per_repo=500, repos_with_tests=N
             print(f"  -> Warning: Not a valid git repository (no .git folder): {repo_path}")
             continue
 
-        records = extract_commits_from_repo(str(repo_path), repo_name, max_commits_per_repo)
+        records = extract_commits_from_repo(str(repo_path), repo_name, max_commits_per_repo, single_file_only)
         all_records.extend(records)
 
         print(f"  -> Found {len(records)} candidate commits")
@@ -170,13 +175,18 @@ def mine_commits(repos_dir="repos", max_commits_per_repo=500, repos_with_tests=N
     return pd.DataFrame(all_records)
 
 def save_results(df, output_file="candidate_commits.csv"):
-    output_path = Path(__file__).parent.parent / output_file
+    output_path = Path(__file__).parent / output_file
     df.to_csv(output_path, index=False)
     print(f"\nSaved results to {output_path}")
 
 
 def main():
     """Main execution function."""
+    parser = argparse.ArgumentParser(description='Extract commits from repositories')
+    parser.add_argument('--max', type=int, default=1000, help='Maximum commits per repository (default: 1000)')
+    parser.add_argument('--single', action='store_true', help='Only include single-file commits')
+    args = parser.parse_args()
+    
     print("="*60)
     print("COMMIT MINING")
     print("="*60)
@@ -198,7 +208,7 @@ def main():
         print("No test validation found - processing all repositories")
 
     # Mine commits (only from repos with tests)
-    df = mine_commits(max_commits_per_repo=500, repos_with_tests=repos_with_tests)
+    df = mine_commits(max_commits_per_repo=args.max, repos_with_tests=repos_with_tests, single_file_only=args.single)
 
     if df.empty:
         print("\nError: No candidate commits found.")

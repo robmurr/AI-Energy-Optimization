@@ -1,0 +1,27 @@
+{
+  "repo": "ComfyUI",
+  "commit_hash": "3fce8881ca0f24e268fac1dc6e85d2b4cbdb0355",
+  "parent_hash": "5c65da312a69ddbc34a2a1384b1118fd4e21776e",
+  "test_files": "tests\\inference\\test_inference.py",
+  "modified_files": "comfy\\samplers.py",
+  "test_strategy": "imports",
+  "parent_test_results": {
+    "success": false,
+    "stdout": "",
+    "stderr": "=== DEBUG: Container Environment ===\nCurrent directory: /workspace/repo\n\u2713 /workspace/repo exists\ntotal 336\ndrwxrwxrwx 1 root root    512 Nov 29 21:34 .\ndrwxr-xr-x 1 root root   4096 Nov 29 22:12 ..\ndrwxrwxrwx 1 root root    512 Nov 29 21:35 .ci\ndrwxrwxrwx 1 root root    512 Nov 29 21:33 .git\ndrwxrwxrwx 1 root root    512 Nov 29 21:33 .github\n-rwxrwxrwx 1 root root    294 Nov 29 21:33 .gitignore\ndrwxr-xr-x 1 root root    512 Nov 29 21:34 .pytest_cache\n-rwxrwxrwx 1 root root     25 Nov 29 21:33 CODEOWNERS\n-rwxrwxrwx 1 root root  35823 Nov 29 21:33 LICENSE\n-rwxrwxrwx 1 root root  13670 Nov 29 21:33 README.md\ndrwxr-xr-x 1 root root    512 Nov 29 21:33 __pycache__\ndrwxrwxrwx 1 root root    512 Nov 29 21:33 comfy\ndrwxrwxrwx 1 root root    512 Nov 29 21:33 comfy_extras\n-rwxrwxrwx 1 root root 118577 Nov 29 21:33 comfyui_screenshot.png\n-rwxrwxrwx 1 root root   3316 Nov 29 21:33 cuda_malloc.py\ndrwxrwxrwx 1 root root    512 Nov 29 21:33 custom_nodes\n-rwxrwxrwx 1 root root  29060 Nov 29 21:33 execution.py\n-rwxrwxrwx 1 root root   1270 Nov 29 21:33 extra_model_paths.yaml.example\n-rwxrwxrwx 1 root root   9007 Nov 29 21:33 folder_paths.py\n\nLooking for test directories:\n/workspace/repo/.pytest_cache\n/workspace/repo/tests\n/workspace/repo/tests-ui\n/workspace/repo/tests-ui/tests\n\nRunning tests on commit 5c65da31...\nbash: -c: line 54: syntax error near unexpected token `('\nbash: -c: line 54: `        echo \"Framework repositories require full source compilation (hours of build time)\" >&2'\n",
+    "output_length": 0
+  },
+  "current_test_results": {
+    "success": false,
+    "stdout": "",
+    "stderr": "=== DEBUG: Container Environment ===\nCurrent directory: /workspace/repo\n\u2713 /workspace/repo exists\ntotal 336\ndrwxrwxrwx 1 root root    512 Nov 29 21:35 .\ndrwxr-xr-x 1 root root   4096 Nov 29 22:12 ..\ndrwxrwxrwx 1 root root    512 Nov 29 21:35 .ci\ndrwxrwxrwx 1 root root    512 Nov 29 21:33 .git\ndrwxrwxrwx 1 root root    512 Nov 29 21:33 .github\n-rwxrwxrwx 1 root root    294 Nov 29 21:33 .gitignore\ndrwxr-xr-x 1 root root    512 Nov 29 21:35 .pytest_cache\n-rwxrwxrwx 1 root root     25 Nov 29 21:33 CODEOWNERS\n-rwxrwxrwx 1 root root  35823 Nov 29 21:33 LICENSE\n-rwxrwxrwx 1 root root  13670 Nov 29 21:33 README.md\ndrwxr-xr-x 1 root root    512 Nov 29 21:34 __pycache__\ndrwxrwxrwx 1 root root    512 Nov 29 21:34 comfy\ndrwxrwxrwx 1 root root    512 Nov 29 21:34 comfy_extras\n-rwxrwxrwx 1 root root 118577 Nov 29 21:33 comfyui_screenshot.png\n-rwxrwxrwx 1 root root   3316 Nov 29 21:33 cuda_malloc.py\ndrwxrwxrwx 1 root root    512 Nov 29 21:33 custom_nodes\n-rwxrwxrwx 1 root root  29060 Nov 29 21:33 execution.py\n-rwxrwxrwx 1 root root   1270 Nov 29 21:33 extra_model_paths.yaml.example\n-rwxrwxrwx 1 root root   9007 Nov 29 21:33 folder_paths.py\n\nLooking for test directories:\n/workspace/repo/.pytest_cache\n/workspace/repo/tests\n/workspace/repo/tests-ui\n/workspace/repo/tests-ui/tests\n\nRunning tests on commit 3fce8881...\nbash: -c: line 54: syntax error near unexpected token `('\nbash: -c: line 54: `        echo \"Framework repositories require full source compilation (hours of build time)\" >&2'\n",
+    "output_length": 0
+  },
+  "comparison": {
+    "results_differ": false,
+    "success_changed": false,
+    "output_changed": false
+  },
+  "status": "completed",
+  "timestamp": "2025-11-29T17:12:47.290115"
+}

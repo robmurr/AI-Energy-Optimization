@@ -1,0 +1,51 @@
+repo,commit_hash,parent_hash,author,date,message,files_changed,modified_files
+matplotlib,4cc7f94014f3f8bc533576db3f5a148755536a5d,e1085ec6cca67a1a923bfd0decfdd8ba750c3166,Scott Shambaugh,2025-01-30T05:15:38-07:00,"Speed up Collection.set_paths (#29398)
+
+* Faster Path creation
+
+* 3d calculation speedups
+
+_to_unmasked_float_array updates
+
+Linting and tweaks
+
+mean zsort
+
+small perf gain
+
+linting
+
+Fix tests
+
+Linting and tweaks
+
+mean zsort
+
+small perf gain
+
+linting
+
+Fix tests
+
+Update lib/matplotlib/collections.py
+
+Co-authored-by: Oscar Gustafsson <oscar.gustafsson@gmail.com>
+
+remove Path __slots__
+
+Code review suggestions
+
+* Remove test
+
+---------
+
+Co-authored-by: Scott Shambaugh <scottshambaugh@users.noreply.github.com>",1,lib\matplotlib\cbook.py
+matplotlib,6574ed51247ce252281788de7e848bbd2d50e0b9,dfc888c6e250d6663a01ab5404e27f7c114a2d92,Tim Hoffmann,2025-08-04T10:19:23+02:00,"MNT: Refactor default violin KDE estimator
+
+Move the default KDE estimator from a private definition
+in `violinplot()` into `violin_stats()`. This makes it easier
+to test and debug violin_stats() as we don't have to
+explicitly provide a KDE method.
+
+It also becomes logically simpler, because `violinplot()`
+is now only `violin_stats()` + `violin()`.",1,lib\matplotlib\cbook.py

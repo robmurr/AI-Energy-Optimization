@@ -5,6 +5,7 @@ Mine Matplotlib repositories from GitHub.
 
 import os
 import sys
+import argparse
 import requests
 from git import Repo
 from pathlib import Path
@@ -107,6 +108,10 @@ def save_repo_metadata(repos, filename="repo_metadata.json"):
     print(f"\nSaved metadata to {metadata_path}")
 
 def main():
+    parser = argparse.ArgumentParser(description='Mine PyTorch repositories from GitHub')
+    parser.add_argument('--max', type=int, default=10, help='Maximum repositories to mine (default: 10)')
+    args = parser.parse_args()
+    
     print("="*60)
     print("REPOSITORY MINING")
     print("="*60)
@@ -121,8 +126,8 @@ def main():
         return 1
     print()
 
-    # Fetch repositories (testing with 5 repos)
-    repos = fetch_pytorch_repos(token=token, max_repos=5, min_stars=50)
+    # Fetch repositories
+    repos = fetch_pytorch_repos(token=token, max_repos=args.max, min_stars=50)
 
     if not repos:
         print("No repositories found. Exiting.")
