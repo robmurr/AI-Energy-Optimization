@@ -1,33 +1,34 @@
 # Dockerfile for ComfyUI
-# Base container - build once, reuse for multiple commits
-FROM python:3.9-slim
+                                    # Base container - build once, reuse for multiple commits
+                                    FROM python:3.9-slim
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    git \
-    build-essential \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+                                    # Install system dependencies
+                                    RUN apt-get update && apt-get install -y \
+                                        git \
+                                        build-essential \
+                                        curl \
+                                        && rm -rf /var/lib/apt/lists/*
 
-# Install common test runners
-RUN pip install --no-cache-dir \
-    pytest \
-    pytest-cov \
-    unittest-xml-reporting \
-    nose
+                                    # Install common test runners
+                                    RUN pip install --no-cache-dir \
+                                        pytest \
+                                        pytest-cov \
+                                        unittest-xml-reporting \
+                                        nose
 
-# Set working directory
-WORKDIR /workspace
+                                    # Set working directory
+                                    WORKDIR /workspace
 
-# Copy repository (will be mounted as volume at runtime, but copy for initial setup)
-COPY . /workspace/
+                                    # Copy repository (will be mounted as volume at runtime, but copy for initial setup)
+                                    COPY . /workspace/
 
-# Install dependencies based on what's available
-
-# Install from requirements.txt
-RUN if [ -f requirements.txt ]; then \
-    pip install --no-cache-dir -r requirements.txt || true; \
-    fi
-
-# Default command
-CMD ["/bin/bash"]
+                                    # Install dependencies based on what's available
+                                    
+                # Install from requirements.txt
+                RUN if [ -f requirements.txt ]; then \
+                    pip install --no-cache-dir -r requirements.txt || true; \
+                    fi
+                
+            # Default command
+            CMD ["/bin/bash"]
+            
