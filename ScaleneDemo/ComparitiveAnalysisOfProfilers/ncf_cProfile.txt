@@ -1,0 +1,60 @@
+Wed Nov 12 23:04:34 2025    ncf_profile.prof
+
+         4934552 function calls (4771371 primitive calls) in 391.244 seconds
+
+   Ordered by: cumulative time
+   List reduced from 9009 to 50 due to restriction <50>
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+   4028/1    0.169    0.000  391.253  391.253 {built-in method builtins.exec}
+        1    0.000    0.000  391.253  391.253 ncf.py:1(<module>)
+        1    0.183    0.183  389.519  389.519 ncf.py:183(main)
+     2820    0.026    0.000  179.507    0.064 _tensor.py:570(backward)
+     2820    0.025    0.000  179.480    0.064 __init__.py:243(backward)
+     2820    0.015    0.000  179.356    0.064 graph.py:832(_engine_run_backward)
+     2820  179.338    0.064  179.338    0.064 {method 'run_backward' of 'torch._C._EngineBase' objects}
+31983/6063    0.054    0.000  151.923    0.025 module.py:1771(_wrapped_call_impl)
+31983/6063   30.684    0.001  151.909    0.025 module.py:1779(_call_impl)
+     3240    0.591    0.000  121.260    0.037 neumf.py:80(forward)
+     9720    0.015    0.000   47.209    0.005 functional.py:1686(relu)
+     9720   47.190    0.005   47.190    0.005 {built-in method torch.relu}
+    12960    0.038    0.000   39.939    0.003 linear.py:130(forward)
+    12960   39.885    0.003   39.885    0.003 {built-in method torch._C._nn.linear}
+      137    0.001    0.000   19.406    0.142 __init__.py:1073(synchronize)
+      137   19.217    0.140   19.217    0.140 {built-in method torch._C._cuda_synchronize}
+      136    0.001    0.000   19.059    0.140 ncf.py:53(synchronized_timestamp)
+       30    0.561    0.019   18.411    0.614 ncf.py:130(val_epoch)
+       30   17.573    0.586   17.573    0.586 {built-in method torch.nonzero}
+     9720    0.054    0.000   16.650    0.002 functional.py:1394(dropout)
+     9720   16.581    0.002   16.581    0.002 {built-in method torch.dropout}
+     6631   13.820    0.002   13.820    0.002 {built-in method torch.cat}
+     2820    0.010    0.000    8.641    0.003 grad_scaler.py:360(step)
+     2820    0.055    0.000    8.631    0.003 optimizer.py:497(wrapper)
+     2820    0.033    0.000    8.285    0.003 optimizer.py:62(_use_grad)
+     2820    0.026    0.000    8.227    0.003 adam.py:213(step)
+     2820    0.010    0.000    7.892    0.003 optimizer.py:133(maybe_fallback)
+     2820    0.068    0.000    7.879    0.003 adam.py:885(adam)
+     2820    0.081    0.000    7.705    0.003 adam.py:544(_multi_tensor_adam)
+      268    0.010    0.000    7.581    0.028 __init__.py:1(<module>)
+       13    0.001    0.000    6.463    0.497 serialization.py:908(save)
+       13    3.484    0.268    3.484    0.268 serialization.py:797(__exit__)
+    12960    0.033    0.000    2.882    0.000 sparse.py:191(forward)
+    12960    0.019    0.000    2.841    0.000 functional.py:2428(embedding)
+   4640/7    0.014    0.000    2.824    0.403 <frozen importlib._bootstrap>:1022(_find_and_load)
+   1877/7    0.006    0.000    2.824    0.403 <frozen importlib._bootstrap>:987(_find_and_load_unlocked)
+   1820/7    0.008    0.000    2.823    0.403 <frozen importlib._bootstrap>:664(_load_unlocked)
+   1765/7    0.004    0.000    2.823    0.403 <frozen importlib._bootstrap_external>:877(exec_module)
+   2296/7    0.001    0.000    2.822    0.403 <frozen importlib._bootstrap>:233(_call_with_frames_removed)
+    12960    2.816    0.000    2.816    0.000 {built-in method torch.embedding}
+    729/5    0.002    0.000    2.804    0.561 {built-in method builtins.__import__}
+       13    1.608    0.124    2.761    0.212 serialization.py:1143(_save)
+     2850    2.328    0.001    2.328    0.001 {built-in method torch.mean}
+ 1992/338    0.004    0.000    2.266    0.007 <frozen importlib._bootstrap>:1053(_handle_fromlist)
+     5640    1.734    0.000    1.734    0.000 {built-in method torch._foreach_add_}
+     2820    1.632    0.001    1.632    0.001 {built-in method torch._foreach_sqrt}
+     2820    1.549    0.001    1.549    0.001 {built-in method torch._foreach_addcdiv_}
+     2820    1.474    0.001    1.474    0.001 {built-in method torch._foreach_div_}
+      160    1.275    0.008    1.275    0.008 {method 'copy_' of 'torch._C.StorageBase' objects}
+      156    0.002    0.000    1.137    0.007 storage.py:263(cpu)
+
+
