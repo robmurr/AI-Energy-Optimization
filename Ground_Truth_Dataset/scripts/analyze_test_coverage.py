@@ -317,21 +317,31 @@ class TestAnalyzer:
     def __init__(self, repo_path: Path):
         self.repo_path = repo_path
 
-    def analyze_test_file(self, test_file_path: str, modified_file_path: str) -> Tuple[Set[str], Set[str]]:
+    def analyze_test_file(self, test_file_path: str, modified_file_path: str, commit_hash: str) -> Tuple[Set[str], Set[str]]:
         """
         Analyze a test file to see what elements it exercises from the modified file.
+        Reads test file from specific commit, not current filesystem.
         Returns (imported_elements, called_elements)
         """
         imported = set()
         called = set()
 
-        test_full_path = self.repo_path / test_file_path
-        if not test_full_path.exists():
-            return imported, called
-
         try:
-            with open(test_full_path, 'r', encoding='utf-8', errors='ignore') as f:
-                content = f.read()
+            # Read test file from specific commit
+            cmd = ['git', 'show', f'{commit_hash}:{test_file_path}']
+            result = subprocess.run(
+                cmd,
+                cwd=self.repo_path,
+                capture_output=True,
+                text=True,
+                timeout=30
+            )
+
+            if result.returncode != 0:
+                # Test file doesn't exist at this commit
+                return imported, called
+
+            content = result.stdout
 
             # Extract imported elements
             imported = self._extract_imports(content, modified_file_path)
@@ -496,7 +506,7 @@ class CoverageAnalyzer:
                     analysis.modified_elements.append(elem)
                     seen_elements.add(elem_key)
 
-        # Analyze test files
+        # Analyze test files (read from commit, not filesystem)
         test_analyzer = TestAnalyzer(repo_path)
         for test_file in relevant_tests.split(';'):
             test_file = test_file.strip()
@@ -508,7 +518,7 @@ class CoverageAnalyzer:
                 if not modified_file.endswith('.py'):
                     continue
 
-                imported, called = test_analyzer.analyze_test_file(test_file, modified_file)
+                imported, called = test_analyzer.analyze_test_file(test_file, modified_file, commit_hash)
                 analysis.imported_elements.update(imported)
                 analysis.called_elements.update(called)
 
