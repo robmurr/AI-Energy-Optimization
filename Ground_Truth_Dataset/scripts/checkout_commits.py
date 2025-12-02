@@ -1,12 +1,21 @@
 #!/usr/bin/env python3
 """
------ Checkout Commits -----
+Checkout Commits - Create isolated checkouts of parent and target commits
+
+By default, uses coverage_analysis.csv (filtered commits with test coverage)
+Can also use test_mapping.csv or candidate_commits.csv via command-line args
+
+Usage:
+    python checkout_commits.py                           # Use coverage_analysis.csv
+    python checkout_commits.py --input test_mapping.csv  # Use test_mapping.csv
+    python checkout_commits.py --max 10                  # Limit to first 10 commits
 """
 
 import os
 import sys
 import csv
 import subprocess
+import argparse
 from pathlib import Path
 
 def checkout_commit(repo_path, commit_hash, target_dir):
@@ -145,19 +154,46 @@ def display_summary(success_count, failures, total):
 
 def main():
     """Main execution function."""
+    parser = argparse.ArgumentParser(
+        description='Checkout commits for before/after comparison'
+    )
+    parser.add_argument(
+        '--input',
+        type=str,
+        default='coverage_analysis.csv',
+        help='Input CSV file (default: coverage_analysis.csv)'
+    )
+    parser.add_argument(
+        '--max',
+        type=int,
+        default=5,
+        help='Maximum number of commits to checkout (default: all)'
+    )
+    args = parser.parse_args()
+
     print("="*60)
     print("REPOSITORY CHECKOUT")
     print("="*60)
     print()
 
-    # Check if candidate_commits.csv exists
-    csv_path = Path(__file__).parent.parent / "candidate_commits.csv"
+    # Check if input CSV exists
+    csv_path = Path(__file__).parent.parent / args.input
     if not csv_path.exists():
-        print("Error: candidate_commits.csv not found.")
+        print(f"Error: {args.input} not found.")
+        print(f"Expected path: {csv_path}")
+        print("\nAvailable options:")
+        print("  - coverage_analysis.csv (default, filtered commits)")
+        print("  - test_mapping.csv (commits with tests)")
+        print("  - candidate_commits.csv (all extracted commits)")
         return 1
 
-    # Process commits (start with first 5 for testing)
-    success_count, failures, total = process_commits(csv_path, max_commits=5)
+    print(f"Input file: {args.input}")
+    if args.max:
+        print(f"Max commits: {args.max}")
+    print()
+
+    # Process commits
+    success_count, failures, total = process_commits(csv_path, max_commits=args.max)
 
     display_summary(success_count, failures, total)
 
