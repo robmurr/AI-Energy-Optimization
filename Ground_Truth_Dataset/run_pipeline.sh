@@ -4,6 +4,15 @@
 # Runs the complete pipeline from mining repos to analyzing test coverage
 # Always uses single-file commits only
 #
+# Pipeline Phases:
+#   1. Mine repositories (with pre-clone filters)
+#   2. Validate test presence
+#   3. Validate repo type (filter C++/CUDA repos) - NEW!
+#   4. Extract commits (single-file only)
+#   5. Map tests to commits
+#   6. Analyze test coverage
+#   7. Checkout commits (optional with --full)
+#
 # Usage:
 #   ./run_pipeline.sh                    # Run with defaults
 #   ./run_pipeline.sh --max-repos 20     # Custom repo limit
@@ -79,42 +88,48 @@ START_TIME=$(date +%s)
 
 # Phase 1: Mine repositories
 if [ "$SKIP_MINE" = false ]; then
-    echo "[1/5] Mining repositories..."
+    echo "[1/6] Mining repositories..."
     python scripts/mine_repos.py --max $MAX_REPOS
     echo "Done"
     echo ""
 else
-    echo "[1/5] Skipping mining phase"
+    echo "[1/6] Skipping mining phase"
     echo ""
 fi
 
-# Phase 2: Validate test presence
-echo "[2/5] Validating test presence..."
+# Phase 1.5: Validate test presence
+echo "[2/6] Validating test presence..."
 python scripts/validate_test_presence.py
 echo "Done"
 echo ""
 
-# Phase 3: Extract commits (always single-file)
-echo "[3/5] Extracting commits (single-file only)..."
+# Phase 1.6: Validate repository type (NEW - filters C++/CUDA repos)
+echo "[3/6] Validating repository type (filter C++/CUDA)..."
+python scripts/validate_repo_type.py
+echo "Done"
+echo ""
+
+# Phase 2: Extract commits (always single-file)
+echo "[4/6] Extracting commits (single-file only)..."
 python scripts/extract_commits.py --max $MAX_COMMITS --single
 echo "Done"
 echo ""
 
-# Phase 4: Map tests to commits
-echo "[4/5] Mapping tests to commits..."
+# Phase 2.5: Map tests to commits
+echo "[5/6] Mapping tests to commits..."
 python scripts/map_tests_to_commits.py
 echo "Done"
 echo ""
 
-# Phase 5: Analyze test coverage
-echo "[5/5] Analyzing test coverage..."
+# Phase 3: Analyze test coverage
+echo "[6/6] Analyzing test coverage..."
 python scripts/analyze_test_coverage.py
 echo "Done"
 echo ""
 
-# Phase 6: Checkout commits (optional)
+# Phase 4: Checkout commits (optional)
 if [ "$INCLUDE_CHECKOUT" = true ]; then
-    echo "[6/6] Checking out commits..."
+    echo "[7/7] Checking out commits..."
     python scripts/checkout_commits.py
     echo "Done"
     echo ""
@@ -131,11 +146,13 @@ echo "=== Pipeline Complete ==="
 echo "Time: ${MINUTES}m ${SECONDS}s"
 echo ""
 echo "Generated files:"
-echo "  - results/repo_metadata.json"
-echo "  - results/test_validation.json"
-echo "  - candidate_commits.csv"
-echo "  - test_mapping.csv"
-echo "  - coverage_analysis.csv"
+echo "  - results/repo_metadata.json (Phase 1)"
+echo "  - results/test_validation.json (Phase 1.5)"
+echo "  - results/repo_type_validation.json (Phase 1.6 - NEW)"
+echo "  - results/valid_repos_summary.json (Phase 1.6 - NEW)"
+echo "  - candidate_commits.csv (Phase 2)"
+echo "  - test_mapping.csv (Phase 2.5)"
+echo "  - coverage_analysis.csv (Phase 3)"
 
 if [ "$INCLUDE_CHECKOUT" = true ]; then
     echo "  - checkouts/"
