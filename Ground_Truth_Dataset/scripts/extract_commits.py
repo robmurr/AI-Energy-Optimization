@@ -12,13 +12,31 @@ import json
 import argparse
 
 # Keywords
-REFACTORING_KEYWORDS = [
-    "refactor", "optimize", "performance", "speed", "efficiency",
-    "accelerate", "bottleneck", "speed up", "improve performance",
-    "faster", "slow", "memory", "cpu", "gpu", "batch",
-    "parallel", "vectorize", "cache", "optimize memory",
-    "reduce memory", "memory leak", "memory usage"
+# 1. High-Confidence Technical Keywords (Almost always performance/energy related)
+ML_PERFORMANCE_KEYWORDS = [
+    "fp16", "bf16", "mixed precision", "amp",  # Precision
+    "quantization", "quantize", "prune", "pruning",  # Model compression
+    "fused", "fuse", "kernel", "cuda", "cudnn",  # Ops
+    "vectorize", "broadcast", "jit", "compile",  # Compilation
+    "inference time", "throughput", "latency", "flops" # Metrics
 ]
+
+# 2. Data & Memory Keywords (Crucial for system energy)
+DATA_MEMORY_KEYWORDS = [
+    "dataloader", "num_workers", "pin_memory", "prefetch",  # Data loading
+    "memory leak", "oom", "out of memory", "peak memory",  # Memory constraints
+    "gradient accumulation", "checkpointing", "buffer"      # Training tricks
+]
+
+# 3. General "Intent" Keywords (Must be paired with code changes)
+GENERAL_PERF_KEYWORDS = [
+    "speed up", "accelerate", "fast", "slow",
+    "optimize", "optimization", "efficiency", "efficient",
+    "bottleneck", "overhead", "performance"
+]
+
+# COMBINED SEARCH LIST
+REFACTORING_KEYWORDS = ML_PERFORMANCE_KEYWORDS + DATA_MEMORY_KEYWORDS + GENERAL_PERF_KEYWORDS
 
 def load_repo_metadata(metadata_file="results/repo_metadata.json"):
     metadata_path = Path(__file__).parent.parent / metadata_file
@@ -26,20 +44,41 @@ def load_repo_metadata(metadata_file="results/repo_metadata.json"):
     with open(metadata_path, 'r') as f:
         return json.load(f)
 
-def load_test_validation(validation_file="results/test_validation.json"):
-    """Load test validation results and return repos with tests."""
-    validation_path = Path(__file__).parent.parent / validation_file
+def load_valid_repos():
+    """
+    Load valid repository list from Phase 1.6 (repo type validation).
 
-    if not validation_path.exists():
-        print(f"Warning: {validation_file} not found. Proceeding with all repos.")
-        return None
+    Tries to load from valid_repos_summary.json (Phase 1.6) first.
+    Falls back to test_validation.json (Phase 1.5) if Phase 1.6 not run.
 
-    with open(validation_path, 'r') as f:
-        validation_data = json.load(f)
+    Returns: set of valid repo names, or None if no validation found
+    """
+    base_path = Path(__file__).parent.parent / "results"
 
-    # Return set of repo names that have tests
-    repos_with_tests = {repo["repo"] for repo in validation_data if repo["has_tests"]}
-    return repos_with_tests
+    # Try Phase 1.6 output first (preferred - only application repos)
+    phase_1_6_path = base_path / "valid_repos_summary.json"
+    if phase_1_6_path.exists():
+        with open(phase_1_6_path, 'r') as f:
+            summary = json.load(f)
+        valid_repos = set(summary['valid_repo_names'])
+        print(f"✅ Loaded Phase 1.6 validation: {len(valid_repos)} valid APPLICATION repos")
+        print(f"   (Filtered out C++/CUDA/complex repos)")
+        return valid_repos
+
+    # Fallback to Phase 1.5 output (repos with tests, but may include C++/CUDA repos)
+    phase_1_5_path = base_path / "test_validation.json"
+    if phase_1_5_path.exists():
+        with open(phase_1_5_path, 'r') as f:
+            validation_data = json.load(f)
+        repos_with_tests = {repo["repo"] for repo in validation_data if repo["has_tests"]}
+        print(f"⚠️  Using Phase 1.5 validation: {len(repos_with_tests)} repos with tests")
+        print(f"   (May include C++/CUDA repos - run validate_repo_type.py for better filtering)")
+        return repos_with_tests
+
+    # No validation found
+    print(f"⚠️  No validation found. Proceeding with all repos.")
+    print(f"   Run validate_test_presence.py (Phase 1.5) or validate_repo_type.py (Phase 1.6)")
+    return None
 
 def has_torch_usage(source_code):
     if not source_code:
@@ -207,17 +246,14 @@ def main():
         return 1
 
     print(f"Loaded metadata for {len(repos)} repositories")
+    print()
 
-    # Load test validation
-    repos_with_tests = load_test_validation()
+    # Load valid repos (Phase 1.6 preferred, Phase 1.5 fallback)
+    valid_repos = load_valid_repos()
+    print()
 
-    if repos_with_tests:
-        print(f"Loaded test validation: {len(repos_with_tests)} repositories have tests")
-    else:
-        print("No test validation found - processing all repositories")
-
-    # Mine commits (only from repos with tests)
-    df = mine_commits(max_commits_per_repo=args.max, repos_with_tests=repos_with_tests)
+    # Mine commits (only from valid repos)
+    df = mine_commits(max_commits_per_repo=args.max, repos_with_tests=valid_repos)
 
     if df.empty:
         print("\nError: No candidate commits found.")
