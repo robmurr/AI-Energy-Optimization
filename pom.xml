@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+         http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- ============================================================ -->
+    <!-- PROJECT COORDINATES                                           -->
+    <!-- Group/Artifact/Version uniquely identify this project         -->
+    <!-- ============================================================ -->
+    <groupId>com.example</groupId>
+    <artifactId>dl4j-profiler-demo</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <name>DL4J Energy Profiler Demo</name>
+    <description>
+        Neural network energy profiling using DeepLearning4j with 
+        Intel Power Gadget, JFR, and VTune integration
+    </description>
+
+    <!-- ============================================================ -->
+    <!-- BUILD PROPERTIES                                              -->
+    <!-- Define versions in one place for easy updates                 -->
+    <!-- ============================================================ -->
+    <properties>
+        <!-- Java version (must match JDK installation) -->
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Dependency versions (DeepLearning4j ecosystem) -->
+        <dl4j.version>1.0.0-M2.1</dl4j.version>
+        <nd4j.version>1.0.0-M2.1</nd4j.version>
+        <slf4j.version>2.0.9</slf4j.version>
+    </properties>
+
+    <!-- ============================================================ -->
+    <!-- DEPENDENCIES                                                  -->
+    <!-- External libraries this project needs to compile and run     -->
+    <!-- ============================================================ -->
+    <dependencies>
+        <!-- DeepLearning4j Core: Neural network framework -->
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-core</artifactId>
+            <version>${dl4j.version}</version>
+            <!-- Includes: network layers, optimizers, loss functions -->
+        </dependency>
+
+        <!-- DeepLearning4j Datasets: Pre-built dataset loaders -->
+        <dependency>
+            <groupId>org.deeplearning4j</groupId>
+            <artifactId>deeplearning4j-datasets</artifactId>
+            <version>${dl4j.version}</version>
+            <!-- Provides: MnistDataSetIterator for automatic MNIST download -->
+        </dependency>
+
+        <!-- ND4J Native Backend: CPU-optimized linear algebra -->
+        <dependency>
+            <groupId>org.nd4j</groupId>
+            <artifactId>nd4j-native-platform</artifactId>
+            <version>${nd4j.version}</version>
+            <!-- Automatically includes platform-specific OpenBLAS binaries -->
+            <!-- Alternative for GPU: nd4j-cuda-11.8-platform (requires CUDA Toolkit) -->
+        </dependency>
+
+        <!-- SLF4J Logging API: Logging interface -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+        <!-- SLF4J Simple Implementation: Console logging (runtime only) -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>runtime</scope>
+            <!-- Simple logger with no configuration files needed -->
+            <!-- Alternative: logback-classic for production (requires logback.xml) -->
+        </dependency>
+    </dependencies>
+
+    <!-- ============================================================ -->
+    <!-- BUILD CONFIGURATION                                           -->
+    <!-- Defines how Maven compiles and packages the project          -->
+    <!-- ============================================================ -->
+    <build>
+        <plugins>
+            <!-- Maven Compiler Plugin: Compiles Java source files -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <release>17</release>
+                    <!-- Show deprecation warnings (helps catch outdated APIs) -->
+                    <compilerArgs>
+                        <arg>-Xlint:deprecation</arg>
+                    </compilerArgs>
+                </configuration>
+            </plugin>
+
+            <!-- Maven Shade Plugin: Creates "fat JAR" with all dependencies -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <!-- Output filename (150 MB with all dependencies) -->
+                            <finalName>dl4j-profiler-demo</finalName>
+                            
+                            <!-- Set main class for java -jar command -->
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>demo.DL4jProfilerDemo</mainClass>
+                                </transformer>
+                            </transformers>
+                            
+                            <!-- Reduce JAR size by excluding unnecessary files -->
+                            <filters>
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>META-INF/*.SF</exclude>
+                                        <exclude>META-INF/*.DSA</exclude>
+                                        <exclude>META-INF/*.RSA</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
