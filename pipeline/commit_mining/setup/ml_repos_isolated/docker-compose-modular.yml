@@ -1,0 +1,73 @@
+services:
+  automatic1111-stable-diffusion-webui:
+    build:
+      context: .
+      dockerfile: docker_repos/automatic1111-stable-diffusion-webui/Dockerfile
+    container_name: ml-analysis-automatic1111-stable-diffusion-webui
+    environment:
+    - JUPYTER_ENABLE_LAB=yes
+    - REPO_NAME=AUTOMATIC1111_stable-diffusion-webui
+    ports:
+    - 8888:8888
+    volumes:
+    - ./analysis/automatic1111-stable-diffusion-webui:/workspace/analysis
+  huggingface-transformers:
+    build:
+      context: .
+      dockerfile: docker_repos/huggingface-transformers/Dockerfile
+    container_name: ml-analysis-huggingface-transformers
+    environment:
+    - JUPYTER_ENABLE_LAB=yes
+    - REPO_NAME=huggingface_transformers
+    ports:
+    - 8889:8889
+    volumes:
+    - ./analysis/huggingface-transformers:/workspace/analysis
+  keras-team-keras:
+    build:
+      context: .
+      dockerfile: docker_repos/keras-team-keras/Dockerfile
+    container_name: ml-analysis-keras-team-keras
+    environment:
+    - JUPYTER_ENABLE_LAB=yes
+    - REPO_NAME=keras-team_keras
+    ports:
+    - 8890:8890
+    volumes:
+    - ./analysis/keras-team-keras:/workspace/analysis
+  pytorch-pytorch:
+    build:
+      context: .
+      dockerfile: docker_repos/pytorch-pytorch/Dockerfile
+    container_name: ml-analysis-pytorch-pytorch
+    environment:
+    - JUPYTER_ENABLE_LAB=yes
+    - REPO_NAME=pytorch_pytorch
+    ports:
+    - 8891:8891
+    volumes:
+    - ./analysis/pytorch-pytorch:/workspace/analysis
+  rasbt-mlxtend:
+    build:
+      context: .
+      dockerfile: docker_repos/rasbt-mlxtend/Dockerfile
+    container_name: ml-analysis-rasbt-mlxtend
+    environment:
+    - JUPYTER_ENABLE_LAB=yes
+    - REPO_NAME=rasbt_mlxtend
+    ports:
+    - 8892:8892
+    volumes:
+    - ./analysis/rasbt-mlxtend:/workspace/analysis
+  tqdm-tqdm:
+    build:
+      context: .
+      dockerfile: docker_repos/tqdm-tqdm/Dockerfile
+    container_name: ml-analysis-tqdm-tqdm
+    environment:
+    - JUPYTER_ENABLE_LAB=yes
+    - REPO_NAME=tqdm_tqdm
+    ports:
+    - 8893:8893
+    volumes:
+    - ./analysis/tqdm-tqdm:/workspace/analysis

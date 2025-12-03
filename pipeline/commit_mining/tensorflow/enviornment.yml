@@ -1,0 +1,12 @@
+name: energy-pytorch
+channels:
+  - defaults
+dependencies:
+  - python=3.10
+  - pip
+  - pip:
+      - gitpython>=3.1.45
+      - pydriller>=2.9
+      - pandas>=2.3.0
+      - requests>=2.32.0
+      - python-dotenv>=1.0.0

@@ -1,0 +1,50 @@
+[
+  {
+    "repo": "30-Days-Of-Python",
+    "has_tests": false,
+    "test_indicators": [],
+    "test_framework": null,
+    "test_file_count": 0
+  },
+  {
+    "repo": "abu",
+    "has_tests": false,
+    "test_indicators": [],
+    "test_framework": null,
+    "test_file_count": 0
+  },
+  {
+    "repo": "data-science-ipython-notebooks",
+    "has_tests": true,
+    "test_indicators": [
+      "3 test file(s)"
+    ],
+    "test_framework": "pytest",
+    "test_file_count": 3
+  },
+  {
+    "repo": "matplotlib",
+    "has_tests": true,
+    "test_indicators": [
+      "pyproject.toml",
+      "tox.ini",
+      ".github/workflows",
+      ".circleci/config.yml",
+      "50 test file(s)"
+    ],
+    "test_framework": "pytest",
+    "test_file_count": 50
+  },
+  {
+    "repo": "pygwalker",
+    "has_tests": true,
+    "test_indicators": [
+      "pyproject.toml",
+      "tests/",
+      ".github/workflows",
+      "3 test file(s)"
+    ],
+    "test_framework": "pytest",
+    "test_file_count": 3
+  }
+]

@@ -1,0 +1,790 @@
+                                                 Memory usage: ▁▁▁▂▃▃▃▃▅▅▅▆▆▇▇▇▇▇▇▇▇▇▇████ (max: 2.406 GB, growth rate:  53%)                                                  
+                        /home/cc/GreenAI/AI-Energy-Optimization/ScaleneDemo/NCFonPytorch/NCF/ncf.py: % of time =  72.93% (5m:10.685s) out of 7m:5.991s.                         
+       ╷       ╷       ╷      ╷       ╷       ╷       ╷               ╷       ╷                                                                                                 
+       │Time   │–––––– │––––… │–––––– │Memory │–––––– │–––––––––––    │Copy   │                                                                                                 
+  Line │Python │native │syst… │GPU    │Python │peak   │timeline/%     │(MB/s) │/home/cc/GreenAI/AI-Energy-Optimization/ScaleneDemo/NCFonPytorch/NCF/ncf.py                      
+╺━━━━━━┿━━━━━━━┿━━━━━━━┿━━━━━━┿━━━━━━━┿━━━━━━━┿━━━━━━━┿━━━━━━━━━━━━━━━┿━━━━━━━┿━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+     1 │       │       │      │       │       │       │               │       │# Copyright (c) 2018, deepakn94, codyaustun, robieta. All rights reserved.                       
+     2 │       │       │      │       │       │       │               │       │#                                                                                                
+     3 │       │       │      │       │       │       │               │       │# Licensed under the Apache License, Version 2.0 (the "License");                                
+     4 │       │       │      │       │       │       │               │       │# you may not use this file except in compliance with the License.                               
+     5 │       │       │      │       │       │       │               │       │# You may obtain a copy of the License at                                                        
+     6 │       │       │      │       │       │       │               │       │#                                                                                                
+     7 │       │       │      │       │       │       │               │       │#     http://www.apache.org/licenses/LICENSE-2.0                                                 
+     8 │       │       │      │       │       │       │               │       │#                                                                                                
+     9 │       │       │      │       │       │       │               │       │# Unless required by applicable law or agreed to in writing, software                            
+    10 │       │       │      │       │       │       │               │       │# distributed under the License is distributed on an "AS IS" BASIS,                              
+    11 │       │       │      │       │       │       │               │       │# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                       
+    12 │       │       │      │       │       │       │               │       │# See the License for the specific language governing permissions and                            
+    13 │       │       │      │       │       │       │               │       │# limitations under the License.                                                                 
+    14 │       │       │      │       │       │       │               │       │#                                                                                                
+    15 │       │       │      │       │       │       │               │       │# -----------------------------------------------------------------------                        
+    16 │       │       │      │       │       │       │               │       │#                                                                                                
+    17 │       │       │      │       │       │       │               │       │# Copyright (c) 2021, NVIDIA CORPORATION. All rights reserved.                                   
+    18 │       │       │      │       │       │       │               │       │#                                                                                                
+    19 │       │       │      │       │       │       │               │       │# Licensed under the Apache License, Version 2.0 (the "License");                                
+    20 │       │       │      │       │       │       │               │       │# you may not use this file except in compliance with the License.                               
+    21 │       │       │      │       │       │       │               │       │# You may obtain a copy of the License at                                                        
+    22 │       │       │      │       │       │       │               │       │#                                                                                                
+    23 │       │       │      │       │       │       │               │       │#     http://www.apache.org/licenses/LICENSE-2.0                                                 
+    24 │       │       │      │       │       │       │               │       │#                                                                                                
+    25 │       │       │      │       │       │       │               │       │# Unless required by applicable law or agreed to in writing, software                            
+    26 │       │       │      │       │       │       │               │       │# distributed under the License is distributed on an "AS IS" BASIS,                              
+    27 │       │       │      │       │       │       │               │       │# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                       
+    28 │       │       │      │       │       │       │               │       │# See the License for the specific language governing permissions and                            
+    29 │       │       │      │       │       │       │               │       │# limitations under the License.                                                                 
+    30 │       │       │      │       │       │       │               │       │                                                                                                 
+    31 │       │    3% │      │       │  53%  │  131M │▁▁▁▁▁▁▁▁▁   3% │     5 │import torch.jit                                                                                 
+    32 │       │       │      │       │       │       │               │       │# from apex.optimizers import FusedAdam                                                          
+    33 │       │       │      │       │       │       │               │       │try:                                                                                             
+    34 │       │       │      │       │       │       │               │       │    from apex.optimizers import FusedAdam                                                        
+    35 │       │       │      │       │       │       │               │       │    Optimizer = FusedAdam                                                                        
+    36 │       │       │      │       │       │       │               │       │except ImportError:                                                                              
+    37 │       │       │      │       │       │       │               │       │    from torch.optim import Adam as FusedAdam                                                    
+    38 │       │       │      │       │       │       │               │       │    Optimizer = FusedAdam                                                                        
+    39 │       │       │      │       │       │       │               │       │                                                                                                 
+    40 │       │       │      │       │       │       │               │       │import os                                                                                        
+    41 │       │       │      │       │       │       │               │       │import math                                                                                      
+    42 │       │       │      │       │       │       │               │       │import time                                                                                      
+    43 │       │       │      │       │       │       │               │       │import numpy as np                                                                               
+    44 │       │       │      │       │       │       │               │       │from argparse import ArgumentParser                                                              
+    45 │       │       │      │       │       │       │               │       │                                                                                                 
+    46 │       │       │      │       │       │       │               │       │import torch                                                                                     
+    47 │       │       │      │       │       │       │               │       │import torch.nn as nn                                                                            
+    48 │       │       │      │       │       │       │               │       │                                                                                                 
+    49 │       │       │      │       │       │       │               │       │import utils                                                                                     
+    50 │       │       │      │       │       │       │               │       │import dataloading                                                                               
+    51 │       │       │      │       │       │       │               │       │from neumf import NeuMF                                                                          
+    52 │       │       │      │       │       │       │               │       │from feature_spec import FeatureSpec                                                             
+    53 │       │       │      │       │       │       │               │       │from neumf_constants import USER_CHANNEL_NAME, ITEM_CHANNEL_NAME, LABEL_CHANNEL_NAME             
+    54 │       │       │      │       │       │       │               │       │                                                                                                 
+    55 │       │       │      │       │       │       │               │       │import dllogger                                                                                  
+    56 │       │       │      │       │       │       │               │       │                                                                                                 
+    57 │       │       │      │       │       │       │               │       │                                                                                                 
+    58 │       │       │      │       │       │       │               │       │def synchronized_timestamp():                                                                    
+    59 │       │    5% │      │100%   │       │       │               │       │    torch.cuda.synchronize()                                                                     
+    60 │       │       │      │       │       │       │               │       │    return time.time()                                                                           
+    61 │       │       │      │       │       │       │               │       │                                                                                                 
+    62 │       │       │      │       │       │       │               │       │def parse_args():                                                                                
+    63 │       │       │      │       │       │       │               │       │    parser = ArgumentParser(description="Train a Neural Collaborative"                           
+    64 │       │       │      │       │       │       │               │       │                                        " Filtering model")                                      
+    65 │       │       │      │       │       │       │               │       │    parser.add_argument('--data', type=str,                                                      
+    66 │       │       │      │       │       │       │               │       │                        help='Path to the directory containing the feature specification yaml')  
+    67 │       │       │      │       │       │       │               │       │    parser.add_argument('--feature_spec_file', type=str, default='feature_spec.yaml',            
+    68 │       │       │      │       │       │       │               │       │                        help='Name of the feature specification file or path relative to the da  
+    69 │       │       │      │       │       │       │               │       │    parser.add_argument('-e', '--epochs', type=int, default=30,                                  
+    70 │       │       │      │       │       │       │               │       │                        help='Number of epochs for training')                                    
+    71 │       │       │      │       │       │       │               │       │    parser.add_argument('-b', '--batch_size', type=int, default=2 ** 20,                         
+    72 │       │       │      │       │       │       │               │       │                        help='Number of examples for each iteration. This will be divided by th  
+    73 │       │       │      │       │       │       │               │       │    parser.add_argument('--valid_batch_size', type=int, default=2 ** 20,                         
+    74 │       │       │      │       │       │       │               │       │                        help='Number of examples in each validation chunk. This will be the max  
+    75 │       │       │      │       │       │       │               │       │                             'on each device.')                                                  
+    76 │       │       │      │       │       │       │               │       │    parser.add_argument('-f', '--factors', type=int, default=64,                                 
+    77 │       │       │      │       │       │       │               │       │                        help='Number of predictive factors')                                     
+    78 │       │       │      │       │       │       │               │       │    parser.add_argument('--layers', nargs='+', type=int,                                         
+    79 │       │       │      │       │       │       │               │       │                        default=[256, 256, 128, 64],                                             
+    80 │       │       │      │       │       │       │               │       │                        help='Sizes of hidden layers for MLP')                                   
+    81 │       │       │      │       │       │       │               │       │    parser.add_argument('-n', '--negative_samples', type=int, default=4,                         
+    82 │       │       │      │       │       │       │               │       │                        help='Number of negative examples per interaction')                      
+    83 │       │       │      │       │       │       │               │       │    parser.add_argument('-l', '--learning_rate', type=float, default=0.0045,                     
+    84 │       │       │      │       │       │       │               │       │                        help='Learning rate for optimizer')                                      
+    85 │       │       │      │       │       │       │               │       │    parser.add_argument('-k', '--topk', type=int, default=10,                                    
+    86 │       │       │      │       │       │       │               │       │                        help='Rank for test examples to be considered a hit')                    
+    87 │       │       │      │       │       │       │               │       │    parser.add_argument('--seed', '-s', type=int, default=None,                                  
+    88 │       │       │      │       │       │       │               │       │                        help='Manually set random seed for torch')                               
+    89 │       │       │      │       │       │       │               │       │    parser.add_argument('--threshold', '-t', type=float, default=1.0,                            
+    90 │       │       │      │       │       │       │               │       │                        help='Stop training early at threshold')                                 
+    91 │       │       │      │       │       │       │               │       │    parser.add_argument('--beta1', '-b1', type=float, default=0.25,                              
+    92 │       │       │      │       │       │       │               │       │                        help='Beta1 for Adam')                                                   
+    93 │       │       │      │       │       │       │               │       │    parser.add_argument('--beta2', '-b2', type=float, default=0.5,                               
+    94 │       │       │      │       │       │       │               │       │                        help='Beta1 for Adam')                                                   
+    95 │       │       │      │       │       │       │               │       │    parser.add_argument('--eps', type=float, default=1e-8,                                       
+    96 │       │       │      │       │       │       │               │       │                        help='Epsilon for Adam')                                                 
+    97 │       │       │      │       │       │       │               │       │    parser.add_argument('--dropout', type=float, default=0.5,                                    
+    98 │       │       │      │       │       │       │               │       │                        help='Dropout probability, if equal to 0 will not use dropout at all')   
+    99 │       │       │      │       │       │       │               │       │    parser.add_argument('--checkpoint_dir', default='', type=str,                                
+   100 │       │       │      │       │       │       │               │       │                        help='Path to the directory storing the checkpoint file, '               
+   101 │       │       │      │       │       │       │               │       │                             'passing an empty path disables checkpoint saving')                 
+   102 │       │       │      │       │       │       │               │       │    parser.add_argument('--load_checkpoint_path', default=None, type=str,                        
+   103 │       │       │      │       │       │       │               │       │                        help='Path to the checkpoint file to be loaded before training/evaluati  
+   104 │       │       │      │       │       │       │               │       │    parser.add_argument('--mode', choices=['train', 'test'], default='train', type=str,          
+   105 │       │       │      │       │       │       │               │       │                        help='Passing "test" will only run a single evaluation; '                
+   106 │       │       │      │       │       │       │               │       │                             'otherwise, full training will be performed')                       
+   107 │       │       │      │       │       │       │               │       │    parser.add_argument('--grads_accumulated', default=1, type=int,                              
+   108 │       │       │      │       │       │       │               │       │                        help='Number of gradients to accumulate before performing an optimizati  
+   109 │       │       │      │       │       │       │               │       │    parser.add_argument('--amp', action='store_true', help='Enable mixed precision training')    
+   110 │       │       │      │       │       │       │               │       │    parser.add_argument('--log_path', default='log.json', type=str,                              
+   111 │       │       │      │       │       │       │               │       │                        help='Path for the JSON training log')                                   
+   112 │       │       │      │       │       │       │               │       │    return parser.parse_args()                                                                   
+   113 │       │       │      │       │       │       │               │       │                                                                                                 
+   114 │       │       │      │       │       │       │               │       │                                                                                                 
+   115 │       │       │      │       │       │       │               │       │def init_distributed(args):                                                                      
+   116 │       │       │      │       │       │       │               │       │    args.world_size = int(os.environ.get('WORLD_SIZE', default=1))                               
+   117 │       │       │      │       │       │       │               │       │    args.distributed = args.world_size > 1                                                       
+   118 │       │       │      │       │       │       │               │       │                                                                                                 
+   119 │       │       │      │       │       │       │               │       │    if args.distributed:                                                                         
+   120 │       │       │      │       │       │       │               │       │        args.local_rank = int(os.environ['LOCAL_RANK'])                                          
+   121 │       │       │      │       │       │       │               │       │                                                                                                 
+   122 │       │       │      │       │       │       │               │       │        '''                                                                                      
+   123 │       │       │      │       │       │       │               │       │        Set cuda device so everything is done on the right GPU.                                  
+   124 │       │       │      │       │       │       │               │       │        THIS MUST BE DONE AS SOON AS POSSIBLE.                                                   
+   125 │       │       │      │       │       │       │               │       │        '''                                                                                      
+   126 │       │       │      │       │       │       │               │       │        torch.cuda.set_device(args.local_rank)                                                   
+   127 │       │       │      │       │       │       │               │       │                                                                                                 
+   128 │       │       │      │       │       │       │               │       │        '''Initialize distributed communication'''                                               
+   129 │       │       │      │       │       │       │               │       │        torch.distributed.init_process_group(backend='nccl',                                     
+   130 │       │       │      │       │       │       │               │       │                                             init_method='env://')                               
+   131 │       │       │      │       │       │       │               │       │    else:                                                                                        
+   132 │       │       │      │       │       │       │               │       │        args.local_rank = 0                                                                      
+   133 │       │       │      │       │       │       │               │       │                                                                                                 
+   134 │       │       │      │       │       │       │               │       │                                                                                                 
+   135 │       │       │      │       │       │       │               │       │def val_epoch(model, dataloader: dataloading.TestDataLoader, k, distributed=False, world_size=1  
+   136 │       │       │      │       │       │       │               │       │    model.eval()                                                                                 
+   137 │       │       │      │       │       │       │               │       │    user_feature_name = dataloader.channel_spec[USER_CHANNEL_NAME][0]                            
+   138 │       │       │      │       │       │       │               │       │    item_feature_name = dataloader.channel_spec[ITEM_CHANNEL_NAME][0]                            
+   139 │       │       │      │       │       │       │               │       │    label_feature_name = dataloader.channel_spec[LABEL_CHANNEL_NAME][0]                          
+   140 │       │       │      │       │       │       │               │       │    with torch.no_grad():                                                                        
+   141 │       │       │      │       │       │       │               │       │        p = []                                                                                   
+   142 │       │       │      │       │       │       │               │       │        labels_list = []                                                                         
+   143 │       │       │      │       │       │       │               │       │        losses = []                                                                              
+   144 │       │       │      │       │       │       │               │       │        for batch_dict in dataloader.get_epoch_data():                                           
+   145 │       │       │      │       │       │       │               │       │            user_batch = batch_dict[USER_CHANNEL_NAME][user_feature_name]                        
+   146 │       │       │      │       │       │       │               │       │            item_batch = batch_dict[ITEM_CHANNEL_NAME][item_feature_name]                        
+   147 │       │       │      │       │       │       │               │       │            label_batch = batch_dict[LABEL_CHANNEL_NAME][label_feature_name]                     
+   148 │       │       │      │100%   │       │       │               │       │            prediction_batch = model(user_batch, item_batch, sigmoid=True).detach()              
+   149 │       │       │      │       │       │       │               │       │                                                                                                 
+   150 │       │       │      │100%   │       │       │               │       │            loss_batch = torch.nn.functional.binary_cross_entropy(input=prediction_batch.reshap  
+   151 │       │       │      │       │       │       │               │       │                                                                  target=label_batch)            
+   152 │       │       │      │       │       │       │               │       │            losses.append(loss_batch)                                                            
+   153 │       │       │      │       │       │       │               │       │                                                                                                 
+   154 │       │       │      │       │       │       │               │       │            p.append(prediction_batch)                                                           
+   155 │       │       │      │       │       │       │               │       │            labels_list.append(label_batch)                                                      
+   156 │       │       │      │       │       │       │               │       │                                                                                                 
+   157 │       │       │      │100%   │       │       │               │       │        ignore_mask = dataloader.get_ignore_mask().view(-1, dataloader.samples_in_series)        
+   158 │       │       │      │       │       │       │               │       │        ratings = torch.cat(p).view(-1, dataloader.samples_in_series)                            
+   159 │       │       │      │       │       │       │               │       │        ratings[ignore_mask] = -1                                                                
+   160 │       │       │      │       │       │       │               │       │        labels = torch.cat(labels_list).view(-1, dataloader.samples_in_series)                   
+   161 │       │       │      │       │       │       │               │       │        del p, labels_list                                                                       
+   162 │       │       │      │       │       │       │               │       │                                                                                                 
+   163 │       │       │      │       │       │       │               │       │        top_indices = torch.topk(ratings, k)[1]                                                  
+   164 │       │       │      │       │       │       │               │       │                                                                                                 
+   165 │       │       │      │       │       │       │               │       │        # Positive items are always first in a given series                                      
+   166 │       │       │      │       │       │       │               │       │        labels_of_selected = torch.gather(labels, 1, top_indices)                                
+   167 │       │       │      │       │       │       │               │       │        ifzero = (labels_of_selected == 1)                                                       
+   168 │       │       │      │       │       │       │               │       │        hits = ifzero.sum()                                                                      
+   169 │       │    4% │      │100%   │       │       │               │       │        ndcg = (math.log(2) / (torch.nonzero(ifzero)[:, 1].view(-1).to(torch.float) + 2).log_()  
+   170 │       │       │      │       │       │       │               │       │        total_validation_loss = torch.mean(torch.stack(losses, dim=0))                           
+   171 │       │       │      │       │       │       │               │       │        #  torch.nonzero may cause host-device synchronization                                   
+   172 │       │       │      │       │       │       │               │       │                                                                                                 
+   173 │       │       │      │       │       │       │               │       │    if distributed:                                                                              
+   174 │       │       │      │       │       │       │               │       │        torch.distributed.all_reduce(hits, op=torch.distributed.ReduceOp.SUM)                    
+   175 │       │       │      │       │       │       │               │       │        torch.distributed.all_reduce(ndcg, op=torch.distributed.ReduceOp.SUM)                    
+   176 │       │       │      │       │       │       │               │       │        torch.distributed.all_reduce(total_validation_loss, op=torch.distributed.ReduceOp.SUM)   
+   177 │       │       │      │       │       │       │               │       │        total_validation_loss = total_validation_loss / world_size                               
+   178 │       │       │      │       │       │       │               │       │                                                                                                 
+   179 │       │       │      │       │       │       │               │       │                                                                                                 
+   180 │       │       │      │       │       │       │               │       │    num_test_cases = dataloader.raw_dataset_length / dataloader.samples_in_series                
+   181 │       │       │      │       │       │       │               │       │    hr = hits.item() / num_test_cases                                                            
+   182 │       │       │      │       │       │       │               │       │    ndcg = ndcg.item() / num_test_cases                                                          
+   183 │       │       │      │       │       │       │               │       │                                                                                                 
+   184 │       │       │      │       │       │       │               │       │    model.train()                                                                                
+   185 │       │       │      │       │       │       │               │       │    return hr, ndcg, total_validation_loss                                                       
+   186 │       │       │      │       │       │       │               │       │                                                                                                 
+   187 │       │       │      │       │       │       │               │       │                                                                                                 
+   188 │       │       │      │       │       │       │               │       │def main():                                                                                      
+   189 │       │       │      │       │       │       │               │       │    args = parse_args()                                                                          
+   190 │       │       │      │       │       │       │               │       │    init_distributed(args)                                                                       
+   191 │       │       │      │       │       │       │               │       │                                                                                                 
+   192 │       │       │      │       │       │       │               │       │    if args.local_rank == 0:                                                                     
+   193 │       │       │      │       │       │       │               │       │        dllogger.init(backends=[dllogger.JSONStreamBackend(verbosity=dllogger.Verbosity.VERBOSE  
+   194 │       │       │      │       │       │       │               │       │                                                           filename=args.log_path),              
+   195 │       │       │      │       │       │       │               │       │                                dllogger.StdOutBackend(verbosity=dllogger.Verbosity.VERBOSE)])   
+   196 │       │       │      │       │       │       │               │       │    else:                                                                                        
+   197 │       │       │      │       │       │       │               │       │        dllogger.init(backends=[])                                                               
+   198 │       │       │      │       │       │       │               │       │                                                                                                 
+   199 │       │       │      │       │       │       │               │       │    dllogger.metadata('train_throughput', {"name": 'train_throughput', 'unit': 'samples/s', 'fo  
+   200 │       │       │      │       │       │       │               │       │    dllogger.metadata('best_train_throughput', {'unit': 'samples/s'})                            
+   201 │       │       │      │       │       │       │               │       │    dllogger.metadata('mean_train_throughput', {'unit': 'samples/s'})                            
+   202 │       │       │      │       │       │       │               │       │    dllogger.metadata('eval_throughput', {"name": 'eval_throughput', 'unit': 'samples/s', 'form  
+   203 │       │       │      │       │       │       │               │       │    dllogger.metadata('best_eval_throughput', {'unit': 'samples/s'})                             
+   204 │       │       │      │       │       │       │               │       │    dllogger.metadata('mean_eval_throughput', {'unit': 'samples/s'})                             
+   205 │       │       │      │       │       │       │               │       │    dllogger.metadata('train_epoch_time', {"name": 'train_epoch_time', 'unit': 's', 'format': "  
+   206 │       │       │      │       │       │       │               │       │    dllogger.metadata('validation_epoch_time', {"name": 'validation_epoch_time', 'unit': 's', '  
+   207 │       │       │      │       │       │       │               │       │    dllogger.metadata('time_to_target', {'unit': 's'})                                           
+   208 │       │       │      │       │       │       │               │       │    dllogger.metadata('time_to_best_model', {'unit': 's'})                                       
+   209 │       │       │      │       │       │       │               │       │    dllogger.metadata('hr@10', {"name": 'hr@10', 'unit': None, 'format': ":.5f"})                
+   210 │       │       │      │       │       │       │               │       │    dllogger.metadata('best_accuracy', {'unit': None})                                           
+   211 │       │       │      │       │       │       │               │       │    dllogger.metadata('best_epoch', {'unit': None})                                              
+   212 │       │       │      │       │       │       │               │       │    dllogger.metadata('validation_loss', {"name": 'validation_loss', 'unit': None, 'format': ":  
+   213 │       │       │      │       │       │       │               │       │    dllogger.metadata('train_loss', {"name": 'train_loss', 'unit': None, 'format': ":.5f"})      
+   214 │       │       │      │       │       │       │               │       │                                                                                                 
+   215 │       │       │      │       │       │       │               │       │    dllogger.log(data=vars(args), step='PARAMETER')                                              
+   216 │       │       │      │       │       │       │               │       │                                                                                                 
+   217 │       │       │      │       │       │       │               │       │    if args.seed is not None:                                                                    
+   218 │       │       │      │       │       │       │               │       │        torch.manual_seed(args.seed)                                                             
+   219 │       │       │      │       │       │       │               │       │                                                                                                 
+   220 │       │       │      │       │       │       │               │       │    if not os.path.exists(args.checkpoint_dir) and args.checkpoint_dir:                          
+   221 │       │       │      │       │       │       │               │       │        print("Saving results to {}".format(args.checkpoint_dir))                                
+   222 │       │       │      │       │       │       │               │       │        os.makedirs(args.checkpoint_dir, exist_ok=True)                                          
+   223 │       │       │      │       │       │       │               │       │                                                                                                 
+   224 │       │       │      │       │       │       │               │       │    # sync workers before timing                                                                 
+   225 │       │       │      │       │       │       │               │       │    if args.distributed:                                                                         
+   226 │       │       │      │       │       │       │               │       │        torch.distributed.broadcast(torch.tensor([1], device="cuda"), 0)                         
+   227 │       │       │      │  2%   │   1%  │ 1.70G │▁▂▂▂▂▂▃▃▃  39% │     4 │    torch.cuda.synchronize()                                                                     
+   228 │       │       │      │       │       │       │               │       │                                                                                                 
+   229 │       │       │      │       │       │       │               │       │    main_start_time = synchronized_timestamp()                                                   
+   230 │       │       │      │       │       │       │               │       │                                                                                                 
+   231 │       │       │      │       │       │       │               │       │    feature_spec_path = os.path.join(args.data, args.feature_spec_file)                          
+   232 │       │       │      │       │       │       │               │       │    feature_spec = FeatureSpec.from_yaml(feature_spec_path)                                      
+   233 │       │       │      │       │       │       │               │       │    trainset = dataloading.TorchTensorDataset(feature_spec, mapping_name='train', args=args)     
+   234 │       │       │      │       │       │       │               │       │    testset = dataloading.TorchTensorDataset(feature_spec, mapping_name='test', args=args)       
+   235 │       │       │      │       │       │       │               │       │    train_loader = dataloading.TrainDataloader(trainset, args)                                   
+   236 │       │       │      │       │       │       │               │       │    test_loader = dataloading.TestDataLoader(testset, args)                                      
+   237 │       │       │      │       │       │       │               │       │                                                                                                 
+   238 │       │       │      │       │       │       │               │       │    # make pytorch memory behavior more consistent later                                         
+   239 │       │       │      │       │       │       │               │       │    torch.cuda.empty_cache()                                                                     
+   240 │       │       │      │       │       │       │               │       │                                                                                                 
+   241 │       │       │      │       │       │       │               │       │    # Create model                                                                               
+   242 │       │       │      │       │       │       │               │       │    user_feature_name = feature_spec.channel_spec[USER_CHANNEL_NAME][0]                          
+   243 │       │       │      │       │       │       │               │       │    item_feature_name = feature_spec.channel_spec[ITEM_CHANNEL_NAME][0]                          
+   244 │       │       │      │       │       │       │               │       │    label_feature_name = feature_spec.channel_spec[LABEL_CHANNEL_NAME][0]                        
+   245 │       │       │      │       │       │       │               │       │    model = NeuMF(nb_users=feature_spec.feature_spec[user_feature_name]['cardinality'],          
+   246 │       │       │      │       │       │       │               │       │                  nb_items=feature_spec.feature_spec[item_feature_name]['cardinality'],          
+   247 │       │       │      │       │       │       │               │       │                  mf_dim=args.factors,                                                           
+   248 │       │       │      │       │       │       │               │       │                  mlp_layer_sizes=args.layers,                                                   
+   249 │       │       │      │       │       │       │               │       │                  dropout=args.dropout)                                                          
+   250 │       │       │      │       │       │       │               │       │                                                                                                 
+   251 │       │    1% │      │       │ 100%  │   50M │▁▁▁▁▁   1%     │     4 │    optimizer = Optimizer(model.parameters(), lr=args.learning_rate,                             
+   252 │       │       │      │       │       │       │               │       │                          betas=(args.beta1, args.beta2), eps=args.eps)                          
+   253 │       │       │      │       │       │       │               │       │                                                                                                 
+   254 │       │       │      │       │       │       │               │       │    criterion = nn.BCEWithLogitsLoss(reduction='none')  # use torch.mean() with dim later to av  
+   255 │       │       │      │       │       │       │               │       │    # Move model and loss to GPU                                                                 
+   256 │       │       │      │  1%   │       │       │               │       │    model = model.cuda()                                                                         
+   257 │       │       │      │       │       │       │               │       │    criterion = criterion.cuda()                                                                 
+   258 │       │       │      │       │       │       │               │       │                                                                                                 
+   259 │       │       │      │       │       │       │               │       │    if args.distributed:                                                                         
+   260 │       │       │      │       │       │       │               │       │        model = torch.nn.parallel.DistributedDataParallel(model)                                 
+   261 │       │       │      │       │       │       │               │       │                                                                                                 
+   262 │       │       │      │       │       │       │               │       │    local_batch = args.batch_size // args.world_size                                             
+   263 │       │       │      │       │       │       │               │       │    traced_criterion = torch.jit.trace(criterion.forward,                                        
+   264 │       │       │      │  1%   │       │       │               │       │                                       (torch.rand(local_batch, 1), torch.rand(local_batch, 1))  
+   265 │       │       │      │       │       │       │               │       │                                                                                                 
+   266 │       │       │      │       │       │       │               │       │    print(model)                                                                                 
+   267 │       │       │      │       │       │       │               │       │    print("{} parameters".format(utils.count_parameters(model)))                                 
+   268 │       │       │      │       │       │       │               │       │                                                                                                 
+   269 │       │       │      │       │       │       │               │       │    if args.load_checkpoint_path:                                                                
+   270 │       │       │      │       │       │       │               │       │        state_dict = torch.load(args.load_checkpoint_path)                                       
+   271 │       │       │      │       │       │       │               │       │        state_dict = {k.replace('module.', ''): v for k, v in state_dict.items()}                
+   272 │       │       │      │       │       │       │               │       │        model.load_state_dict(state_dict)                                                        
+   273 │       │       │      │       │       │       │               │       │                                                                                                 
+   274 │       │       │      │       │       │       │               │       │    if args.mode == 'test':                                                                      
+   275 │       │       │      │       │       │       │               │       │        start = synchronized_timestamp()                                                         
+   276 │       │       │      │       │       │       │               │       │        hr, ndcg, val_loss = val_epoch(model, test_loader, args.topk,                            
+   277 │       │       │      │       │       │       │               │       │                                       distributed=args.distributed, world_size=args.world_size  
+   278 │       │       │      │       │       │       │               │       │        val_time = synchronized_timestamp() - start                                              
+   279 │       │       │      │       │       │       │               │       │        eval_size = test_loader.raw_dataset_length                                               
+   280 │       │       │      │       │       │       │               │       │        eval_throughput = eval_size / val_time                                                   
+   281 │       │       │      │       │       │       │               │       │                                                                                                 
+   282 │       │       │      │       │       │       │               │       │        dllogger.log(step=tuple(), data={'best_eval_throughput': eval_throughput,                
+   283 │       │       │      │       │       │       │               │       │                                         'hr@10': hr,                                            
+   284 │       │       │      │       │       │       │               │       │                                         'validation_loss': float(val_loss.item())})             
+   285 │       │       │      │       │       │       │               │       │        return                                                                                   
+   286 │       │       │      │       │       │       │               │       │                                                                                                 
+   287 │       │       │      │       │       │       │               │       │    # this should always be overridden if hr>0.                                                  
+   288 │       │       │      │       │       │       │               │       │    # It is theoretically possible for the hit rate to be zero in the first epoch, which would   
+   289 │       │       │      │       │       │       │               │       │    # to an uninitialized variable.                                                              
+   290 │       │       │      │       │       │       │               │       │    max_hr = 0                                                                                   
+   291 │       │       │      │       │       │       │               │       │    best_epoch = 0                                                                               
+   292 │       │       │      │       │       │       │               │       │    best_model_timestamp = synchronized_timestamp()                                              
+   293 │       │       │      │       │       │       │               │       │    train_throughputs, eval_throughputs = [], []                                                 
+   294 │       │       │      │       │       │       │               │       │    scaler = torch.cuda.amp.GradScaler(enabled=args.amp)                                         
+   295 │       │       │      │       │       │       │               │       │                                                                                                 
+   296 │       │       │      │       │       │       │               │       │    for epoch in range(args.epochs):                                                             
+   297 │       │       │      │       │       │       │               │       │                                                                                                 
+   298 │       │       │      │       │       │       │               │       │        begin = synchronized_timestamp()                                                         
+   299 │       │       │      │       │       │       │               │       │        batch_dict_list = train_loader.get_epoch_data()                                          
+   300 │       │       │      │       │       │       │               │       │        num_batches = len(batch_dict_list)                                                       
+   301 │       │       │      │       │       │       │               │       │        for i in range(num_batches // args.grads_accumulated):                                   
+   302 │       │       │      │100%   │       │       │               │       │            for j in range(args.grads_accumulated):                                              
+   303 │       │       │      │       │       │       │               │       │                batch_idx = (args.grads_accumulated * i) + j                                     
+   304 │       │       │      │       │       │       │               │       │                batch_dict = batch_dict_list[batch_idx]                                          
+   305 │       │       │      │       │       │       │               │       │                                                                                                 
+   306 │       │       │      │       │       │       │               │       │                user_features = batch_dict[USER_CHANNEL_NAME]                                    
+   307 │       │       │      │       │       │       │               │       │                item_features = batch_dict[ITEM_CHANNEL_NAME]                                    
+   308 │       │       │      │       │       │       │               │       │                                                                                                 
+   309 │       │       │      │       │       │       │               │       │                user_batch = user_features[user_feature_name]                                    
+   310 │       │       │      │       │       │       │               │       │                item_batch = item_features[item_feature_name]                                    
+   311 │       │       │      │       │       │       │               │       │                                                                                                 
+   312 │       │       │      │       │       │       │               │       │                label_features = batch_dict[LABEL_CHANNEL_NAME]                                  
+   313 │       │       │      │       │       │       │               │       │                label_batch = label_features[label_feature_name]                                 
+   314 │       │       │      │       │       │       │               │       │                                                                                                 
+   315 │       │       │      │100%   │       │       │               │       │                with torch.cuda.amp.autocast(enabled=args.amp):                                  
+   316 │       │       │      │ 90%   │       │       │               │       │                    outputs = model(user_batch, item_batch)                                      
+   317 │    3% │    2% │   3% │100%   │       │       │               │       │                    loss = traced_criterion(outputs, label_batch.view(-1, 1))                    
+   318 │       │       │      │100%   │       │       │               │       │                    loss = torch.mean(loss.float().view(-1), 0)                                  
+   319 │       │       │      │       │       │       │               │       │                                                                                                 
+   320 │    6% │   25% │  16% │100%   │       │       │               │     2 │                scaler.scale(loss).backward()                                                    
+   321 │       │       │      │ 95%   │       │       │               │     1 │            scaler.step(optimizer)                                                               
+   322 │       │       │      │ 49%   │       │       │               │       │            scaler.update()                                                                      
+   323 │       │       │      │       │       │       │               │       │                                                                                                 
+   324 │       │       │      │ 93%   │       │       │               │       │            for p in model.parameters():                                                         
+   325 │       │       │      │ 92%   │       │       │               │       │                p.grad = None                                                                    
+   326 │       │       │      │       │       │       │               │       │                                                                                                 
+   327 │       │       │      │       │       │       │               │       │        del batch_dict_list                                                                      
+   328 │       │       │      │       │       │       │               │       │        train_time = synchronized_timestamp() - begin                                            
+   329 │       │       │      │       │       │       │               │       │        begin = synchronized_timestamp()                                                         
+   330 │       │       │      │       │       │       │               │       │                                                                                                 
+   331 │       │       │      │       │       │       │               │       │        epoch_samples = train_loader.length_after_augmentation                                   
+   332 │       │       │      │       │       │       │               │       │        train_throughput = epoch_samples / train_time                                            
+   333 │       │       │      │       │       │       │               │       │        train_throughputs.append(train_throughput)                                               
+   334 │       │       │      │       │       │       │               │       │                                                                                                 
+   335 │       │       │      │       │       │       │               │       │        hr, ndcg, val_loss = val_epoch(model, test_loader, args.topk,                            
+   336 │       │       │      │       │       │       │               │       │                                       distributed=args.distributed, world_size=args.world_size  
+   337 │       │       │      │       │       │       │               │       │                                                                                                 
+   338 │       │       │      │       │       │       │               │       │        val_time = synchronized_timestamp() - begin                                              
+   339 │       │       │      │       │       │       │               │       │        eval_size = test_loader.raw_dataset_length                                               
+   340 │       │       │      │       │       │       │               │       │        eval_throughput = eval_size / val_time                                                   
+   341 │       │       │      │       │       │       │               │       │        eval_throughputs.append(eval_throughput)                                                 
+   342 │       │       │      │       │       │       │               │       │                                                                                                 
+   343 │       │       │      │       │       │       │               │       │        if args.distributed:                                                                     
+   344 │       │       │      │       │       │       │               │       │            torch.distributed.all_reduce(loss, op=torch.distributed.ReduceOp.SUM)                
+   345 │       │       │      │       │       │       │               │       │            loss = loss / args.world_size                                                        
+   346 │       │       │      │       │       │       │               │       │                                                                                                 
+   347 │       │       │      │100%   │       │       │               │       │        dllogger.log(step=(epoch,),                                                              
+   348 │       │       │      │       │       │       │               │       │                     data={'train_throughput': train_throughput,                                 
+   349 │       │       │      │       │       │       │               │       │                           'hr@10': hr,                                                          
+   350 │       │       │      │       │       │       │               │       │                           'train_epoch_time': train_time,                                       
+   351 │       │       │      │       │       │       │               │       │                           'validation_epoch_time': val_time,                                    
+   352 │       │       │      │       │       │       │               │       │                           'eval_throughput': eval_throughput,                                   
+   353 │       │       │      │       │       │       │               │       │                           'validation_loss': float(val_loss.item()),                            
+   354 │       │       │      │       │       │       │               │       │                           'train_loss': float(loss.item())})                                    
+   355 │       │       │      │       │       │       │               │       │                                                                                                 
+   356 │       │       │      │       │       │       │               │       │        if hr > max_hr and args.local_rank == 0:                                                 
+   357 │       │       │      │       │       │       │               │       │            max_hr = hr                                                                          
+   358 │       │       │      │       │       │       │               │       │            best_epoch = epoch                                                                   
+   359 │       │       │      │       │       │       │               │       │            print("New best hr!")                                                                
+   360 │       │       │      │       │       │       │               │       │            if args.checkpoint_dir:                                                              
+   361 │       │       │      │       │       │       │               │       │                save_checkpoint_path = os.path.join(args.checkpoint_dir, 'model.pth')            
+   362 │       │       │      │       │       │       │               │       │                print("Saving the model to: ", save_checkpoint_path)                             
+   363 │       │       │      │ 32%   │  17%  │   82M │▃▃▃▃▃▃▃▃▃  28% │       │                torch.save(model.state_dict(), save_checkpoint_path)                             
+   364 │       │       │      │       │       │       │               │       │            best_model_timestamp = synchronized_timestamp()                                      
+   365 │       │       │      │       │       │       │               │       │                                                                                                 
+   366 │       │       │      │       │       │       │               │       │        if args.threshold is not None:                                                           
+   367 │       │       │      │       │       │       │               │       │            if hr >= args.threshold:                                                             
+   368 │       │       │      │       │       │       │               │       │                print("Hit threshold of {}".format(args.threshold))                              
+   369 │       │       │      │       │       │       │               │       │                break                                                                            
+   370 │       │       │      │       │       │       │               │       │                                                                                                 
+   371 │       │       │      │       │       │       │               │       │    if args.local_rank == 0:                                                                     
+   372 │       │       │      │       │       │       │               │       │        dllogger.log(data={'best_train_throughput': max(train_throughputs),                      
+   373 │       │       │      │       │       │       │               │       │                           'best_eval_throughput': max(eval_throughputs),                        
+   374 │       │       │      │       │       │       │               │       │                           'mean_train_throughput': np.mean(train_throughputs),                  
+   375 │       │       │      │       │       │       │               │       │                           'mean_eval_throughput': np.mean(eval_throughputs),                    
+   376 │       │       │      │       │       │       │               │       │                           'best_accuracy': max_hr,                                              
+   377 │       │       │      │       │       │       │               │       │                           'best_epoch': best_epoch,                                             
+   378 │       │       │      │       │       │       │               │       │                           'time_to_target': synchronized_timestamp() - main_start_time,         
+   379 │       │       │      │       │       │       │               │       │                           'time_to_best_model': best_model_timestamp - main_start_time,         
+   380 │       │       │      │       │       │       │               │       │                           'validation_loss': float(val_loss.item()),                            
+   381 │       │       │      │       │       │       │               │       │                           'train_loss': float(loss.item())},                                    
+   382 │       │       │      │       │       │       │               │       │                     step=tuple())                                                               
+   383 │       │       │      │       │       │       │               │       │                                                                                                 
+   384 │       │       │      │       │       │       │               │       │                                                                                                 
+   385 │       │       │      │       │       │       │               │       │if __name__ == '__main__':                                                                       
+   386 │       │       │      │       │       │       │               │       │    main()                                                                                       
+   387 │       │       │      │       │       │       │               │       │                                                                                                 
+       │       │       │      │       │       │       │               │       │                                                                                                 
+╶──────┼───────┼───────┼──────┼───────┼───────┼───────┼───────────────┼───────┼────────────────────────────────────────────────────────────────────────────────────────────────╴
+       │       │       │      │       │       │       │               │       │function summary for /home/cc/GreenAI/AI-Energy-Optimization/ScaleneDemo/NCFonPytorch/NCF/ncf.…  
+    58 │       │    5% │      │100%   │       │       │               │       │synchronized_timestamp                                                                           
+   135 │       │    4% │      │100%   │       │       │               │       │val_epoch                                                                                        
+   188 │   10% │   29% │  21% │ 93%   │   9%  │ 1.70G │█████████  68% │    11 │main                                                                                             
+       ╵       ╵       ╵      ╵       ╵       ╵       ╵               ╵       ╵                                                                                                 
+Top PEAK memory consumption, by line:
+(1)   227:  1739 MB                                                                                                                                                              
+(2)    31:   131 MB                                                                                                                                                              
+(3)   363:    82 MB                                                                                                                                                              
+(4)   251:    50 MB                                                                                                                                                              
+                       /home/cc/GreenAI/AI-Energy-Optimization/ScaleneDemo/NCFonPytorch/NCF/neumf.py: % of time =  26.78% (2m:54.094s) out of 7m:5.991s.                        
+       ╷       ╷       ╷      ╷       ╷       ╷       ╷               ╷       ╷                                                                                                 
+       │Time   │–––––– │––––… │–––––– │Memory │–––––– │–––––––––––    │Copy   │                                                                                                 
+  Line │Python │native │syst… │GPU    │Python │peak   │timeline/%     │(MB/s) │/home/cc/GreenAI/AI-Energy-Optimization/ScaleneDemo/NCFonPytorch/NCF/neumf.py                    
+╺━━━━━━┿━━━━━━━┿━━━━━━━┿━━━━━━┿━━━━━━━┿━━━━━━━┿━━━━━━━┿━━━━━━━━━━━━━━━┿━━━━━━━┿━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+     1 │       │       │      │       │       │       │               │       │# Copyright (c) 2018, deepakn94, robieta. All rights reserved.                                   
+     2 │       │       │      │       │       │       │               │       │#                                                                                                
+     3 │       │       │      │       │       │       │               │       │# Licensed under the Apache License, Version 2.0 (the "License");                                
+     4 │       │       │      │       │       │       │               │       │# you may not use this file except in compliance with the License.                               
+     5 │       │       │      │       │       │       │               │       │# You may obtain a copy of the License at                                                        
+     6 │       │       │      │       │       │       │               │       │#                                                                                                
+     7 │       │       │      │       │       │       │               │       │#     http://www.apache.org/licenses/LICENSE-2.0                                                 
+     8 │       │       │      │       │       │       │               │       │#                                                                                                
+     9 │       │       │      │       │       │       │               │       │# Unless required by applicable law or agreed to in writing, software                            
+    10 │       │       │      │       │       │       │               │       │# distributed under the License is distributed on an "AS IS" BASIS,                              
+    11 │       │       │      │       │       │       │               │       │# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                       
+    12 │       │       │      │       │       │       │               │       │# See the License for the specific language governing permissions and                            
+    13 │       │       │      │       │       │       │               │       │# limitations under the License.                                                                 
+    14 │       │       │      │       │       │       │               │       │#                                                                                                
+    15 │       │       │      │       │       │       │               │       │# -----------------------------------------------------------------------                        
+    16 │       │       │      │       │       │       │               │       │#                                                                                                
+    17 │       │       │      │       │       │       │               │       │# Copyright (c) 2018, NVIDIA CORPORATION. All rights reserved.                                   
+    18 │       │       │      │       │       │       │               │       │#                                                                                                
+    19 │       │       │      │       │       │       │               │       │# Licensed under the Apache License, Version 2.0 (the "License");                                
+    20 │       │       │      │       │       │       │               │       │# you may not use this file except in compliance with the License.                               
+    21 │       │       │      │       │       │       │               │       │# You may obtain a copy of the License at                                                        
+    22 │       │       │      │       │       │       │               │       │#                                                                                                
+    23 │       │       │      │       │       │       │               │       │#     http://www.apache.org/licenses/LICENSE-2.0                                                 
+    24 │       │       │      │       │       │       │               │       │#                                                                                                
+    25 │       │       │      │       │       │       │               │       │# Unless required by applicable law or agreed to in writing, software                            
+    26 │       │       │      │       │       │       │               │       │# distributed under the License is distributed on an "AS IS" BASIS,                              
+    27 │       │       │      │       │       │       │               │       │# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                       
+    28 │       │       │      │       │       │       │               │       │# See the License for the specific language governing permissions and                            
+    29 │       │       │      │       │       │       │               │       │# limitations under the License.                                                                 
+    30 │       │       │      │       │       │       │               │       │                                                                                                 
+    31 │       │       │      │       │       │       │               │       │import numpy as np                                                                               
+    32 │       │       │      │       │       │       │               │       │import torch                                                                                     
+    33 │       │       │      │       │       │       │               │       │import torch.nn as nn                                                                            
+    34 │       │       │      │       │       │       │               │       │                                                                                                 
+    35 │       │       │      │       │       │       │               │       │import sys                                                                                       
+    36 │       │       │      │       │       │       │               │       │from os.path import abspath, join, dirname                                                       
+    37 │       │       │      │       │       │       │               │       │                                                                                                 
+    38 │       │       │      │       │       │       │               │       │                                                                                                 
+    39 │       │       │      │       │       │       │               │       │class NeuMF(nn.Module):                                                                          
+    40 │       │       │      │       │       │       │               │       │    def __init__(self, nb_users, nb_items,                                                       
+    41 │       │       │      │       │       │       │               │       │                 mf_dim, mlp_layer_sizes, dropout=0):                                            
+    42 │       │       │      │       │       │       │               │       │                                                                                                 
+    43 │       │       │      │       │       │       │               │       │        if mlp_layer_sizes[0] % 2 != 0:                                                          
+    44 │       │       │      │       │       │       │               │       │            raise RuntimeError('u dummy, mlp_layer_sizes[0] % 2 != 0')                           
+    45 │       │       │      │       │       │       │               │       │        super(NeuMF, self).__init__()                                                            
+    46 │       │       │      │       │       │       │               │       │        nb_mlp_layers = len(mlp_layer_sizes)                                                     
+    47 │       │       │      │       │       │       │               │       │                                                                                                 
+    48 │       │       │      │ 15%   │  41%  │   34M │▁              │       │        self.mf_user_embed = nn.Embedding(nb_users, mf_dim)                                      
+    49 │       │       │      │       │       │       │               │       │        self.mf_item_embed = nn.Embedding(nb_items, mf_dim)                                      
+    50 │       │       │      │       │  47%  │   74M │▁   2%         │       │        self.mlp_user_embed = nn.Embedding(nb_users, mlp_layer_sizes[0] // 2)                    
+    51 │       │       │      │       │       │   13M │▁              │       │        self.mlp_item_embed = nn.Embedding(nb_items, mlp_layer_sizes[0] // 2)                    
+    52 │       │       │      │       │       │       │               │       │        self.dropout = dropout                                                                   
+    53 │       │       │      │       │       │       │               │       │                                                                                                 
+    54 │       │       │      │       │       │       │               │       │        self.mlp = nn.ModuleList()                                                               
+    55 │       │       │      │       │       │       │               │       │        for i in range(1, nb_mlp_layers):                                                        
+    56 │       │       │      │       │       │       │               │       │            self.mlp.extend([nn.Linear(mlp_layer_sizes[i - 1], mlp_layer_sizes[i])])  # noqa: E  
+    57 │       │       │      │       │       │       │               │       │                                                                                                 
+    58 │       │       │      │       │       │       │               │       │        self.final = nn.Linear(mlp_layer_sizes[-1] + mf_dim, 1)                                  
+    59 │       │       │      │       │       │       │               │       │                                                                                                 
+    60 │       │       │      │       │       │       │               │       │        self.mf_user_embed.weight.data.normal_(0., 0.01)                                         
+    61 │       │       │      │       │       │       │               │       │        self.mf_item_embed.weight.data.normal_(0., 0.01)                                         
+    62 │       │       │      │       │       │       │               │       │        self.mlp_user_embed.weight.data.normal_(0., 0.01)                                        
+    63 │       │       │      │       │       │       │               │       │        self.mlp_item_embed.weight.data.normal_(0., 0.01)                                        
+    64 │       │       │      │       │       │       │               │       │                                                                                                 
+    65 │       │       │      │       │       │       │               │       │        def glorot_uniform(layer):                                                               
+    66 │       │       │      │       │       │       │               │       │            fan_in, fan_out = layer.in_features, layer.out_features                              
+    67 │       │       │      │       │       │       │               │       │            limit = np.sqrt(6. / (fan_in + fan_out))                                             
+    68 │       │       │      │       │       │       │               │       │            layer.weight.data.uniform_(-limit, limit)                                            
+    69 │       │       │      │       │       │       │               │       │                                                                                                 
+    70 │       │       │      │       │       │       │               │       │        def lecunn_uniform(layer):                                                               
+    71 │       │       │      │       │       │       │               │       │            fan_in, fan_out = layer.in_features, layer.out_features  # noqa: F841, E501          
+    72 │       │       │      │       │       │       │               │       │            limit = np.sqrt(3. / fan_in)                                                         
+    73 │       │       │      │       │       │       │               │       │            layer.weight.data.uniform_(-limit, limit)                                            
+    74 │       │       │      │       │       │       │               │       │        for layer in self.mlp:                                                                   
+    75 │       │       │      │       │       │       │               │       │            if type(layer) != nn.Linear:                                                         
+    76 │       │       │      │       │       │       │               │       │                continue                                                                         
+    77 │       │       │      │       │       │       │               │       │            glorot_uniform(layer)                                                                
+    78 │       │       │      │       │       │       │               │       │        lecunn_uniform(self.final)                                                               
+    79 │       │       │      │       │       │       │               │       │                                                                                                 
+    80 │       │       │      │100%   │       │       │               │       │    def forward(self, user, item, sigmoid=False):                                                
+    81 │       │       │      │ 98%   │       │       │               │       │        xmfu = self.mf_user_embed(user)                                                          
+    82 │       │       │      │100%   │       │       │               │       │        xmfi = self.mf_item_embed(item)                                                          
+    83 │       │       │      │       │       │       │               │       │        xmf = xmfu * xmfi                                                                        
+    84 │       │       │      │       │       │       │               │       │                                                                                                 
+    85 │       │       │      │ 98%   │       │       │               │       │        xmlpu = self.mlp_user_embed(user)                                                        
+    86 │       │       │      │ 78%   │       │       │               │       │        xmlpi = self.mlp_item_embed(item)                                                        
+    87 │       │       │      │ 72%   │       │       │               │       │        xmlp = torch.cat((xmlpu, xmlpi), dim=1)                                                  
+    88 │       │       │      │100%   │       │       │               │       │        for i, layer in enumerate(self.mlp):                                                     
+    89 │    1% │       │   1% │ 87%   │   2%  │  489M │▁▁▁▁▁▁▁▁▁  12% │     2 │            xmlp = layer(xmlp)                                                                   
+    90 │    4% │    3% │   4% │100%   │       │       │               │       │            xmlp = nn.functional.relu(xmlp)                                                      
+    91 │       │       │      │       │       │       │               │       │            if self.dropout != 0:                                                                
+    92 │    1% │       │      │ 99%   │       │       │               │       │                xmlp = nn.functional.dropout(xmlp, p=self.dropout, training=self.training)       
+    93 │       │       │      │       │       │       │               │       │                                                                                                 
+    94 │       │       │      │ 99%   │       │       │               │       │        x = torch.cat((xmf, xmlp), dim=1)                                                        
+    95 │    2% │    1% │   2% │100%   │       │       │               │     1 │        x = self.final(x)                                                                        
+    96 │       │       │      │       │       │       │               │       │        if sigmoid:                                                                              
+    97 │       │       │      │100%   │       │       │               │       │            x = torch.sigmoid(x)                                                                 
+    98 │       │       │      │       │       │       │               │       │        return x                                                                                 
+    99 │       │       │      │       │       │       │               │       │                                                                                                 
+       │       │       │      │       │       │       │               │       │                                                                                                 
+╶──────┼───────┼───────┼──────┼───────┼───────┼───────┼───────────────┼───────┼────────────────────────────────────────────────────────────────────────────────────────────────╴
+       │       │       │      │       │       │       │               │       │function summary for /home/cc/GreenAI/AI-Energy-Optimization/ScaleneDemo/NCFonPytorch/NCF/neum…  
+    40 │       │       │      │  3%   │  40%  │   74M │███   3%       │       │NeuMF.__init__                                                                                   
+    65 │       │       │      │       │       │       │               │       │NeuMF.glorot_uniform                                                                             
+    80 │   11% │    7% │   9% │ 98%   │   2%  │  489M │█████████  12% │     3 │NeuMF.forward                                                                                    
+       ╵       ╵       ╵      ╵       ╵       ╵       ╵               ╵       ╵                                                                                                 
+Top PEAK memory consumption, by line:
+(1)    89:   489 MB                                                                                                                                                              
+(2)    50:    74 MB                                                                                                                                                              
+(3)    48:    34 MB                                                                                                                                                              
+(4)    51:    13 MB                                                                                                                                                              
+                      /home/cc/GreenAI/AI-Energy-Optimization/ScaleneDemo/NCFonPytorch/NCF/dataloading.py: % of time =   0.24% (1.012s) out of 7m:5.991s.                       
+       ╷       ╷       ╷      ╷       ╷       ╷       ╷               ╷       ╷                                                                                                 
+       │Time   │–––––– │––––… │–––––– │Memory │–––––– │–––––––––––    │Copy   │                                                                                                 
+  Line │Python │native │syst… │GPU    │Python │peak   │timeline/%     │(MB/s) │/home/cc/GreenAI/AI-Energy-Optimization/ScaleneDemo/NCFonPytorch/NCF/dataloading.py              
+╺━━━━━━┿━━━━━━━┿━━━━━━━┿━━━━━━┿━━━━━━━┿━━━━━━━┿━━━━━━━┿━━━━━━━━━━━━━━━┿━━━━━━━┿━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╸
+     1 │       │       │      │       │       │       │               │       │# Copyright (c) 2018, deepakn94, codyaustun, robieta. All rights reserved.                       
+     2 │       │       │      │       │       │       │               │       │#                                                                                                
+     3 │       │       │      │       │       │       │               │       │# Licensed under the Apache License, Version 2.0 (the "License");                                
+     4 │       │       │      │       │       │       │               │       │# you may not use this file except in compliance with the License.                               
+     5 │       │       │      │       │       │       │               │       │# You may obtain a copy of the License at                                                        
+     6 │       │       │      │       │       │       │               │       │#                                                                                                
+     7 │       │       │      │       │       │       │               │       │#     http://www.apache.org/licenses/LICENSE-2.0                                                 
+     8 │       │       │      │       │       │       │               │       │#                                                                                                
+     9 │       │       │      │       │       │       │               │       │# Unless required by applicable law or agreed to in writing, software                            
+    10 │       │       │      │       │       │       │               │       │# distributed under the License is distributed on an "AS IS" BASIS,                              
+    11 │       │       │      │       │       │       │               │       │# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                       
+    12 │       │       │      │       │       │       │               │       │# See the License for the specific language governing permissions and                            
+    13 │       │       │      │       │       │       │               │       │# limitations under the License.                                                                 
+    14 │       │       │      │       │       │       │               │       │#                                                                                                
+    15 │       │       │      │       │       │       │               │       │# -----------------------------------------------------------------------                        
+    16 │       │       │      │       │       │       │               │       │#                                                                                                
+    17 │       │       │      │       │       │       │               │       │# Copyright (c) 2021, NVIDIA CORPORATION. All rights reserved.                                   
+    18 │       │       │      │       │       │       │               │       │#                                                                                                
+    19 │       │       │      │       │       │       │               │       │# Licensed under the Apache License, Version 2.0 (the "License");                                
+    20 │       │       │      │       │       │       │               │       │# you may not use this file except in compliance with the License.                               
+    21 │       │       │      │       │       │       │               │       │# You may obtain a copy of the License at                                                        
+    22 │       │       │      │       │       │       │               │       │#                                                                                                
+    23 │       │       │      │       │       │       │               │       │#     http://www.apache.org/licenses/LICENSE-2.0                                                 
+    24 │       │       │      │       │       │       │               │       │#                                                                                                
+    25 │       │       │      │       │       │       │               │       │# Unless required by applicable law or agreed to in writing, software                            
+    26 │       │       │      │       │       │       │               │       │# distributed under the License is distributed on an "AS IS" BASIS,                              
+    27 │       │       │      │       │       │       │               │       │# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.                       
+    28 │       │       │      │       │       │       │               │       │# See the License for the specific language governing permissions and                            
+    29 │       │       │      │       │       │       │               │       │# limitations under the License.                                                                 
+    30 │       │       │      │       │       │       │               │       │                                                                                                 
+    31 │       │       │      │       │       │       │               │       │import torch                                                                                     
+    32 │       │       │      │       │       │       │               │       │import os                                                                                        
+    33 │       │       │      │       │       │       │               │       │from feature_spec import FeatureSpec                                                             
+    34 │       │       │      │       │       │       │               │       │from neumf_constants import USER_CHANNEL_NAME, ITEM_CHANNEL_NAME, LABEL_CHANNEL_NAME, TEST_SAMP  
+    35 │       │       │      │       │       │       │               │       │                                                                                                 
+    36 │       │       │      │       │       │       │               │       │                                                                                                 
+    37 │       │       │      │       │       │       │               │       │class TorchTensorDataset:                                                                        
+    38 │       │       │      │       │       │       │               │       │    """ Warning! This dataset/loader uses torch.load. Torch.load implicitly uses pickle. Pickle  
+    39 │       │       │      │       │       │       │               │       │    It is trivial to achieve arbitrary code execution using a prepared pickle payload. Only unp  
+    40 │       │       │      │       │       │       │               │       │                                                                                                 
+    41 │       │       │      │       │       │       │               │       │    def __init__(self, feature_spec: FeatureSpec, mapping_name: str, args):                      
+    42 │       │       │      │       │       │       │               │       │        self.local_rank = args.local_rank                                                        
+    43 │       │       │      │       │       │       │               │       │        self.mapping_name = mapping_name                                                         
+    44 │       │       │      │       │       │       │               │       │        self.features = dict()                                                                   
+    45 │       │       │      │       │       │       │               │       │        self.feature_spec = feature_spec                                                         
+    46 │       │       │      │       │       │       │               │       │        self._load_features()                                                                    
+    47 │       │       │      │       │       │       │               │       │                                                                                                 
+    48 │       │       │      │       │       │       │               │       │    def _load_features(self):                                                                    
+    49 │       │       │      │       │       │       │               │       │        chunks = self.feature_spec.source_spec[self.mapping_name]                                
+    50 │       │       │      │       │       │       │               │       │        for chunk in chunks:                                                                     
+    51 │       │       │      │       │       │       │               │       │            assert chunk['type'] == 'torch_tensor', "Only torch_tensor files supported in this   
+    52 │       │       │      │       │       │       │               │       │            files_list = chunk['files']                                                          
+    53 │       │       │      │       │       │       │               │       │            assert len(files_list) == 1, "Only one file per chunk supported in this loader"      
+    54 │       │       │      │       │       │       │               │       │            file_relative_path = files_list[0]                                                   
+    55 │       │       │      │       │       │       │               │       │            path_to_load = os.path.join(self.feature_spec.base_directory, file_relative_path)    
+    56 │       │       │      │  5%   │  13%  │  304M │▂▁▁▁▁▁▁▁  14%  │       │            chunk_data = torch.load(path_to_load, map_location=torch.device('cuda:{}'.format(se  
+    57 │       │       │      │       │       │       │               │       │            running_pos = 0                                                                      
+    58 │       │       │      │       │       │       │               │       │            for feature_name in chunk['features']:                                               
+    59 │       │       │      │       │       │       │               │       │                next_running_pos = running_pos + 1                                               
+    60 │       │       │      │       │       │       │               │       │                feature_data = chunk_data[:, running_pos:next_running_pos]                       
+    61 │       │       │      │       │       │       │               │       │                # This is needed because slicing instead of indexing keeps the data 2-dimension  
+    62 │       │       │      │       │       │       │               │       │                feature_data = feature_data.reshape(-1, 1)                                       
+    63 │       │       │      │       │       │       │               │       │                running_pos = next_running_pos                                                   
+    64 │       │       │      │       │       │       │               │       │                self.features[feature_name] = feature_data                                       
+    65 │       │       │      │       │       │       │               │       │                                                                                                 
+    66 │       │       │      │       │       │       │               │       │                                                                                                 
+    67 │       │       │      │       │       │       │               │       │class TestDataLoader:                                                                            
+    68 │       │       │      │       │       │       │               │       │    def __init__(self, dataset: TorchTensorDataset, args):                                       
+    69 │       │       │      │       │       │       │               │       │        self.dataset = dataset                                                                   
+    70 │       │       │      │       │       │       │               │       │        self.feature_spec = dataset.feature_spec                                                 
+    71 │       │       │      │       │       │       │               │       │        self.channel_spec = self.feature_spec.channel_spec                                       
+    72 │       │       │      │       │       │       │               │       │        self.samples_in_series = self.feature_spec.metadata[TEST_SAMPLES_PER_SERIES]             
+    73 │       │       │      │       │       │       │               │       │        self.raw_dataset_length = None  # First feature loaded sets this. Total length before s  
+    74 │       │       │      │       │       │       │               │       │        self.data = dict()                                                                       
+    75 │       │       │      │       │       │       │               │       │        self.world_size = args.world_size                                                        
+    76 │       │       │      │       │       │       │               │       │        self.local_rank = args.local_rank                                                        
+    77 │       │       │      │       │       │       │               │       │        self.batch_size = args.valid_batch_size                                                  
+    78 │       │       │      │       │       │       │               │       │                                                                                                 
+    79 │       │       │      │       │       │       │               │       │        self._build_channel_dict()                                                               
+    80 │       │       │      │       │       │       │               │       │        self._deduplication_augmentation()                                                       
+    81 │       │       │      │       │       │       │               │       │        self._split_between_devices()                                                            
+    82 │       │       │      │       │       │       │               │       │        self._split_into_batches()                                                               
+    83 │       │       │      │       │       │       │               │       │                                                                                                 
+    84 │       │       │      │       │       │       │               │       │    def _build_channel_dict(self):                                                               
+    85 │       │       │      │       │       │       │               │       │        for channel_name, channel_features in self.channel_spec.items():                         
+    86 │       │       │      │       │       │       │               │       │            channel_tensors = dict()                                                             
+    87 │       │       │      │       │       │       │               │       │            for feature_name in channel_features:                                                
+    88 │       │       │      │       │       │       │               │       │                channel_tensors[feature_name] = self.dataset.features[feature_name]              
+    89 │       │       │      │       │       │       │               │       │                                                                                                 
+    90 │       │       │      │       │       │       │               │       │                if not self.raw_dataset_length:                                                  
+    91 │       │       │      │       │       │       │               │       │                    self.raw_dataset_length = channel_tensors[feature_name].shape[0]             
+    92 │       │       │      │       │       │       │               │       │                else:                                                                            
+    93 │       │       │      │       │       │       │               │       │                    assert self.raw_dataset_length == channel_tensors[feature_name].shape[0]     
+    94 │       │       │      │       │       │       │               │       │                                                                                                 
+    95 │       │       │      │       │       │       │               │       │            self.data[channel_name] = channel_tensors                                            
+    96 │       │       │      │       │       │       │               │       │                                                                                                 
+    97 │       │       │      │       │       │       │               │       │    def _deduplication_augmentation(self):                                                       
+    98 │       │       │      │       │       │       │               │       │        # Augmentation                                                                           
+    99 │       │       │      │       │       │       │               │       │        # This adds a duplication mask tensor.                                                   
+   100 │       │       │      │       │       │       │               │       │        # This is here to exactly replicate the MLPerf training regime. Moving this deduplicati  
+   101 │       │       │      │       │       │       │               │       │        # generation stage increases the real diversity of the candidates, which makes the rank  
+   102 │       │       │      │       │       │       │               │       │        # and results in a drop in HR@10 of approx 0.01. This has been deemed unacceptable (May  
+   103 │       │       │      │       │       │       │               │       │                                                                                                 
+   104 │       │       │      │       │       │       │               │       │        # We need the duplication mask to determine if a given item should be skipped during ra  
+   105 │       │       │      │       │       │       │               │       │        # If an item with label 1 is duplicated in the sampled ones, we need to be careful to n  
+   106 │       │       │      │       │       │       │               │       │        # label 1 as a duplicate. If an item appears repeatedly only with label 1, no duplicate  
+   107 │       │       │      │       │       │       │               │       │                                                                                                 
+   108 │       │       │      │       │       │       │               │       │        # To easily compute candidates, we sort the items. This will impact the distribution of  
+   109 │       │       │      │       │       │       │               │       │        # devices, but should not influence the numerics or performance meaningfully.            
+   110 │       │       │      │       │       │       │               │       │        # We need to assure that the positive item, which we don't want to mark as a duplicate,  
+   111 │       │       │      │       │       │       │               │       │        # We do this by adding labels as a secondary factor                                      
+   112 │       │       │      │       │       │       │               │       │                                                                                                 
+   113 │       │       │      │       │       │       │               │       │        # Reshape the tensors to have items for a given user in a single row                     
+   114 │       │       │      │       │       │       │               │       │        user_feature_name = self.channel_spec[USER_CHANNEL_NAME][0]                              
+   115 │       │       │      │       │       │       │               │       │        item_feature_name = self.channel_spec[ITEM_CHANNEL_NAME][0]                              
+   116 │       │       │      │       │       │       │               │       │        label_feature_name = self.channel_spec[LABEL_CHANNEL_NAME][0]                            
+   117 │       │       │      │       │       │       │               │       │        self.ignore_mask_channel_name = 'mask_ch'                                                
+   118 │       │       │      │       │       │       │               │       │        self.ignore_mask_feature_name = 'mask'                                                   
+   119 │       │       │      │       │       │       │               │       │                                                                                                 
+   120 │       │       │      │       │       │       │               │       │        items = self.data[ITEM_CHANNEL_NAME][item_feature_name].view(-1, self.samples_in_series  
+   121 │       │       │      │       │       │       │               │       │        users = self.data[USER_CHANNEL_NAME][user_feature_name].view(-1, self.samples_in_series  
+   122 │       │       │      │       │       │       │               │       │        labels = self.data[LABEL_CHANNEL_NAME][label_feature_name].view(-1, self.samples_in_ser  
+   123 │       │       │      │       │       │       │               │       │                                                                                                 
+   124 │       │       │      │       │       │       │               │       │        sorting_weights = items.float() - labels.float() * 0.5                                   
+   125 │       │       │      │       │       │       │               │       │        _, indices = torch.sort(sorting_weights)                                                 
+   126 │       │       │      │       │       │       │               │       │        # The gather reorders according to the indices decided by the sort above                 
+   127 │       │       │      │  6%   │       │       │               │       │        sorted_items = torch.gather(items, 1, indices)                                           
+   128 │       │       │      │       │       │       │               │       │        sorted_labels = torch.gather(labels, 1, indices)                                         
+   129 │       │       │      │       │       │       │               │       │        sorted_users = torch.gather(users, 1, indices)                                           
+   130 │       │       │      │       │       │       │               │       │                                                                                                 
+   131 │       │       │      │       │       │       │               │       │        dup_mask = sorted_items[:, 0:-1] == sorted_items[:, 1:]  # This says if a given item is  
+   132 │       │       │      │       │       │       │               │       │        dup_mask = dup_mask.type(torch.bool)                                                     
+   133 │       │       │      │       │       │       │               │       │        # The first item for a given user can never be a duplicate:                              
+   134 │       │       │      │  6%   │       │       │               │       │        dup_mask = torch.cat((torch.zeros_like(dup_mask[:, 0:1]), dup_mask), dim=1)              
+   135 │       │       │      │       │       │       │               │       │                                                                                                 
+   136 │       │       │      │       │       │       │               │       │        # Reshape them back                                                                      
+   137 │       │       │      │       │       │       │               │       │        self.data[ITEM_CHANNEL_NAME][item_feature_name] = sorted_items.view(-1, 1)               
+   138 │       │       │      │       │       │       │               │       │        self.data[USER_CHANNEL_NAME][user_feature_name] = sorted_users.view(-1, 1)               
+   139 │       │       │      │       │       │       │               │       │        self.data[LABEL_CHANNEL_NAME][label_feature_name] = sorted_labels.view(-1, 1)            
+   140 │       │       │      │       │       │       │               │       │        self.data[self.ignore_mask_channel_name] = dict()                                        
+   141 │       │       │      │       │       │       │               │       │        self.data[self.ignore_mask_channel_name][self.ignore_mask_feature_name] = dup_mask.view  
+   142 │       │       │      │       │       │       │               │       │                                                                                                 
+   143 │       │       │      │       │       │       │               │       │    def _split_between_devices(self):                                                            
+   144 │       │       │      │       │       │       │               │       │        if self.world_size > 1:                                                                  
+   145 │       │       │      │       │       │       │               │       │            # DO NOT REPLACE WITH torch.chunk (number of returned chunks can silently be lower   
+   146 │       │       │      │       │       │       │               │       │            # It would break compatibility with small datasets.                                  
+   147 │       │       │      │       │       │       │               │       │            num_test_cases = self.raw_dataset_length / self.samples_in_series                    
+   148 │       │       │      │       │       │       │               │       │            smaller_batch = (int(num_test_cases // self.world_size)) * self.samples_in_series    
+   149 │       │       │      │       │       │       │               │       │            bigger_batch = smaller_batch + self.samples_in_series                                
+   150 │       │       │      │       │       │       │               │       │            remainder = int(num_test_cases % self.world_size)                                    
+   151 │       │       │      │       │       │       │               │       │            samples_per_card = [bigger_batch] * remainder + [smaller_batch] * (self.world_size   
+   152 │       │       │      │       │       │       │               │       │            for channel_name, channel_dict in self.data.items():                                 
+   153 │       │       │      │       │       │       │               │       │                for feature_name, feature_tensor in channel_dict.items():                        
+   154 │       │       │      │       │       │       │               │       │                    channel_dict[feature_name] = \                                               
+   155 │       │       │      │       │       │       │               │       │                        channel_dict[feature_name].split(samples_per_card)[self.local_rank]      
+   156 │       │       │      │       │       │       │               │       │                                                                                                 
+   157 │       │       │      │       │       │       │               │       │    def _split_into_batches(self):                                                               
+   158 │       │       │      │       │       │       │               │       │        self.batches = None                                                                      
+   159 │       │       │      │       │       │       │               │       │        # This is the structure of each batch, waiting to be copied and filled in with data      
+   160 │       │       │      │       │       │       │               │       │        for channel_name, channel_dict in self.data.items():                                     
+   161 │       │       │      │       │       │       │               │       │            for feature_name, feature_tensor in channel_dict.items():                            
+   162 │       │       │      │       │       │       │               │       │                feature_batches = feature_tensor.view(-1).split(self.batch_size)                 
+   163 │       │       │      │       │       │       │               │       │                if not self.batches:                                                             
+   164 │       │       │      │       │       │       │               │       │                    self.batches = list(                                                         
+   165 │       │       │      │       │       │       │               │       │                        {channel_name: dict() for channel_name in self.data.keys()} for _ in fe  
+   166 │       │       │      │       │       │       │               │       │                for pos, feature_batch_data in enumerate(feature_batches):                       
+   167 │       │       │      │       │       │       │               │       │                    self.batches[pos][channel_name][feature_name] = feature_batch_data           
+   168 │       │       │      │       │       │       │               │       │                                                                                                 
+   169 │       │       │      │       │       │       │               │       │    def get_epoch_data(self):                                                                    
+   170 │       │       │      │       │       │       │               │       │        return self.batches                                                                      
+   171 │       │       │      │       │       │       │               │       │                                                                                                 
+   172 │       │       │      │       │       │       │               │       │    def get_ignore_mask(self):                                                                   
+   173 │       │       │      │       │       │       │               │       │        return self.data[self.ignore_mask_channel_name][self.ignore_mask_feature_name]           
+   174 │       │       │      │       │       │       │               │       │                                                                                                 
+   175 │       │       │      │       │       │       │               │       │                                                                                                 
+   176 │       │       │      │       │       │       │               │       │class TrainDataloader:                                                                           
+   177 │       │       │      │       │       │       │               │       │    def __init__(self, dataset: TorchTensorDataset, args):                                       
+   178 │       │       │      │       │       │       │               │       │        self.dataset = dataset                                                                   
+   179 │       │       │      │       │       │       │               │       │        self.local_rank = args.local_rank                                                        
+   180 │       │       │      │       │       │       │               │       │        if args.distributed:                                                                     
+   181 │       │       │      │       │       │       │               │       │            self.local_batch = args.batch_size // args.world_size                                
+   182 │       │       │      │       │       │       │               │       │        else:                                                                                    
+   183 │       │       │      │       │       │       │               │       │            self.local_batch = args.batch_size                                                   
+   184 │       │       │      │       │       │       │               │       │                                                                                                 
+   185 │       │       │      │       │       │       │               │       │        self.feature_spec = dataset.feature_spec                                                 
+   186 │       │       │      │       │       │       │               │       │        self.channel_spec = self.feature_spec.channel_spec                                       
+   187 │       │       │      │       │       │       │               │       │        self.negative_samples = args.negative_samples                                            
+   188 │       │       │      │       │       │       │               │       │                                                                                                 
+   189 │       │       │      │       │       │       │               │       │        self.data = dict()                                                                       
+   190 │       │       │      │       │       │       │               │       │        self.raw_dataset_length = None  # first feature loaded sets this                         
+   191 │       │       │      │       │       │       │               │       │        self._build_channel_dict()                                                               
+   192 │       │       │      │       │       │       │               │       │        self.length_after_augmentation = self.raw_dataset_length * (self.negative_samples + 1)   
+   193 │       │       │      │       │       │       │               │       │        samples_per_worker = self.length_after_augmentation / args.world_size                    
+   194 │       │       │      │       │       │       │               │       │        self.samples_begin = int(samples_per_worker * args.local_rank)                           
+   195 │       │       │      │       │       │       │               │       │        self.samples_end = int(samples_per_worker * (args.local_rank + 1))                       
+   196 │       │       │      │       │       │       │               │       │                                                                                                 
+   197 │       │       │      │       │       │       │               │       │    def _build_channel_dict(self):                                                               
+   198 │       │       │      │       │       │       │               │       │        for channel_name, channel_features in self.channel_spec.items():                         
+   199 │       │       │      │       │       │       │               │       │            channel_tensors = dict()                                                             
+   200 │       │       │      │       │       │       │               │       │            for feature_name in channel_features:                                                
+   201 │       │       │      │       │       │       │               │       │                channel_tensors[feature_name] = self.dataset.features[feature_name]              
+   202 │       │       │      │       │       │       │               │       │                if not self.raw_dataset_length:                                                  
+   203 │       │       │      │       │       │       │               │       │                    self.raw_dataset_length = channel_tensors[feature_name].shape[0]             
+   204 │       │       │      │       │       │       │               │       │                else:                                                                            
+   205 │       │       │      │       │       │       │               │       │                    assert self.raw_dataset_length == channel_tensors[feature_name].shape[0]     
+   206 │       │       │      │       │       │       │               │       │            self.data[channel_name] = channel_tensors                                            
+   207 │       │       │      │       │       │       │               │       │                                                                                                 
+   208 │       │       │      │       │       │       │               │       │    def get_epoch_data(self):                                                                    
+   209 │       │       │      │       │       │       │               │       │                                                                                                 
+   210 │       │       │      │       │       │       │               │       │        # Augment, appending args.negative_samples times the original set, now with random item  
+   211 │       │       │      │       │       │       │               │       │        augmented_data = {channel_name: dict() for channel_name in self.data.keys()}             
+   212 │       │       │      │       │       │       │               │       │        user_feature_name = self.channel_spec[USER_CHANNEL_NAME][0]                              
+   213 │       │       │      │       │       │       │               │       │        item_feature_name = self.channel_spec[ITEM_CHANNEL_NAME][0]                              
+   214 │       │       │      │       │       │       │               │       │        label_feature_name = self.channel_spec[LABEL_CHANNEL_NAME][0]                            
+   215 │       │       │      │       │       │       │               │       │                                                                                                 
+   216 │       │       │      │       │       │       │               │       │        # USER                                                                                   
+   217 │       │       │      │       │       │       │               │       │        user_tensor = self.data[USER_CHANNEL_NAME][user_feature_name]                            
+   218 │       │       │      │       │       │       │               │       │        neg_users = user_tensor.repeat(self.negative_samples, 1)                                 
+   219 │       │       │      │       │       │       │               │       │        augmented_users = torch.cat((user_tensor, neg_users))                                    
+   220 │       │       │      │       │       │       │               │       │        augmented_data[USER_CHANNEL_NAME][user_feature_name] = augmented_users                   
+   221 │       │       │      │       │       │       │               │       │        del neg_users                                                                            
+   222 │       │       │      │       │       │       │               │       │                                                                                                 
+   223 │       │       │      │       │       │       │               │       │        # ITEM                                                                                   
+   224 │       │       │      │       │       │       │               │       │        item_tensor = self.data[ITEM_CHANNEL_NAME][item_feature_name]                            
+   225 │       │       │      │       │       │       │               │       │        neg_items = torch.empty_like(item_tensor).repeat(self.negative_samples, 1) \             
+   226 │       │       │      │       │       │       │               │       │            .random_(0, self.feature_spec.feature_spec[item_feature_name]['cardinality'])        
+   227 │       │       │      │  1%   │       │       │               │       │        augmented_items = torch.cat((item_tensor, neg_items))                                    
+   228 │       │       │      │       │       │       │               │       │        augmented_data[ITEM_CHANNEL_NAME][item_feature_name] = augmented_items                   
+   229 │       │       │      │       │       │       │               │       │        del neg_items                                                                            
+   230 │       │       │      │       │       │       │               │       │                                                                                                 
+   231 │       │       │      │       │       │       │               │       │        # LABEL                                                                                  
+   232 │       │       │      │       │       │       │               │       │        label_tensor = self.data[LABEL_CHANNEL_NAME][label_feature_name]                         
+   233 │       │       │      │       │       │       │               │       │        neg_label = torch.zeros_like(label_tensor, dtype=torch.float32).repeat(self.negative_sa  
+   234 │       │       │      │       │       │       │               │       │        augmented_labels = torch.cat((label_tensor, neg_label))                                  
+   235 │       │       │      │       │       │       │               │       │        del neg_label                                                                            
+   236 │       │       │      │       │       │       │               │       │        augmented_data[LABEL_CHANNEL_NAME][label_feature_name] = augmented_labels                
+   237 │       │       │      │       │       │       │               │       │                                                                                                 
+   238 │       │       │      │       │       │       │               │       │        # Labels are not shuffled between cards.                                                 
+   239 │       │       │      │       │       │       │               │       │        # This replicates previous behaviour.                                                    
+   240 │       │       │      │       │       │       │               │       │        epoch_indices = torch.randperm(self.samples_end - self.samples_begin, device='cuda:{}'.  
+   241 │       │       │      │       │       │       │               │       │        epoch_indices += self.samples_begin                                                      
+   242 │       │       │      │       │       │       │               │       │                                                                                                 
+   243 │       │       │      │       │       │       │               │       │        batches = None                                                                           
+   244 │       │       │      │       │       │       │               │       │        for channel_name, channel_dict in augmented_data.items():                                
+   245 │       │       │      │       │       │       │               │       │            for feature_name, feature_tensor in channel_dict.items():                            
+   246 │       │       │      │       │       │       │               │       │                # the last batch will almost certainly be smaller, drop it                       
+   247 │       │       │      │       │       │       │               │       │                # Warning: may not work if there's only one                                      
+   248 │       │       │      │ 91%   │       │       │               │       │                feature_batches = feature_tensor.view(-1)[epoch_indices].split(self.local_batch  
+   249 │       │       │      │       │       │       │               │       │                if not batches:                                                                  
+   250 │       │       │      │       │       │       │               │       │                    batches = list({channel_name: dict() for channel_name in self.data.keys()}   
+   251 │       │       │      │       │       │       │               │       │                for pos, feature_batch_data in enumerate(feature_batches):                       
+   252 │       │       │      │       │       │       │               │       │                    batches[pos][channel_name][feature_name] = feature_batch_data                
+   253 │       │       │      │       │       │       │               │       │                                                                                                 
+   254 │       │       │      │       │       │       │               │       │        return batches                                                                           
+   255 │       │       │      │       │       │       │               │       │                                                                                                 
+       │       │       │      │       │       │       │               │       │                                                                                                 
+╶──────┼───────┼───────┼──────┼───────┼───────┼───────┼───────────────┼───────┼────────────────────────────────────────────────────────────────────────────────────────────────╴
+       │       │       │      │       │       │       │               │       │function summary for /home/cc/GreenAI/AI-Energy-Optimization/ScaleneDemo/NCFonPytorch/NCF/data…  
+    48 │       │       │      │  5%   │  13%  │  304M │████████  14%  │       │TorchTensorDataset._load_features                                                                
+    97 │       │       │      │  6%   │       │       │               │       │TestDataLoader._deduplication_augmentation                                                       
+   208 │       │       │      │ 75%   │       │       │               │       │TrainDataloader.get_epoch_data                                                                   
+       ╵       ╵       ╵      ╵       ╵       ╵       ╵               ╵       ╵                                                                                                 
+Top PEAK memory consumption, by line:
+(1)    56:   304 MB                                                                                   
