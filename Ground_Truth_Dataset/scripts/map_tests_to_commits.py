@@ -11,6 +11,86 @@ import subprocess
 from pathlib import Path
 
 
+def get_parent_hash(repo_path, commit_hash):
+    """Get the parent commit hash."""
+    try:
+        result = subprocess.run(
+            ['git', 'rev-parse', f'{commit_hash}^'],
+            cwd=repo_path,
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+        if result.returncode == 0:
+            return result.stdout.strip()
+    except Exception:
+        pass
+    return None
+
+
+def file_exists_at_commit(repo_path, commit_hash, file_path):
+    """Check if a file exists at a specific commit."""
+    try:
+        result = subprocess.run(
+            ['git', 'ls-tree', commit_hash, '--', file_path],
+            cwd=repo_path,
+            capture_output=True,
+            text=True,
+            timeout=10
+        )
+        return result.returncode == 0 and result.stdout.strip() != ''
+    except Exception:
+        return False
+
+
+def get_file_content_at_commit(repo_path, commit_hash, file_path):
+    """Get file content at a specific commit."""
+    try:
+        result = subprocess.run(
+            ['git', 'show', f'{commit_hash}:{file_path}'],
+            cwd=repo_path,
+            capture_output=True,
+            text=True,
+            timeout=30
+        )
+        if result.returncode == 0:
+            return result.stdout
+    except Exception:
+        pass
+    return None
+
+
+def validate_test_unchanged(repo_path, parent_hash, commit_hash, test_file):
+    """
+    Validate that a test file:
+    1. Exists in parent commit
+    2. Exists in target commit
+    3. Has identical content in both commits
+
+    Returns: (is_valid, reason)
+    """
+    # Check if test exists in parent
+    if not file_exists_at_commit(repo_path, parent_hash, test_file):
+        return False, "not_in_parent"
+
+    # Check if test exists in target
+    if not file_exists_at_commit(repo_path, commit_hash, test_file):
+        return False, "not_in_target"
+
+    # Get content from both commits
+    parent_content = get_file_content_at_commit(repo_path, parent_hash, test_file)
+    target_content = get_file_content_at_commit(repo_path, commit_hash, test_file)
+
+    if parent_content is None or target_content is None:
+        return False, "content_read_error"
+
+    # Check if content is identical
+    if parent_content != target_content:
+        return False, "test_modified"
+
+    return True, "valid"
+
+
 def find_test_by_convention(repo_path, modified_file):
     """
     strategy1: file name conventions.
@@ -119,12 +199,14 @@ def find_test_by_imports(repo_path, modified_file):
             ])
 
         for pattern in patterns:
+            # OPTION 1: Use grep (fast, but only works on Mac/Linux with grep installed)
             try:
-                # Use grep to search for the import pattern in test files
                 result = subprocess.run(
                     ['grep', '-r', '-l', '--include=*.py', pattern, str(test_dir_path)],
                     capture_output=True,
                     text=True,
+                    encoding='utf-8',
+                    errors='ignore',
                     timeout=5
                 )
 
@@ -138,6 +220,27 @@ def find_test_by_imports(repo_path, modified_file):
             except (subprocess.TimeoutExpired, subprocess.SubprocessError):
                 # Skip if grep fails or times out
                 pass
+
+            '''
+            # OPTION 2: Pure Python search (cross-platform, works on Windows)
+            # Remove the triple quotes above and below to enable this version
+            # Comment out OPTION 1 if using this
+            try:
+                # Search for pattern in Python files recursively
+                for py_file in test_dir_path.rglob('*.py'):
+                    try:
+                        with open(py_file, 'r', encoding='utf-8', errors='ignore') as f:
+                            content = f.read()
+                            if pattern in content:
+                                test_file = py_file.relative_to(repo_path)
+                                candidates.append(str(test_file))
+                    except (IOError, OSError):
+                        # Skip files we can't read
+                        continue
+            except Exception:
+                # Skip if search fails
+                pass
+            '''
 
     # Remove duplicates while preserving order
     return list(dict.fromkeys(candidates))
@@ -212,7 +315,7 @@ def process_commits(csv_path, repos_dir="repos", max_commits=None):
 
     # Read commits
     commits = []
-    with open(csv_path, 'r') as f:
+    with open(csv_path, 'r', encoding='utf-8', errors='ignore') as f:
         reader = csv.DictReader(f)
         for row in reader:
             commits.append(row)
@@ -241,23 +344,53 @@ def process_commits(csv_path, repos_dir="repos", max_commits=None):
             print("SKIP (repo not found)")
             continue
 
+        # Get parent commit hash
+        parent_hash = get_parent_hash(repo_path, commit_hash)
+        if not parent_hash:
+            print("SKIP (no parent hash)")
+            continue
+
         test_info = find_relevant_tests(repo_path, modified_files)
 
         if test_info is None:
             print("SKIP (no tests found in first 3 strategies)")
             continue
 
+        # Validate that tests are unchanged between parent and target
+        valid_tests = []
+        invalid_reasons = []
+
+        for test_file in test_info['tests']:
+            is_valid, reason = validate_test_unchanged(repo_path, parent_hash, commit_hash, test_file)
+            if is_valid:
+                valid_tests.append(test_file)
+            else:
+                invalid_reasons.append(f"{test_file}:{reason}")
+
+        # Skip if no valid tests remain
+        if not valid_tests:
+            reason_summary = ", ".join(set(r.split(':')[1] for r in invalid_reasons[:3]))
+            print(f"SKIP (tests invalid: {reason_summary})")
+            continue
+
         results.append({
             'repo': repo_name,
             'commit_hash': commit_hash,
+            'parent_hash': parent_hash,
             'modified_files': modified_files_str,
             'modified_file_count': len(modified_files),
-            'relevant_tests': '; '.join(test_info['tests']),
-            'test_count': len(test_info['tests']),
-            'test_strategy': test_info['strategy']
+            'relevant_tests': '; '.join(valid_tests),
+            'test_count': len(valid_tests),
+            'test_strategy': test_info['strategy'],
+            'tests_validated': 'all_unchanged'
         })
 
-        print(f"OK ({test_info['strategy']}, {len(test_info['tests'])} test(s))")
+        validation_note = ""
+        if len(valid_tests) < len(test_info['tests']):
+            filtered_count = len(test_info['tests']) - len(valid_tests)
+            validation_note = f", {filtered_count} filtered"
+
+        print(f"OK ({test_info['strategy']}, {len(valid_tests)} test(s){validation_note})")
 
     return results
 
@@ -265,10 +398,10 @@ def process_commits(csv_path, repos_dir="repos", max_commits=None):
 def save_results(results, output_file="test_mapping.csv"):
     output_path = Path(__file__).parent.parent / output_file
 
-    with open(output_path, 'w', newline='') as f:
+    with open(output_path, 'w', newline='', encoding='utf-8') as f:
         fieldnames = [
-            'repo', 'commit_hash', 'modified_files', 'modified_file_count',
-            'relevant_tests', 'test_count', 'test_strategy'
+            'repo', 'commit_hash', 'parent_hash', 'modified_files', 'modified_file_count',
+            'relevant_tests', 'test_count', 'test_strategy', 'tests_validated'
         ]
         writer = csv.DictWriter(f, fieldnames=fieldnames)
         writer.writeheader()
